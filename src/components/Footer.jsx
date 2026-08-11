@@ -4,99 +4,94 @@ export default function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="bg-gray-900 text-white py-16">
+    <footer className="bg-black/40 backdrop-blur-md border-t border-white/10 py-16">
       <div className="max-w-7xl mx-auto px-4">
-        {/* Main Footer Content */}
         <div className="grid md:grid-cols-5 gap-12 mb-12">
           {/* Brand */}
-          <div className="md:col-span-1">
-            <div className="text-2xl font-bold mb-4">
-              Stock<span className="text-cyan-500">AI</span>
+          <div className="animate-slide-in-up">
+            <div className="text-2xl font-black gradient-text mb-4">
+              Stock<span className="text-cyan-400">AI</span>
             </div>
-            <p className="text-gray-400 text-sm">
-              Control de inventario inteligente con IA para el futuro del retail y la logística.
+            <p className="text-gray-400 text-sm leading-relaxed">
+              Control inteligente de inventario con IA para el futuro del retail.
             </p>
           </div>
 
-          {/* Producto */}
-          <div>
+          {/* Product */}
+          <div className="animate-slide-in-up stagger-1">
             <h4 className="font-bold text-white mb-4">Producto</h4>
-            <ul className="space-y-2 text-gray-400 text-sm">
-              <li><a href="#" className="hover:text-white transition-colors">Características</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Precios</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Documentación</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">API Reference</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Status</a></li>
+            <ul className="space-y-2 text-sm text-gray-400">
+              {['Características', 'Precios', 'API', 'Status'].map(item => (
+                <li key={item}>
+                  <a href="#" className="hover:text-cyan-400 transition-colors">
+                    {item}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Empresa */}
-          <div>
+          {/* Company */}
+          <div className="animate-slide-in-up stagger-2">
             <h4 className="font-bold text-white mb-4">Empresa</h4>
-            <ul className="space-y-2 text-gray-400 text-sm">
-              <li><a href="#" className="hover:text-white transition-colors">Acerca de</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Carreras</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Prensa</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Contacto</a></li>
+            <ul className="space-y-2 text-sm text-gray-400">
+              {['Acerca de', 'Blog', 'Carreras', 'Contacto'].map(item => (
+                <li key={item}>
+                  <a href="#" className="hover:text-cyan-400 transition-colors">
+                    {item}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
 
           {/* Legal */}
-          <div>
+          <div className="animate-slide-in-up stagger-3">
             <h4 className="font-bold text-white mb-4">Legal</h4>
-            <ul className="space-y-2 text-gray-400 text-sm">
-              <li><a href="#" className="hover:text-white transition-colors">Términos</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Privacidad</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Cookies</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Seguridad</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Compliance</a></li>
+            <ul className="space-y-2 text-sm text-gray-400">
+              {['Términos', 'Privacidad', 'Cookies', 'Seguridad'].map(item => (
+                <li key={item}>
+                  <a href="#" className="hover:text-cyan-400 transition-colors">
+                    {item}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
 
           {/* Social */}
-          <div>
+          <div className="animate-slide-in-up stagger-4">
             <h4 className="font-bold text-white mb-4">Síguenos</h4>
             <div className="flex gap-4">
-              <a href="#" className="text-gray-400 hover:text-cyan-500 transition-colors">
-                <Twitter size={24} />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-cyan-500 transition-colors">
-                <Linkedin size={24} />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-cyan-500 transition-colors">
-                <Github size={24} />
-              </a>
+              {[
+                { icon: Twitter, label: 'Twitter' },
+                { icon: Linkedin, label: 'LinkedIn' },
+                { icon: Github, label: 'GitHub' }
+              ].map(({ icon: Icon, label }) => (
+                <a
+                  key={label}
+                  href="#"
+                  className="w-10 h-10 rounded-lg glass flex items-center justify-center text-gray-300 hover:text-cyan-400 hover:bg-cyan-400/10 transition-all"
+                  title={label}
+                >
+                  <Icon size={20} />
+                </a>
+              ))}
             </div>
           </div>
         </div>
 
         {/* Divider */}
-        <div className="border-t border-gray-800 my-8"></div>
+        <div className="border-t border-white/10 my-8"></div>
 
-        {/* Bottom Footer */}
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          <p className="text-gray-400 text-sm">
-            &copy; {currentYear} StockAI. Todos los derechos reservados.
-          </p>
-
-          <div className="flex gap-8 text-gray-400 text-sm mt-4 md:mt-0">
-            <a href="#" className="hover:text-white transition-colors">
-              Términos de Servicio
-            </a>
-            <a href="#" className="hover:text-white transition-colors">
-              Política de Privacidad
-            </a>
-            <a href="#" className="hover:text-white transition-colors">
-              Configuración de Cookies
-            </a>
+        {/* Bottom */}
+        <div className="flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
+          <p>&copy; {currentYear} StockAI. Todos los derechos reservados.</p>
+          <div className="flex gap-6 mt-4 md:mt-0">
+            <a href="#" className="hover:text-cyan-400 transition-colors">Términos</a>
+            <a href="#" className="hover:text-cyan-400 transition-colors">Privacidad</a>
+            <a href="#" className="hover:text-cyan-400 transition-colors">Cookies</a>
           </div>
-        </div>
-
-        {/* Trust Badges */}
-        <div className="mt-12 pt-8 border-t border-gray-800 text-center text-gray-400 text-sm">
-          <p className="mb-4">Certificado por:</p>
-          <p>🔒 ISO 27001 • 🛡️ SOC 2 Type II • 🌍 GDPR Compliant • 🔐 Enterprise Security</p>
         </div>
       </div>
     </footer>
