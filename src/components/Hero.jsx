@@ -1,4 +1,5 @@
-import { ArrowRight, Zap } from 'lucide-react'
+import { Zap } from 'lucide-react'
+import CtaButton from './CtaButton'
 
 export default function Hero() {
   return (
@@ -29,12 +30,7 @@ export default function Hero() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <button className="group relative px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold rounded-xl flex items-center justify-center gap-2 overflow-hidden">
-                <span className="relative z-10 flex items-center gap-2">
-                  Comenzar Ahora
-                  <ArrowRight size={20} className="group-hover:translate-x-2 transition-transform" />
-                </span>
-              </button>
+              <CtaButton />
               <button className="px-8 py-4 glass text-white font-semibold rounded-xl hover:bg-opacity-20 backdrop-blur-md">
                 Ver Demo
               </button>
