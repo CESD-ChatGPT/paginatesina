@@ -10,7 +10,7 @@ export default function CTA() {
               ¿Listo para optimizar tu inventario?
             </h2>
             <p className="text-xl text-gray-600 mb-12">
-              Únete a cientos de empresas que ya están ahorrando tiempo y dinero con StockAI.
+              Descubre cómo StockAI puede transformar tu gestión de stock con inteligencia artificial.
             </p>
 
             <div className="grid md:grid-cols-2 gap-6 mb-12">
@@ -41,15 +41,15 @@ export default function CTA() {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-colors">
-                Comenzar Prueba Gratuita
+                Comenzar
               </button>
               <button className="bg-gray-100 hover:bg-gray-200 text-gray-900 px-8 py-4 rounded-lg font-semibold text-lg transition-colors">
-                Agendar Demo
+                Contactar
               </button>
             </div>
 
             <p className="text-gray-500 text-sm mt-8">
-              Respaldado por las mejores empresas del sector. Certificado ISO 27001.
+              Solución confiable para empresas de todos los tamaños.
             </p>
           </div>
         </div>
