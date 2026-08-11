@@ -1,6 +1,7 @@
 {
   "name": "stockai-landing",
   "version": "1.0.0",
+  "type": "module",
   "description": "Landing page for StockAI - Intelligent Stock Control Software",
   "main": "index.js",
   "scripts": {
