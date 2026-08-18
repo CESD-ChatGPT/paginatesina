@@ -23,14 +23,25 @@ export default function LoadingScreen() {
           height: 100px;
         }
 
+        .loader {
+          transform: scale(0.85);
+        }
+
+        @media (min-width: 480px) {
+          .loader {
+            transform: scale(1);
+          }
+        }
+
         .loader__bar {
           position: absolute;
           bottom: 0;
           width: 10px;
           height: 50%;
-          background: rgb(0, 0, 0);
+          background: var(--loader-bar);
           transform-origin: center bottom;
           box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+          transition: background 0.4s ease;
         }
 
         .loader__bar:nth-child(1) {
@@ -74,10 +85,11 @@ export default function LoadingScreen() {
           left: 0;
           width: 10px;
           height: 10px;
-          background: rgb(44, 143, 255);
+          background: var(--loader-ball);
           border-radius: 50%;
           -webkit-animation: ball624 4s infinite;
           animation: ball624 4s infinite;
+          transition: background 0.4s ease;
         }
 
         @keyframes ball624 {
@@ -358,12 +370,13 @@ export default function LoadingScreen() {
           position: fixed;
           inset: 0;
           z-index: 999;
-          background-color: #f5f5f5;
+          background: var(--loader-bg);
           display: flex;
           flex-direction: column;
           align-items: center;
           justify-content: center;
-          gap: 30px;
+          gap: clamp(16px, 5vw, 30px);
+          padding: 20px;
           animation: fadeOutLoading 0.5s ease-out 2s forwards;
         }
 
@@ -379,14 +392,17 @@ export default function LoadingScreen() {
         }
 
         .loader-text {
-          font-size: 24px;
-          font-weight: 700;
-          color: #121212;
+          font-size: clamp(18px, 5vw, 24px);
+          font-weight: 800;
           letter-spacing: -0.5px;
+          background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 50%, var(--accent-3) 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
         }
       `}</style>
 
-      <div className="loading-container">
+      <div className="loading-container" role="status" aria-label="Cargando StockAI">
         <div className="loader">
           <div className="loader__bar"></div>
           <div className="loader__bar"></div>

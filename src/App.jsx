@@ -8,7 +8,7 @@ import { ThemeProvider } from './contexts/ThemeContext'
 
 function AppContent() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-black">
+    <div className="app-bg min-h-screen">
       <LoadingScreen />
       <Header />
       <Hero />

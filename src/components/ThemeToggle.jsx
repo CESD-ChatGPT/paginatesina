@@ -1,92 +1,94 @@
 import { useContext } from 'react'
 import { ThemeContext } from '../contexts/ThemeContext'
 
+/* From Uiverse.io by Yaya12085 — adaptado: escalado para navbar,
+   colores de marca y transición día/noche */
 export function ThemeToggleButton() {
   const { theme, toggleTheme } = useContext(ThemeContext)
 
   return (
     <>
       <style>{`
-        /* From Uiverse.io by Yaya12085 */
-        .container {
+        .toggle-container {
+          display: flex;
+          align-items: center;
+          flex-shrink: 0;
         }
 
-        .label {
-          height: 60px;
-          width: 120px;
+        .toggle-label {
+          height: 34px;
+          width: 68px;
           background-color: #ffffff;
-          border-radius: 30px;
-          -webkit-box-shadow: inset 0 0 5px 4px rgba(255, 255, 255, 1),
-            inset 0 0 20px 1px rgba(0, 0, 0, 0.488), 10px 20px 30px rgba(0, 0, 0, 0.096),
-            inset 0 0 0 3px rgba(0, 0, 0, 0.3);
-          box-shadow: inset 0 0 5px 4px rgba(255, 255, 255, 1),
-            inset 0 0 20px 1px rgba(0, 0, 0, 0.488), 10px 20px 30px rgba(0, 0, 0, 0.096),
-            inset 0 0 0 3px rgba(0, 0, 0, 0.3);
-          display: -webkit-box;
-          display: -ms-flexbox;
+          border-radius: 17px;
+          -webkit-box-shadow: inset 0 0 4px 2px rgba(255, 255, 255, 1),
+            inset 0 0 12px 1px rgba(0, 0, 0, 0.488), 6px 12px 18px rgba(0, 0, 0, 0.096),
+            inset 0 0 0 2px rgba(0, 0, 0, 0.3);
+          box-shadow: inset 0 0 4px 2px rgba(255, 255, 255, 1),
+            inset 0 0 12px 1px rgba(0, 0, 0, 0.488), 6px 12px 18px rgba(0, 0, 0, 0.096),
+            inset 0 0 0 2px rgba(0, 0, 0, 0.3);
           display: flex;
-          -webkit-box-align: center;
-          -ms-flex-align: center;
           align-items: center;
           cursor: pointer;
           position: relative;
-          -webkit-transition: -webkit-transform 0.4s;
-          transition: -webkit-transform 0.4s;
-          transition: transform 0.4s;
+          transition: transform 0.4s, background-color 0.4s;
         }
 
-        .label:hover {
+        [data-theme="dark"] .toggle-label,
+        :root:not([data-theme="light"]) .toggle-label {
+          background-color: #1e293b;
+          -webkit-box-shadow: inset 0 0 4px 2px rgba(148, 163, 184, 0.4),
+            inset 0 0 12px 1px rgba(0, 0, 0, 0.6), 6px 12px 18px rgba(0, 0, 0, 0.3),
+            inset 0 0 0 2px rgba(0, 212, 255, 0.35);
+          box-shadow: inset 0 0 4px 2px rgba(148, 163, 184, 0.4),
+            inset 0 0 12px 1px rgba(0, 0, 0, 0.6), 6px 12px 18px rgba(0, 0, 0, 0.3),
+            inset 0 0 0 2px rgba(0, 212, 255, 0.35);
+        }
+
+        .toggle-label:hover {
           -webkit-transform: perspective(100px) rotateX(5deg) rotateY(-5deg);
           transform: perspective(100px) rotateX(5deg) rotateY(-5deg);
         }
 
-        #checkbox:checked ~ .label:hover {
+        #theme-checkbox:checked ~ .toggle-label:hover {
           -webkit-transform: perspective(100px) rotateX(-5deg) rotateY(5deg);
           transform: perspective(100px) rotateX(-5deg) rotateY(5deg);
         }
 
-        #checkbox {
+        #theme-checkbox {
           display: none;
         }
 
-        #checkbox:checked ~ .label::before {
-          left: 70px;
-          background-color: #000000;
-          background-image: linear-gradient(315deg, #000000 0%, #414141 70%);
-          -webkit-transition: 0.4s;
+        #theme-checkbox:checked ~ .toggle-label::before {
+          left: 38px;
+          background-color: #fbbf24;
+          background-image: linear-gradient(130deg, #fde68a 10%, #ffffff 11%, #f59e0b 62%);
           transition: 0.4s;
         }
 
-        .label::before {
+        .toggle-label::before {
           position: absolute;
           content: "";
-          height: 40px;
-          width: 40px;
+          height: 24px;
+          width: 24px;
           border-radius: 50%;
           background-color: #000000;
-          background-image: linear-gradient(
-            130deg,
-            #757272 10%,
-            #ffffff 11%,
-            #726f6f 62%
-          );
-          left: 10px;
-          -webkit-box-shadow: 0 2px 1px rgba(0, 0, 0, 0.3),
-            10px 10px 10px rgba(0, 0, 0, 0.3);
-          box-shadow: 0 2px 1px rgba(0, 0, 0, 0.3), 10px 10px 10px rgba(0, 0, 0, 0.3);
-          -webkit-transition: 0.4s;
+          background-image: linear-gradient(130deg, #334155 10%, #00d4ff 11%, #0f172a 62%);
+          left: 5px;
+          -webkit-box-shadow: 0 2px 1px rgba(0, 0, 0, 0.3), 6px 6px 6px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 2px 1px rgba(0, 0, 0, 0.3), 6px 6px 6px rgba(0, 0, 0, 0.3);
           transition: 0.4s;
         }
       `}</style>
 
-      <div className="container">
+      <div className="toggle-container">
         <input
           type="checkbox"
-          id="checkbox"
+          id="theme-checkbox"
           checked={theme === 'light'}
           onChange={toggleTheme}
+          aria-label="Cambiar tema claro/oscuro"
         />
-        <label htmlFor="checkbox" className="label"></label>
+        <label htmlFor="theme-checkbox" className="toggle-label"></label>
       </div>
     </>
   )

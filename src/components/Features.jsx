@@ -41,41 +41,41 @@ export default function Features() {
   ]
 
   return (
-    <section id="features" className="py-32 relative overflow-hidden">
+    <section id="features" className="py-20 sm:py-28 md:py-32 relative overflow-hidden">
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-float" style={{animationDelay: '0s'}}></div>
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-float" style={{animationDelay: '2s'}}></div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 relative z-10">
-        <div className="text-center mb-20 animate-slide-in-up">
-          <h2 className="text-5xl md:text-6xl font-black mb-6 leading-tight">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+        <div className="text-center mb-14 sm:mb-20 animate-slide-in-up">
+          <h2 className="text-3xl sm:text-5xl md:text-6xl font-black mb-6 leading-tight text-main">
             <span>Características</span>
             <br />
             <span className="gradient-text">Revolucionarias</span>
           </h2>
-          <p className="text-lg text-gray-400 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg text-muted max-w-2xl mx-auto">
             Soluciones inteligentes para cada aspecto de tu negocio
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-5 sm:gap-6">
           {features.map((feature, index) => {
             const Icon = feature.icon
             return (
               <div
                 key={index}
-                className="group glass-hover glass h-full p-8 rounded-2xl animate-slide-in-up"
+                className="group glass-hover glass h-full p-6 sm:p-8 rounded-2xl animate-slide-in-up"
                 style={{animationDelay: `${index * 0.1}s`}}
               >
                 <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${feature.color} p-2.5 mb-6 group-hover:scale-110 transition-transform`}>
                   <Icon className="w-full h-full text-white" />
                 </div>
 
-                <h3 className="text-xl font-bold text-white mb-3">
+                <h3 className="text-xl font-bold text-main mb-3">
                   {feature.title}
                 </h3>
-                <p className="text-gray-400 text-sm leading-relaxed">
+                <p className="text-muted text-sm leading-relaxed">
                   {feature.description}
                 </p>
 
