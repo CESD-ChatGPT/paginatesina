@@ -1,6 +1,5 @@
 import { useContext } from 'react'
 import { ThemeContext } from '../contexts/ThemeContext'
-import { Sun, Moon } from 'lucide-react'
 
 export function ThemeToggleButton() {
   const { theme, toggleTheme } = useContext(ThemeContext)
@@ -8,78 +7,87 @@ export function ThemeToggleButton() {
   return (
     <>
       <style>{`
-        .theme-toggle {
-          position: relative;
-          display: inline-flex;
+        /* From Uiverse.io by Yaya12085 */
+        .container {
+        }
+
+        .label {
+          height: 60px;
+          width: 120px;
+          background-color: #ffffff;
+          border-radius: 30px;
+          -webkit-box-shadow: inset 0 0 5px 4px rgba(255, 255, 255, 1),
+            inset 0 0 20px 1px rgba(0, 0, 0, 0.488), 10px 20px 30px rgba(0, 0, 0, 0.096),
+            inset 0 0 0 3px rgba(0, 0, 0, 0.3);
+          box-shadow: inset 0 0 5px 4px rgba(255, 255, 255, 1),
+            inset 0 0 20px 1px rgba(0, 0, 0, 0.488), 10px 20px 30px rgba(0, 0, 0, 0.096),
+            inset 0 0 0 3px rgba(0, 0, 0, 0.3);
+          display: -webkit-box;
+          display: -ms-flexbox;
+          display: flex;
+          -webkit-box-align: center;
+          -ms-flex-align: center;
           align-items: center;
-          justify-content: center;
-          width: 50px;
-          height: 50px;
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 12px;
           cursor: pointer;
-          transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
-          backdrop-filter: blur(10px);
+          position: relative;
+          -webkit-transition: -webkit-transform 0.4s;
+          transition: -webkit-transform 0.4s;
+          transition: transform 0.4s;
         }
 
-        .theme-toggle:hover {
-          background: rgba(255, 255, 255, 0.08);
-          border-color: rgba(255, 255, 255, 0.15);
-          transform: translateY(-2px);
-          box-shadow: 0 8px 32px rgba(0, 212, 255, 0.2);
+        .label:hover {
+          -webkit-transform: perspective(100px) rotateX(5deg) rotateY(-5deg);
+          transform: perspective(100px) rotateX(5deg) rotateY(-5deg);
         }
 
-        .theme-toggle svg {
-          width: 24px;
-          height: 24px;
-          transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
+        #checkbox:checked ~ .label:hover {
+          -webkit-transform: perspective(100px) rotateX(-5deg) rotateY(5deg);
+          transform: perspective(100px) rotateX(-5deg) rotateY(5deg);
         }
 
-        .sun-icon {
+        #checkbox {
+          display: none;
+        }
+
+        #checkbox:checked ~ .label::before {
+          left: 70px;
+          background-color: #000000;
+          background-image: linear-gradient(315deg, #000000 0%, #414141 70%);
+          -webkit-transition: 0.4s;
+          transition: 0.4s;
+        }
+
+        .label::before {
           position: absolute;
-          animation: ${theme === 'dark' ? 'rotateIn' : 'rotateOut'} 0.4s ease-out forwards;
-        }
-
-        .moon-icon {
-          position: absolute;
-          animation: ${theme === 'light' ? 'rotateIn' : 'rotateOut'} 0.4s ease-out forwards;
-        }
-
-        @keyframes rotateIn {
-          from {
-            transform: rotate(-180deg);
-            opacity: 0;
-          }
-          to {
-            transform: rotate(0deg);
-            opacity: 1;
-          }
-        }
-
-        @keyframes rotateOut {
-          from {
-            transform: rotate(0deg);
-            opacity: 1;
-          }
-          to {
-            transform: rotate(180deg);
-            opacity: 0;
-          }
+          content: "";
+          height: 40px;
+          width: 40px;
+          border-radius: 50%;
+          background-color: #000000;
+          background-image: linear-gradient(
+            130deg,
+            #757272 10%,
+            #ffffff 11%,
+            #726f6f 62%
+          );
+          left: 10px;
+          -webkit-box-shadow: 0 2px 1px rgba(0, 0, 0, 0.3),
+            10px 10px 10px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 2px 1px rgba(0, 0, 0, 0.3), 10px 10px 10px rgba(0, 0, 0, 0.3);
+          -webkit-transition: 0.4s;
+          transition: 0.4s;
         }
       `}</style>
 
-      <button
-        onClick={toggleTheme}
-        className="theme-toggle"
-        title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-      >
-        {theme === 'dark' ? (
-          <Moon className="moon-icon text-cyan-400" />
-        ) : (
-          <Sun className="sun-icon text-yellow-400" />
-        )}
-      </button>
+      <div className="container">
+        <input
+          type="checkbox"
+          id="checkbox"
+          checked={theme === 'light'}
+          onChange={toggleTheme}
+        />
+        <label htmlFor="checkbox" className="label"></label>
+      </div>
     </>
   )
 }
