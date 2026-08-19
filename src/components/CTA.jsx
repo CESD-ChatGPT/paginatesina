@@ -1,55 +1,88 @@
-import { Mail, MessageSquare } from 'lucide-react'
 import CtaButton from './CtaButton'
+
+/* Banda invertida a sangre completa: rompe el ritmo papel/tinta del resto
+   de la página para que el cierre no parezca "otra sección más". */
+
+const STEPS = [
+  { n: '01', title: 'Conectás tu fuente', detail: 'ERP, e-commerce o una planilla. Sin migración.' },
+  { n: '02', title: 'El modelo lee tu histórico', detail: 'Primeras proyecciones en 48 h.' },
+  { n: '03', title: 'Aprobás la primera orden', detail: 'Vos decidís; la IA solo sugiere.' },
+]
 
 export default function CTA() {
   return (
-    <section id="contact" className="py-20 sm:py-28 md:py-32 relative overflow-hidden">
-      {/* Background animations */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float"></div>
-      </div>
+    <section
+      id="contact"
+      className="section-pad"
+      style={{ background: 'var(--inverse-bg)', color: 'var(--inverse-ink)' }}
+    >
+      <div className="shell">
+        <div className="flex items-baseline gap-4 mb-12 md:mb-16">
+          <span className="t-mono text-[13px]" style={{ color: 'var(--inverse-graphite)' }}>
+            02
+          </span>
+          <h2 className="t-h2 max-w-[16ch]">Puesta en marcha en una semana</h2>
+        </div>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
-        <div className="glass-lg p-8 sm:p-12 md:p-20 rounded-3xl backdrop-blur-md animate-scale-in">
-          <div className="text-center mb-12 sm:mb-16">
-            <h2 className="text-3xl sm:text-5xl md:text-6xl font-black mb-6 leading-tight text-main">
-              <span>Transforma tu</span>
-              <br />
-              <span className="gradient-text">Negocio Hoy</span>
-            </h2>
-            <p className="text-base sm:text-lg text-muted max-w-2xl mx-auto">
-              Únete a cientos de empresas que ya están ahorrando dinero con StockAI
+        <div className="grid grid-cols-12 gap-y-12 gap-x-8 items-end">
+          {/* Pasos de onboarding: sustituyen a las dos cajas genéricas */}
+          <ol className="col-span-12 lg:col-span-7">
+            {STEPS.map((step, i) => (
+              <li
+                key={step.n}
+                className="grid grid-cols-[auto_1fr] gap-x-5 py-5 border-t"
+                style={{
+                  borderColor: 'var(--inverse-rule)',
+                  borderBottomWidth: i === STEPS.length - 1 ? '1px' : 0,
+                  borderBottomStyle: 'solid',
+                }}
+              >
+                <span
+                  className="t-mono text-[13px] tabular-nums pt-0.5"
+                  style={{ color: 'var(--inverse-graphite)' }}
+                >
+                  {step.n}
+                </span>
+                <div>
+                  <h3 className="t-h3 mb-1">{step.title}</h3>
+                  <p className="t-small" style={{ color: 'var(--inverse-graphite)' }}>
+                    {step.detail}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ol>
+
+          {/* Acción */}
+          <div className="col-span-12 lg:col-span-5 lg:pl-4">
+            <p
+              className="text-[15px] leading-relaxed mb-6 max-w-[34ch]"
+              style={{ color: 'var(--inverse-graphite)' }}
+            >
+              Probá con tu propio catálogo durante 14 días. Si el pronóstico no te sirve,
+              no pagás nada.
+            </p>
+
+            {/* Una sola acción primaria. La secundaria baja a enlace de
+                texto para que no compitan al quedar apiladas. */}
+            <div className="flex flex-col sm:flex-row lg:flex-col sm:items-center lg:items-start gap-x-6 gap-y-4">
+              <CtaButton label="Probar 14 días" variant="inverse" />
+              <a
+                href="#contact"
+                className="inline-flex items-center min-h-[44px] text-[15px] font-medium underline underline-offset-4 decoration-1 transition-opacity hover:opacity-70"
+                style={{ color: 'var(--inverse-graphite)', textDecorationColor: 'currentColor' }}
+              >
+                Prefiero hablar con alguien
+              </a>
+            </div>
+
+            <p
+              className="t-mono text-[11px] mt-5"
+              style={{ color: 'var(--inverse-graphite)' }}
+            >
+              Sin tarjeta · Cancelás cuando quieras
             </p>
           </div>
-
-          {/* Feature boxes */}
-          <div className="grid sm:grid-cols-2 gap-5 sm:gap-6 mb-10 sm:mb-12">
-            {[
-              { icon: Mail, title: 'Prueba Gratis', desc: 'Sin tarjeta de crédito' },
-              { icon: MessageSquare, title: 'Demo Personal', desc: 'Con un experto' }
-            ].map((item, i) => {
-              const Icon = item.icon
-              return (
-                <div key={i} className="glass p-6 rounded-2xl backdrop-blur-sm text-center animate-slide-in-up" style={{animationDelay: `${i * 0.1}s`}}>
-                  <Icon className="w-8 h-8 mx-auto mb-3 text-cyan-400" />
-                  <h3 className="font-bold text-main mb-1">{item.title}</h3>
-                  <p className="text-sm text-muted">{item.desc}</p>
-                </div>
-              )
-            })}
-          </div>
-
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
-            <CtaButton size="lg" />
-            <button className="w-full sm:w-auto px-8 py-4 glass text-main font-bold rounded-2xl hover:bg-opacity-20 transition-all">
-              Agendar Demo
-            </button>
-          </div>
-
-          <p className="text-center text-sm text-soft">
-            Sin compromisos • Acceso inmediato • Cancela en cualquier momento
-          </p>
         </div>
       </div>
     </section>

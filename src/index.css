@@ -1,3 +1,5 @@
+@import './fonts.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -12,208 +14,246 @@ html {
   scroll-behavior: smooth;
 }
 
-/* ============================================
-   SISTEMA DE TEMAS (Dark / Light)
-   ============================================ */
+/* ============================================================
+   SISTEMA "LEDGER" — precisión operativa
+   Tinta sobre papel, un solo acento, color semántico solo en datos.
+   ============================================================ */
 :root,
-:root[data-theme="dark"] {
-  --bg-main: #0a0e27;
-  --bg-gradient-from: #020617;
-  --bg-gradient-via: #0f172a;
-  --bg-gradient-to: #000000;
-  --text-primary: #f1f5f9;
-  --text-secondary: #94a3b8;
-  --text-tertiary: #64748b;
+:root[data-theme="light"] {
+  --paper: #faf9f6;        /* fondo: papel de libro contable, no blanco estéril */
+  --surface: #ffffff;
+  --surface-sunken: #f2f1ec;
+  --ink: #14161a;          /* casi negro: menos duro que #000 en pantalla */
+  --graphite: #55595f;     /* 7.05:1 sobre blanco */
+  --muted: #666b73;        /* 4.74:1 en el peor fondo (sunken) — AA en 11px */
+  --rule: #e3e1da;         /* hairline estructural */
+  --rule-strong: #cbc8be;
 
-  --glass-bg: rgba(255, 255, 255, 0.05);
-  --glass-bg-strong: rgba(255, 255, 255, 0.03);
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --glass-border-hover: rgba(255, 255, 255, 0.18);
-  --glass-bg-hover: rgba(255, 255, 255, 0.09);
+  --accent: #0b5cd5;       /* ÚNICO acento: azul de señal, no cyan de "startup IA" */
+  --accent-ink: #ffffff;
+  --accent-wash: #eef3fd;
 
-  --accent: #00d4ff;
-  --accent-2: #0066CC;
-  --accent-3: #a855f7;
+  /* Semánticos: exclusivos de estados de datos, nunca decorativos */
+  --positive: #1a7f5a;
+  --alert: #b8460e;
 
-  --navbar-bg: rgba(15, 23, 42, 0.55);
-  --navbar-link: rgba(241, 245, 249, 0.9);
-  --navbar-link-hover-bg: rgba(255, 255, 255, 0.18);
-  --navbar-active-bg: rgba(0, 212, 255, 0.18);
-  --navbar-active-color: #00d4ff;
-
-  --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-  --footer-bg: rgba(0, 0, 0, 0.4);
-  --loader-bg: #0a0e27;
-  --loader-bar: #e2e8f0;
-  --loader-ball: #00d4ff;
+  --inverse-bg: #14161a;
+  --inverse-ink: #faf9f6;
+  --inverse-graphite: #9ba1a8;
+  --inverse-rule: #2b2f36;
 }
 
-:root[data-theme="light"] {
-  --bg-main: #f2f6fc;
-  --bg-gradient-from: #eef4fb;
-  --bg-gradient-via: #e3ecf7;
-  --bg-gradient-to: #dbe7f5;
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-tertiary: #64748b;
+:root[data-theme="dark"] {
+  --paper: #0d0f12;
+  --surface: #14171b;
+  --surface-sunken: #101317;
+  --ink: #ededea;
+  --graphite: #9ba1a8;     /* 6.90:1 sobre surface */
+  --muted: #858b93;        /* 5.23:1 en el peor fondo — AA en 11px */
+  --rule: #262a30;
+  --rule-strong: #363b43;
 
-  --glass-bg: rgba(255, 255, 255, 0.55);
-  --glass-bg-strong: rgba(255, 255, 255, 0.65);
-  --glass-border: rgba(15, 23, 42, 0.08);
-  --glass-border-hover: rgba(15, 23, 42, 0.16);
-  --glass-bg-hover: rgba(255, 255, 255, 0.85);
+  --accent: #5b95f5;       /* aclarado para contraste AA sobre fondo oscuro */
+  --accent-ink: #0d0f12;
+  --accent-wash: #16202f;
 
-  --accent: #0066CC;
-  --accent-2: #00a2c7;
-  --accent-3: #7c3aed;
+  --positive: #3fae82;
+  --alert: #e07340;
 
-  --navbar-bg: rgba(255, 255, 255, 0.6);
-  --navbar-link: rgba(15, 23, 42, 0.85);
-  --navbar-link-hover-bg: rgba(0, 102, 204, 0.12);
-  --navbar-active-bg: rgba(0, 102, 204, 0.15);
-  --navbar-active-color: #0066CC;
-
-  --card-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
-  --footer-bg: rgba(255, 255, 255, 0.55);
-  --loader-bg: #f2f6fc;
-  --loader-bar: #0f172a;
-  --loader-ball: #0066CC;
+  --inverse-bg: #faf9f6;
+  --inverse-ink: #14161a;
+  --inverse-graphite: #55595f;
+  --inverse-rule: #d9d6cd;
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: var(--bg-main);
-  color: var(--text-primary);
+  background: var(--paper);
+  color: var(--ink);
   overflow-x: hidden;
-  transition: background 0.4s ease, color 0.4s ease;
+  font-size: 16px;
+  line-height: 1.6;
 }
 
-.app-bg {
-  min-height: 100vh;
-  background: linear-gradient(180deg, var(--bg-gradient-from) 0%, var(--bg-gradient-via) 50%, var(--bg-gradient-to) 100%);
-  transition: background 0.4s ease;
+/* ============================================================
+   TIPOGRAFÍA
+   Escala apretada arriba (densidad operativa), cómoda en cuerpo.
+   ============================================================ */
+.t-display {
+  font-size: clamp(2.5rem, 6.2vw, 4.5rem);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 0.98;
 }
 
-/* Texto adaptable al tema */
-.text-main { color: var(--text-primary); }
-.text-muted { color: var(--text-secondary); }
-.text-soft { color: var(--text-tertiary); }
-
-/* ============================================
-   GLASS MORPHISM (adaptable al tema)
-   ============================================ */
-.glass {
-  background: var(--glass-bg);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid var(--glass-border);
-  border-radius: 16px;
-  transition: background 0.4s ease, border-color 0.4s ease;
+.t-h2 {
+  font-size: clamp(1.75rem, 3.6vw, 2.75rem);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.08;
 }
 
-.glass-lg {
-  background: var(--glass-bg-strong);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--glass-border);
-  border-radius: 24px;
-  box-shadow: var(--card-shadow);
-  transition: background 0.4s ease, border-color 0.4s ease;
+.t-h3 {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
 }
 
-.glass-hover {
-  transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
+.t-body {
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--graphite);
+  max-width: 62ch;          /* longitud de línea legible */
 }
 
-.glass-hover:hover {
-  background: var(--glass-bg-hover);
-  border-color: var(--glass-border-hover);
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(0, 212, 255, 0.12);
+.t-small {
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--graphite);
 }
 
-/* ============================================
-   GRADIENTES DE MARCA
-   ============================================ */
-.gradient-primary {
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 50%, var(--accent-3) 100%);
+/* Mono = lenguaje de datos: SKUs, cantidades, deltas, índices, etiquetas */
+.t-mono {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
 }
 
-.gradient-text {
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 50%, var(--accent-3) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.t-label {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--muted);
 }
 
-/* ============================================
-   ANIMACIONES
-   ============================================ */
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
+.t-figure {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  letter-spacing: -0.02em;
 }
 
-@keyframes glow {
-  0%, 100% { text-shadow: 0 0 20px rgba(0, 212, 255, 0.3); }
-  50% { text-shadow: 0 0 40px rgba(0, 212, 255, 0.6); }
+/* ============================================================
+   ESTRUCTURA — la grilla ES la identidad
+   ============================================================ */
+.shell {
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
-@keyframes slideInLeft {
-  from { opacity: 0; transform: translateX(-60px); }
-  to { opacity: 1; transform: translateX(0); }
+@media (min-width: 768px) {
+  .shell {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
 }
 
-@keyframes slideInRight {
-  from { opacity: 0; transform: translateX(60px); }
-  to { opacity: 1; transform: translateX(0); }
+/* Hairline estructural: divide como renglón de libro mayor */
+.rule-top {
+  border-top: 1px solid var(--rule);
 }
 
-@keyframes slideInUp {
-  from { opacity: 0; transform: translateY(40px); }
-  to { opacity: 1; transform: translateY(0); }
+.rule-bottom {
+  border-bottom: 1px solid var(--rule);
 }
 
-@keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.9); }
-  to { opacity: 1; transform: scale(1); }
+.section-pad {
+  padding-top: 72px;
+  padding-bottom: 72px;
 }
 
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px rgba(0, 212, 255, 0.3); }
-  50% { box-shadow: 0 0 40px rgba(0, 212, 255, 0.6); }
+@media (min-width: 768px) {
+  .section-pad {
+    padding-top: 112px;
+    padding-bottom: 112px;
+  }
 }
 
-.animate-float { animation: float 3s ease-in-out infinite; }
-.animate-glow { animation: glow 2s ease-in-out infinite; }
-.animate-slide-in-left { animation: slideInLeft 0.8s cubic-bezier(0.23, 1, 0.320, 1); }
-.animate-slide-in-right { animation: slideInRight 0.8s cubic-bezier(0.23, 1, 0.320, 1); }
-.animate-slide-in-up { animation: slideInUp 0.8s cubic-bezier(0.23, 1, 0.320, 1) both; }
-.animate-scale-in { animation: scaleIn 0.6s cubic-bezier(0.23, 1, 0.320, 1); }
-.animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
-
-.stagger-1 { animation-delay: 0.1s; }
-.stagger-2 { animation-delay: 0.2s; }
-.stagger-3 { animation-delay: 0.3s; }
-.stagger-4 { animation-delay: 0.4s; }
-.stagger-5 { animation-delay: 0.5s; }
-
-button, a, [role="button"] {
-  transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
+/* Superficie: bordes rectos, sin glass, sin sombra pesada */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
 }
 
-/* Scrollbar */
-::-webkit-scrollbar { width: 10px; }
-::-webkit-scrollbar-track { background: var(--glass-bg); }
-::-webkit-scrollbar-thumb {
-  background: rgba(0, 212, 255, 0.4);
-  border-radius: 5px;
+/* ============================================================
+   MOTION — solo con función. Nada de movimiento permanente.
+   ============================================================ */
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
-::-webkit-scrollbar-thumb:hover { background: rgba(0, 212, 255, 0.6); }
+
+.reveal {
+  animation: reveal 420ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================================
+   BASE INTERACTIVA
+   ============================================================ */
+button,
+a,
+[role="button"] {
+  transition: color 180ms ease, background-color 180ms ease,
+    border-color 180ms ease;
+}
+
+a,
+button {
+  cursor: pointer;
+}
 
 *:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+  border-radius: 1px;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--surface-sunken);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--rule-strong);
+  border: 3px solid var(--surface-sunken);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
 }

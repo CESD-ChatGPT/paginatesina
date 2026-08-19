@@ -3,12 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/paginatesina/favicon.svg" />
     <title>StockAI - Control de Inventario Inteligente</title>
     <meta name="description" content="Software inteligente para control de stock con IA. Automatiza tu inventario y optimiza tu negocio." />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/paginatesina/fonts/ibm-plex-sans-var-latin.woff2"
+      crossorigin
+    />
     <script>
       (function () {
         try {
-          var theme = localStorage.getItem('theme') || 'dark';
+          var theme = localStorage.getItem('theme') || 'light';
           document.documentElement.setAttribute('data-theme', theme);
         } catch (e) {}
       })();

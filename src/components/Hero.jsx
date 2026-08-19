@@ -1,82 +1,77 @@
-import { Zap } from 'lucide-react'
 import CtaButton from './CtaButton'
+import StockPanel from './StockPanel'
+
+/* Composición asimétrica y anclada a la izquierda (no centrada):
+   bloque tipográfico + panel de producto real, con la banda de
+   métricas separada por hairline como pie de un libro mayor. */
+
+const FIGURES = [
+  { value: '−32%', label: 'Capital inmovilizado', note: 'promedio a 6 meses' },
+  { value: '94%', label: 'Precisión de pronóstico', note: 'sobre 1,2M de SKU' },
+  { value: '11 h', label: 'Ahorro semanal por equipo', note: 'gestión manual evitada' },
+]
 
 export default function Hero() {
   return (
-    <section className="min-h-screen flex items-center justify-center pt-28 sm:pt-32 pb-16 sm:pb-20 relative overflow-hidden">
-      {/* Animated background elements */}
-      <div className="absolute top-20 left-10 w-72 h-72 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float"></div>
-      <div className="absolute top-40 right-10 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float" style={{animationDelay: '2s'}}></div>
-      <div className="absolute bottom-20 left-1/2 w-72 h-72 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float" style={{animationDelay: '4s'}}></div>
+    <section className="rule-bottom">
+      <div className="shell pt-28 pb-0 md:pt-36">
+        <div className="grid grid-cols-12 gap-y-12 gap-x-8 items-start">
+          {/* Bloque tipográfico */}
+          <div className="col-span-12 lg:col-span-6 reveal">
+            <p className="t-label mb-5">Control de inventario con IA</p>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10 w-full">
-        <div className="grid md:grid-cols-2 gap-10 md:gap-12 items-center">
-          {/* Left side - Text */}
-          <div className="animate-slide-in-left text-center md:text-left">
-            <div className="inline-block mb-6 glass px-4 py-2 text-sm">
-              <span className="gradient-text font-semibold">✨ Inteligencia Artificial</span>
-            </div>
-
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 md:mb-8 leading-tight text-main">
-              <span>Control de</span>
+            <h1 className="t-display mb-6">
+              Dejá de comprar
               <br />
-              <span className="gradient-text animate-glow">Stock</span>
-              <br />
-              <span>Inteligente</span>
+              stock a ciegas.
             </h1>
 
-            <p className="text-base sm:text-lg text-muted mb-10 md:mb-12 leading-relaxed max-w-lg mx-auto md:mx-0">
-              La única plataforma con IA que realmente entiende tu inventario. Reduce costos, prevén demanda y optimiza tu negocio automáticamente.
+            <p className="t-body mb-8">
+              StockAI lee el histórico de tu depósito, proyecta la demanda real de cada
+              SKU y te dice qué reponer, cuánto y cuándo — antes de que se quiebre o de
+              que te sobre.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 items-center justify-center md:justify-start">
-              <CtaButton size="lg" />
-              <button className="w-full sm:w-auto px-8 py-4 glass text-main font-semibold rounded-2xl hover:bg-opacity-20 backdrop-blur-md">
-                Ver Demo
-              </button>
+            <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+              <CtaButton label="Probar 14 días" />
+              <a
+                href="#features"
+                className="inline-flex items-center justify-center px-5 py-3 text-[15px] font-medium border border-rule-strong hover:border-ink hover:bg-[var(--surface)] transition-colors"
+                style={{ borderRadius: '2px' }}
+              >
+                Ver cómo funciona
+              </a>
             </div>
 
-            {/* Stats */}
-            <div className="mt-12 md:mt-16 grid grid-cols-3 gap-4 sm:gap-6">
-              {[
-                { value: '500+', label: 'Empresas' },
-                { value: '98%', label: 'Satisfacción' },
-                { value: '24/7', label: 'Soporte' }
-              ].map((stat, i) => (
-                <div key={i} className="animate-slide-in-up" style={{animationDelay: `${i * 0.1}s`}}>
-                  <p className="text-xl sm:text-2xl font-bold gradient-text">{stat.value}</p>
-                  <p className="text-soft text-xs sm:text-sm">{stat.label}</p>
-                </div>
-              ))}
-            </div>
+            <p className="t-small mt-6 text-muted">
+              Sin tarjeta. Se conecta a tu ERP o planilla en el día.
+            </p>
           </div>
 
-          {/* Right side - Visual */}
-          <div className="relative h-72 sm:h-96 flex items-center justify-center animate-slide-in-right">
-            <div className="absolute inset-0 bg-gradient-to-br from-cyan-500 to-purple-600 rounded-3xl opacity-20 blur-3xl animate-pulse-glow"></div>
-
-            <div className="relative w-full h-full max-w-sm md:max-w-none mx-auto">
-              <div className="glass-lg absolute inset-0 flex flex-col items-center justify-center px-6">
-                <Zap className="text-cyan-400 mb-4 animate-bounce" size={56} />
-                <h3 className="text-xl sm:text-2xl font-bold text-main text-center mb-2">
-                  Dashboard IA
-                </h3>
-                <p className="text-muted text-sm text-center">
-                  Análisis en tiempo real
-                </p>
-              </div>
-
-              {/* Floating cards effect */}
-              <div className="hidden xs:block absolute top-4 right-4 sm:top-8 sm:right-8 glass px-3 py-2 sm:p-4 rounded-lg w-24 sm:w-32 animate-slide-in-up stagger-1">
-                <p className="text-[10px] sm:text-xs text-muted">Predicción</p>
-                <p className="text-sm sm:text-lg font-bold gradient-text">+23%</p>
-              </div>
-              <div className="hidden xs:block absolute bottom-4 left-4 sm:bottom-8 sm:left-8 glass px-3 py-2 sm:p-4 rounded-lg w-24 sm:w-32 animate-slide-in-up stagger-2">
-                <p className="text-[10px] sm:text-xs text-muted">Eficiencia</p>
-                <p className="text-sm sm:text-lg font-bold gradient-text">-15%</p>
-              </div>
-            </div>
+          {/* Panel de producto */}
+          <div className="col-span-12 lg:col-span-6 lg:pl-4 reveal" style={{ animationDelay: '90ms' }}>
+            <StockPanel />
           </div>
+        </div>
+      </div>
+
+      {/* Banda de métricas: renglón de cierre, dividido por hairlines */}
+      <div className="shell mt-16 md:mt-24">
+        <div className="grid grid-cols-1 sm:grid-cols-3 rule-top">
+          {FIGURES.map((f, i) => (
+            <div
+              key={f.label}
+              className={[
+                'py-6 sm:py-7',
+                i > 0 ? 'border-t sm:border-t-0 sm:border-l border-rule sm:pl-6' : '',
+                i === 0 ? 'sm:pr-6' : '',
+              ].join(' ')}
+            >
+              <p className="t-figure text-2xl md:text-[28px] mb-1.5">{f.value}</p>
+              <p className="text-[13px] font-medium mb-0.5">{f.label}</p>
+              <p className="t-mono text-[11px] text-muted">{f.note}</p>
+            </div>
+          ))}
         </div>
       </div>
     </section>

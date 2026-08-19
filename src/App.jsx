@@ -8,12 +8,14 @@ import { ThemeProvider } from './contexts/ThemeContext'
 
 function AppContent() {
   return (
-    <div className="app-bg min-h-screen">
+    <div className="min-h-screen">
       <LoadingScreen />
       <Header />
-      <Hero />
-      <Features />
-      <CTA />
+      <main>
+        <Hero />
+        <Features />
+        <CTA />
+      </main>
       <Footer />
     </div>
   )

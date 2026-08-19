@@ -1,106 +1,116 @@
-import { TrendingUp } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 
-/* From Uiverse.io by Creatlydev — adaptado: gradiente de marca en vez de
-   verde plano, icono de negocio/IA en vez del icono de pagos, tamaños
-   responsive (sm/md/lg) y contraste correcto en ambos temas. */
-export default function CtaButton({ label = 'Comenzar Ahora', size = 'md', onClick }) {
+/* From Uiverse.io by Creatlydev — conservado: el relleno que entra desde
+   la izquierda al hover y la caja de ícono adosada.
+   Adaptado al sistema: esquinas rectas, acento único y variante para
+   la banda invertida. */
+export default function CtaButton({ label = 'Comenzar', variant = 'default', onClick }) {
   return (
     <>
       <style>{`
         .cta-btn {
-          --icon-size: 48px;
-          text-decoration: none;
-          line-height: 1;
-          border-radius: 1.5rem;
-          overflow: hidden;
           position: relative;
-          box-shadow: 0 10px 25px rgba(0, 102, 204, 0.25), var(--card-shadow);
-          background-color: #ffffff;
-          border: 1px solid var(--glass-border);
-          color: #121212;
-          cursor: pointer;
           display: inline-flex;
           align-items: stretch;
+          overflow: hidden;
+          border-radius: 2px;
+          border: 1px solid var(--rule-strong);
+          background: var(--surface);
+          color: var(--ink);
+          font-family: inherit;
           flex-shrink: 0;
           max-width: 100%;
         }
 
-        .cta-btn-decor {
+        .cta-btn--inverse {
+          border-color: var(--inverse-rule);
+          background: var(--inverse-bg);
+          color: var(--inverse-ink);
+        }
+
+        .cta-btn__fill {
           position: absolute;
           inset: 0;
-          background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 55%, var(--accent-3) 100%);
+          background: var(--accent);
           transform: translateX(-100%);
-          transition: transform 0.35s cubic-bezier(0.23, 1, 0.320, 1);
+          transition: transform 260ms cubic-bezier(0.22, 0.61, 0.36, 1);
           z-index: 0;
         }
 
-        .cta-btn-content {
+        .cta-btn:hover .cta-btn__fill,
+        .cta-btn:focus-visible .cta-btn__fill {
+          transform: translateX(0);
+        }
+
+        .cta-btn__body {
+          position: relative;
+          z-index: 1;
           display: flex;
           align-items: center;
-          font-weight: 700;
-          position: relative;
-          overflow: hidden;
           min-width: 0;
         }
 
-        .cta-btn-icon {
-          width: var(--icon-size);
-          height: var(--icon-size);
-          background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 55%, var(--accent-3) 100%);
+        .cta-btn__icon {
           display: grid;
           place-items: center;
+          width: 44px;
+          align-self: stretch;
+          background: var(--accent);
+          color: var(--accent-ink);
           flex-shrink: 0;
-          color: #fff;
+          transition: background 260ms ease;
         }
 
-        .cta-btn-text {
-          display: inline-block;
-          transition: color 0.25s ease;
-          padding: 2px 1.5rem 2px 0.9rem;
-          overflow: hidden;
+        .cta-btn__label {
+          padding: 12px 20px 12px 14px;
+          font-size: 15px;
+          font-weight: 500;
           white-space: nowrap;
+          overflow: hidden;
           text-overflow: ellipsis;
+          transition: color 200ms ease;
         }
 
-        .cta-btn:hover .cta-btn-text {
-          color: #fff;
+        .cta-btn:hover .cta-btn__label,
+        .cta-btn:focus-visible .cta-btn__label {
+          color: var(--accent-ink);
         }
 
-        .cta-btn:hover .cta-btn-decor {
-          transform: translate(0);
+        .cta-btn svg {
+          width: 17px;
+          height: 17px;
+          transition: transform 260ms cubic-bezier(0.22, 0.61, 0.36, 1);
         }
 
-        .cta-btn:active {
-          transform: scale(0.98);
+        .cta-btn:hover svg {
+          transform: translateX(2px);
         }
 
-        /* Tamaños */
-        .cta-btn.size-sm { --icon-size: 38px; }
-        .cta-btn.size-sm .cta-btn-text { font-size: 0.85rem; padding: 2px 1.1rem 2px 0.7rem; }
-        .cta-btn.size-sm svg { width: 16px; height: 16px; }
-
-        .cta-btn.size-md { --icon-size: 48px; }
-        .cta-btn.size-md .cta-btn-text { font-size: 1rem; }
-        .cta-btn.size-md svg { width: 20px; height: 20px; }
-
-        .cta-btn.size-lg { --icon-size: 56px; }
-        .cta-btn.size-lg .cta-btn-text { font-size: 1.05rem; padding: 2px 2rem 2px 1rem; }
-        .cta-btn.size-lg svg { width: 22px; height: 22px; }
-
-        @media (max-width: 480px) {
-          .cta-btn.size-lg { --icon-size: 46px; }
-          .cta-btn.size-lg .cta-btn-text { font-size: 0.95rem; padding: 2px 1.4rem 2px 0.8rem; }
+        @media (max-width: 639px) {
+          .cta-btn {
+            width: 100%;
+          }
+          .cta-btn__body {
+            width: 100%;
+          }
+          .cta-btn__label {
+            flex: 1;
+            text-align: left;
+          }
         }
       `}</style>
 
-      <button className={`cta-btn size-${size}`} onClick={onClick}>
-        <span className="cta-btn-decor"></span>
-        <div className="cta-btn-content">
-          <div className="cta-btn-icon">
-            <TrendingUp strokeWidth={2.5} />
-          </div>
-          <span className="cta-btn-text">{label}</span>
-        </div>
+      <button
+        className={`cta-btn${variant === 'inverse' ? ' cta-btn--inverse' : ''}`}
+        onClick={onClick}
+      >
+        <span className="cta-btn__fill" aria-hidden="true" />
+        <span className="cta-btn__body">
+          <span className="cta-btn__icon" aria-hidden="true">
+            <ArrowRight strokeWidth={2} />
+          </span>
+          <span className="cta-btn__label">{label}</span>
+        </span>
       </button>
     </>
   )
