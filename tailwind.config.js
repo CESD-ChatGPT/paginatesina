@@ -27,6 +27,7 @@ export default {
         'accent-ink': 'var(--accent-ink)',
         'accent-wash': 'var(--accent-wash)',
         positive: 'var(--positive)',
+        warning: 'var(--warning)',
         alert: 'var(--alert)',
       },
       borderRadius: {

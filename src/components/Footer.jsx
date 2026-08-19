@@ -1,4 +1,5 @@
 import { Github, Linkedin, Twitter } from 'lucide-react'
+import { Isologotipo } from './brand/Logo'
 
 const COLUMNS = [
   { title: 'Producto', items: ['Pronóstico', 'Reposición', 'Multidepósito', 'Integraciones'] },
@@ -22,9 +23,9 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-12 gap-x-8 gap-y-10">
           {/* Marca */}
           <div className="col-span-2 md:col-span-4">
-            <p className="font-semibold text-[15px] tracking-tight mb-3">
-              Stock<span className="t-mono" style={{ color: 'var(--accent)' }}>AI</span>
-            </p>
+            <span className="inline-flex text-ink mb-3">
+              <Isologotipo size={24} />
+            </span>
             <p className="t-small max-w-[30ch]">
               Control de inventario con pronóstico de demanda para operaciones que no
               pueden permitirse un quiebre de stock.
@@ -56,7 +57,7 @@ export default function Footer() {
       <div className="rule-top">
         <div className="shell py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="t-mono text-[11px] text-muted order-2 sm:order-1">
-            © {year} StockAI
+            © {year} SOLVUS
           </p>
           <div className="flex items-center gap-1 order-1 sm:order-2">
             {SOCIAL.map(({ icon: Icon, label }) => (

@@ -1,4 +1,6 @@
 import { Boxes, Bell, Workflow, Building2, ShieldCheck } from 'lucide-react'
+import DemandChart from './charts/DemandChart'
+import { getDemandPreview } from '../data/inventory'
 
 /* Jerarquía real en lugar de seis cards iguales:
    una capacidad principal (la que define el producto) con evidencia visual,
@@ -31,43 +33,6 @@ const SUPPORTING = [
     description: 'Cifrado en tránsito y en reposo. Tu histórico nunca entrena modelos de terceros.',
   },
 ]
-
-function DemandChart() {
-  return (
-    <svg
-      viewBox="0 0 320 84"
-      className="w-full h-auto"
-      role="img"
-      aria-label="Curva de demanda histórica y su proyección: la demanda real sube de forma irregular y el pronóstico continúa la tendencia al alza"
-    >
-      {/* Renglones de referencia */}
-      {[20, 42, 64].map((y) => (
-        <line key={y} x1="0" y1={y} x2="320" y2={y} stroke="var(--rule)" strokeWidth="1" />
-      ))}
-
-      {/* Demanda observada */}
-      <polyline
-        points="0,62 26,58 53,64 80,48 106,52 133,38 160,42"
-        fill="none"
-        stroke="var(--graphite)"
-        strokeWidth="1.75"
-      />
-
-      {/* Proyección */}
-      <polyline
-        points="160,42 186,34 213,37 240,26 266,30 293,20 320,24"
-        fill="none"
-        stroke="var(--accent)"
-        strokeWidth="1.75"
-        strokeDasharray="4 3"
-      />
-
-      {/* Corte entre observado y proyectado */}
-      <line x1="160" y1="8" x2="160" y2="76" stroke="var(--rule-strong)" strokeWidth="1" />
-      <circle cx="160" cy="42" r="3" fill="var(--accent)" />
-    </svg>
-  )
-}
 
 export default function Features() {
   return (
@@ -113,24 +78,7 @@ export default function Features() {
               <span className="t-label">Demanda · MB-1180</span>
               <span className="t-mono text-[11px] text-muted">12 meses</span>
             </div>
-            <DemandChart />
-            <div className="flex items-center gap-5 mt-4">
-              <span className="inline-flex items-center gap-2 t-mono text-[11px] text-graphite">
-                <span className="w-4 h-px" style={{ background: 'var(--graphite)' }} aria-hidden="true" />
-                Observado
-              </span>
-              <span className="inline-flex items-center gap-2 t-mono text-[11px] text-graphite">
-                <span
-                  className="w-4 h-px"
-                  style={{
-                    backgroundImage:
-                      'repeating-linear-gradient(to right, var(--accent) 0 4px, transparent 4px 7px)',
-                  }}
-                  aria-hidden="true"
-                />
-                Proyectado
-              </span>
-            </div>
+            <DemandChart {...getDemandPreview()} />
           </div>
         </div>
 

@@ -15,55 +15,78 @@ html {
 }
 
 /* ============================================================
-   SISTEMA "LEDGER" — precisión operativa
-   Tinta sobre papel, un solo acento, color semántico solo en datos.
+   SISTEMA "LEDGER" — precisión operativa · PALETA SOLVUS
+   Marca:  teal #1F6C82 · petróleo #0B2C40 · blanco #FFFFFF · negro #0A0A0A
+   Todos los contrastes verificados en navegador (mínimo AA 4.5:1).
+   Los grises y la rampa de gráficos son extensiones tonales de la marca,
+   no colores nuevos.
    ============================================================ */
 :root,
 :root[data-theme="light"] {
-  --paper: #faf9f6;        /* fondo: papel de libro contable, no blanco estéril */
-  --surface: #ffffff;
-  --surface-sunken: #f2f1ec;
-  --ink: #14161a;          /* casi negro: menos duro que #000 en pantalla */
-  --graphite: #55595f;     /* 7.05:1 sobre blanco */
-  --muted: #666b73;        /* 4.74:1 en el peor fondo (sunken) — AA en 11px */
-  --rule: #e3e1da;         /* hairline estructural */
-  --rule-strong: #cbc8be;
+  --paper: #f6f8f9;        /* página: blanco con una pizca de petróleo */
+  --surface: #ffffff;      /* blanco puro de marca — paneles */
+  --surface-sunken: #edf1f3;
+  --ink: #0a0a0a;          /* negro profundo de marca — 17.4:1 peor caso */
+  --graphite: #485a64;     /* 6.32:1 peor caso */
+  --muted: #5a6b75;        /* 4.87:1 peor caso — AA en 11px */
+  --rule: #dde4e8;
+  --rule-strong: #c2ced4;
 
-  --accent: #0b5cd5;       /* ÚNICO acento: azul de señal, no cyan de "startup IA" */
-  --accent-ink: #ffffff;
-  --accent-wash: #eef3fd;
+  --accent: #1f6c82;       /* teal de marca — ÚNICO acento · 5.24:1 peor caso */
+  --accent-ink: #ffffff;   /* 5.96:1 sobre el teal */
+  --accent-wash: #eaf2f5;
 
-  /* Semánticos: exclusivos de estados de datos, nunca decorativos */
+  /* Estados: reservados a datos, siempre acompañados de etiqueta de texto */
   --positive: #1a7f5a;
+  --warning: #8a6a1f;
   --alert: #b8460e;
 
-  --inverse-bg: #14161a;
-  --inverse-ink: #faf9f6;
-  --inverse-graphite: #9ba1a8;
-  --inverse-rule: #2b2f36;
+  --inverse-bg: #0b2c40;   /* la banda invertida usa el petróleo de marca */
+  --inverse-ink: #ffffff;
+  --inverse-graphite: #93a7b1;
+  --inverse-rule: #1d4257;
+
+  /* Gráficos: rampa secuencial de un solo tono (verificada monotónica) */
+  --seq-1: #b4d3dd;
+  --seq-2: #7fb0c1;
+  --seq-3: #4a8ca3;
+  --seq-4: #1f6c82;
+  --seq-5: #154b5b;
+  --chart-context: #5a6b75;  /* serie de contexto en gráficos de énfasis */
+  --chart-grid: #dde4e8;
 }
 
 :root[data-theme="dark"] {
-  --paper: #0d0f12;
-  --surface: #14171b;
-  --surface-sunken: #101317;
-  --ink: #ededea;
-  --graphite: #9ba1a8;     /* 6.90:1 sobre surface */
-  --muted: #858b93;        /* 5.23:1 en el peor fondo — AA en 11px */
-  --rule: #262a30;
-  --rule-strong: #363b43;
+  --paper: #071a26;        /* más profundo que el petróleo, para que éste sea superficie */
+  --surface: #0b2c40;      /* azul petróleo de marca */
+  --surface-sunken: #08222f;
+  --ink: #f2f6f7;
+  --graphite: #b3c4cc;     /* 8.07:1 peor caso */
+  --muted: #93a7b1;        /* 5.80:1 peor caso */
+  --rule: #16394d;
+  --rule-strong: #21506a;
 
-  --accent: #5b95f5;       /* aclarado para contraste AA sobre fondo oscuro */
-  --accent-ink: #0d0f12;
-  --accent-wash: #16202f;
+  --accent: #4fb3ce;       /* teal de marca aclarado: el original da 2.43:1 sobre
+                              petróleo y fallaría. Mismo tono, otro escalón. */
+  --accent-ink: #0b2c40;   /* 5.99:1 sobre el teal claro */
+  --accent-wash: #0f3a4f;
 
   --positive: #3fae82;
+  --warning: #d2a73e;
   --alert: #e07340;
 
-  --inverse-bg: #faf9f6;
-  --inverse-ink: #14161a;
-  --inverse-graphite: #55595f;
-  --inverse-rule: #d9d6cd;
+  --inverse-bg: #ffffff;
+  --inverse-ink: #0a0a0a;
+  --inverse-graphite: #485a64;
+  --inverse-rule: #dde4e8;
+
+  --seq-1: #1a5468;
+  --seq-2: #256d85;
+  --seq-3: #3d90a8;
+  --seq-4: #4fb3ce;
+  --seq-5: #82cde0;
+  --chart-context: #93a7b1;
+  --chart-grid: #16394d;
 }
 
 body {

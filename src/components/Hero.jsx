@@ -27,7 +27,7 @@ export default function Hero() {
             </h1>
 
             <p className="t-body mb-8">
-              StockAI lee el histórico de tu depósito, proyecta la demanda real de cada
+              SOLVUS lee el histórico de tu depósito, proyecta la demanda real de cada
               SKU y te dice qué reponer, cuánto y cuándo — antes de que se quiebre o de
               que te sobre.
             </p>

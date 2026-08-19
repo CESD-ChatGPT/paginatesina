@@ -1,20 +1,14 @@
-/* Panel de producto real para el hero.
-   Reemplaza la caja de vidrio decorativa: muestra qué hace StockAI
+import { getStockPreview, stockState, STATE_LABEL, STATE_TOKEN } from '../data/inventory'
+
+/* Panel de producto para el hero.
+   Reemplaza la caja de vidrio decorativa: muestra qué hace SOLVUS
    (filas de inventario + una recomendación de reposición de la IA)
-   en lugar de insinuarlo con un ícono. */
+   en lugar de insinuarlo con un ícono.
 
-const ROWS = [
-  { sku: 'MB-2041', name: 'Teclado mecánico TKL', stock: 142, reorder: 60, state: 'ok' },
-  { sku: 'MB-1180', name: 'Monitor 24" IPS', stock: 18, reorder: 45, state: 'low' },
-  { sku: 'AC-3392', name: 'Hub USB-C 7 puertos', stock: 87, reorder: 40, state: 'ok' },
-  { sku: 'MB-0774', name: 'Webcam 1080p', stock: 31, reorder: 35, state: 'watch' },
-]
+   Los datos salen de la capa src/data/inventory.js — la misma que
+   alimenta el dashboard — para que no existan dos fuentes de verdad. */
 
-const STATE_LABEL = {
-  ok: 'En rango',
-  low: 'Bajo',
-  watch: 'Por quebrar',
-}
+const ROWS = getStockPreview(4)
 
 export default function StockPanel() {
   return (
@@ -71,16 +65,9 @@ export default function StockPanel() {
               <td className="px-4 py-2.5 text-right whitespace-nowrap align-top">
                 <span
                   className="t-mono text-[11px]"
-                  style={{
-                    color:
-                      row.state === 'ok'
-                        ? 'var(--positive)'
-                        : row.state === 'low'
-                        ? 'var(--alert)'
-                        : 'var(--graphite)',
-                  }}
+                  style={{ color: STATE_TOKEN[stockState(row)] }}
                 >
-                  {STATE_LABEL[row.state]}
+                  {STATE_LABEL[stockState(row)]}
                 </span>
               </td>
             </tr>

@@ -133,7 +133,7 @@ export default function LoadingScreen() {
         }
       `}</style>
 
-      <div className="intro" role="status" aria-label="Cargando StockAI">
+      <div className="intro" role="status" aria-label="Cargando SOLVUS">
         <div className="loader" aria-hidden="true">
           <div className="loader__bar"></div>
           <div className="loader__bar"></div>
@@ -142,7 +142,7 @@ export default function LoadingScreen() {
           <div className="loader__bar"></div>
           <div className="loader__ball"></div>
         </div>
-        <p className="t-label">StockAI</p>
+        <p className="t-label">SOLVUS</p>
       </div>
     </>
   )

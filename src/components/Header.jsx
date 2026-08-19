@@ -1,4 +1,6 @@
+import { Link } from 'react-router-dom'
 import { ThemeToggleButton } from './ThemeToggle'
+import { Isologotipo } from './brand/Logo'
 
 /* From Uiverse.io by mymiamo — conservado: la barra flotante fija con
    backdrop-filter y el realce de fondo al hover sobre cada enlace.
@@ -44,17 +46,10 @@ export default function Header() {
           display: inline-flex;
           align-items: center;
           min-height: 44px;
-          font-weight: 600;
           font-size: 15px;
-          letter-spacing: -0.02em;
           white-space: nowrap;
           color: var(--ink);
           text-decoration: none;
-        }
-
-        .nav__brand span {
-          font-family: 'IBM Plex Mono', monospace;
-          color: var(--accent);
         }
 
         .nav__links {
@@ -126,8 +121,8 @@ export default function Header() {
 
       <header>
         <nav className="nav" aria-label="Navegación principal">
-          <a href="#" className="nav__brand">
-            Stock<span>AI</span>
+          <a href="#" className="nav__brand" aria-label="SOLVUS — inicio">
+            <Isologotipo size={22} />
           </a>
 
           <div className="nav__links">
@@ -140,9 +135,9 @@ export default function Header() {
 
           <div className="nav__right">
             <ThemeToggleButton />
-            <a href="#contact" className="nav__cta">
-              Probar
-            </a>
+            <Link to="/login" className="nav__cta">
+              Ingresar
+            </Link>
           </div>
         </nav>
       </header>
