@@ -77,6 +77,12 @@ const mockAdapter = {
     await delay(520)
     return DEMAND_MB1180
   },
+  async createReplenishmentOrder(skus) {
+    await delay(900)
+    // No persiste nada: sin backend no hay dónde. Devuelve el borrador
+    // que la UI muestra como confirmación.
+    return { id: `OC-${Date.now().toString().slice(-6)}`, skus, createdAt: new Date() }
+  },
 }
 
 const apiAdapter = {
@@ -88,6 +94,9 @@ const apiAdapter = {
   async getDemandSeries() {
     throw new Error('API de demanda no configurada')
   },
+  async createReplenishmentOrder() {
+    throw new Error('API de órdenes de compra no configurada')
+  },
 }
 
 const source = USE_MOCK ? mockAdapter : apiAdapter
@@ -97,6 +106,7 @@ const source = USE_MOCK ? mockAdapter : apiAdapter
 export const inventoryService = {
   getStockRows: () => source.getStockRows(),
   getDemandSeries: () => source.getDemandSeries(),
+  createReplenishmentOrder: (skus) => source.createReplenishmentOrder(skus),
 
   /* Derivados calculados sobre las filas — no son datos nuevos,
      son agregaciones de la misma fuente. */

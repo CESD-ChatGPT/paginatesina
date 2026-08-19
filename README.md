@@ -115,6 +115,27 @@ están en `src/index.css` y sus contrastes fueron medidos en navegador.
 - Motion con función: revelado único, hover y transiciones de estado.
   Todo bajo `prefers-reduced-motion`.
 
+## Componentes de base externa
+
+Cuatro piezas parten de código de [Uiverse.io](https://uiverse.io) y están
+adaptadas al sistema. Cada archivo documenta en su cabecera qué se conservó
+del original y qué se cambió, y por qué.
+
+| Componente | Origen | Dónde se usa |
+|---|---|---|
+| `ThemeToggle.jsx` | Yaya12085 | Navbar — conectado al `ThemeContext` |
+| `Header.jsx` (`.menu`) | mymiamo | Navbar pública, 4 destinos reales |
+| `ActionButton.jsx` | Creatlydev | Panel — generar orden de reposición |
+| `BarsLoader.jsx` | Nawsome | Intro + carga del gráfico de demanda |
+
+`CtaButton.jsx` también desciende del componente de Creatlydev, pero cumple
+otro rol (llamada a la acción de la landing) y se mantiene aparte de
+`ActionButton`. No coinciden nunca en pantalla.
+
+Dos defectos del CSS original quedaron corregidos: `transform: rotate(2.2)`
+en la navbar no tenía unidad (era inválido y no hacía nada), y el blanco
+fijo sobre el azul daba 2.42:1 al pasar al teal claro del modo oscuro.
+
 ## Verificado
 
 - Sin overflow horizontal en 375 / 390 / 768 / 1024 / 1440, en las 3 rutas

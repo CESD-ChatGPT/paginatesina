@@ -14,6 +14,11 @@ html {
   scroll-behavior: smooth;
 }
 
+/* La navbar es fija: sin esto el título de la sección queda detrás */
+section[id] {
+  scroll-margin-top: 96px;
+}
+
 /* ============================================================
    SISTEMA "LEDGER" — precisión operativa · PALETA SOLVUS
    Marca:  teal #1F6C82 · petróleo #0B2C40 · blanco #FFFFFF · negro #0A0A0A

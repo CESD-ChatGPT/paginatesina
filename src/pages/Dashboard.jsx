@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { LogOut, AlertTriangle } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
@@ -12,7 +13,9 @@ import {
 import { Isologotipo } from '../components/brand/Logo'
 import DemandChart from '../components/charts/DemandChart'
 import CategoryBars from '../components/charts/CategoryBars'
-import { LoadingBlock, ErrorBlock, EmptyBlock, Skeleton } from '../components/States'
+import { LoadingBlock, ErrorBlock, EmptyBlock } from '../components/States'
+import ActionButton from '../components/ActionButton'
+import BarsLoader from '../components/BarsLoader'
 
 function StatTile({ label, value, prefix, note, tone }) {
   return (
@@ -37,6 +40,23 @@ export default function Dashboard() {
   const rows = useAsync(() => inventoryService.getStockRows(), [])
   const demand = useAsync(() => inventoryService.getDemandSeries(), [])
   const categories = useAsync(() => inventoryService.getCategoryBreakdown(), [])
+
+  const [order, setOrder] = useState({ status: 'idle', data: null })
+
+  const lowSkus =
+    rows.status === 'success'
+      ? rows.data.filter((r) => stockState(r) === 'low').map((r) => r.sku)
+      : []
+
+  async function handleCreateOrder() {
+    setOrder({ status: 'pending', data: null })
+    try {
+      const draft = await inventoryService.createReplenishmentOrder(lowSkus)
+      setOrder({ status: 'done', data: draft })
+    } catch (e) {
+      setOrder({ status: 'error', data: null, error: e })
+    }
+  }
 
   async function handleSignOut() {
     await signOut()
@@ -153,7 +173,16 @@ export default function Dashboard() {
               )}
             </div>
 
-            {demand.status === 'loading' && <Skeleton height={200} />}
+            {demand.status === 'loading' && (
+              <div
+                className="flex flex-col items-center justify-center gap-3 py-6"
+                role="status"
+                aria-live="polite"
+              >
+                <BarsLoader scale={0.62} />
+                <span className="t-mono text-[11px] text-muted">Proyectando demanda…</span>
+              </div>
+            )}
             {demand.status === 'error' && <ErrorBlock error={demand.error} />}
             {demand.status === 'success' &&
               (demand.data.observed.length === 0 ? (
@@ -187,9 +216,40 @@ export default function Dashboard() {
 
         {/* Tabla de stock */}
         <section className="panel" aria-label="Detalle de inventario">
-          <div className="px-5 py-4 border-b border-rule">
-            <h2 className="t-h3">Inventario</h2>
+          <div className="px-4 sm:px-5 py-4 border-b border-rule flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
+            <div>
+              <h2 className="t-h3">Inventario</h2>
+              {lowSkus.length > 0 && order.status !== 'done' && (
+                <p className="t-mono text-[11px] mt-1" style={{ color: 'var(--alert)' }}>
+                  {lowSkus.length} SKU bajo el punto de reposición
+                </p>
+              )}
+            </div>
+
+            {/* Acción real del panel: hasta ahora no tenía ninguna. */}
+            {rows.status === 'success' &&
+              (order.status === 'done' ? (
+                <p className="t-mono text-[12px]" style={{ color: 'var(--positive)' }}>
+                  Borrador {order.data.id} generado · {order.data.skus.length} SKU
+                </p>
+              ) : (
+                /* Etiqueta corta a propósito: el .button__text del original
+                   trunca con ellipsis, y "Generar orden de reposición" se
+                   cortaba. El subtítulo de arriba ya da el contexto. */
+                <ActionButton
+                  label="Generar orden"
+                  onClick={handleCreateOrder}
+                  pending={order.status === 'pending'}
+                  disabled={lowSkus.length === 0}
+                />
+              ))}
           </div>
+
+          {order.status === 'error' && (
+            <div className="px-5 pt-4">
+              <ErrorBlock error={order.error} onRetry={handleCreateOrder} />
+            </div>
+          )}
 
           {rows.status === 'loading' && (
             <div className="p-5">
