@@ -58,7 +58,7 @@ export default function CTA() {
       <div className="shell">
         <div className="flex items-baseline gap-4 mb-12 md:mb-16 reveal-el">
           <span className="t-mono text-[13px]" style={{ color: 'var(--inverse-graphite)' }}>
-            02
+            03
           </span>
           <h2 className="t-h2 max-w-[16ch]">Puesta en marcha en una semana</h2>
         </div>

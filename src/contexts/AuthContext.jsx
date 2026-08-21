@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useCallback } from 'react'
+import { can as canForRole } from '../lib/permissions'
 
 /* ═══════════════════════════════════════════════════════════════
    AUTENTICACIÓN
@@ -34,7 +35,8 @@ const mockAuthProvider = {
     return {
       name: 'Paula Ferrari',
       email: DEMO_EMAIL,
-      role: 'Jefa de operaciones',
+      jobTitle: 'Jefa de operaciones',
+      role: 'administrador',
       warehouse: 'Depósito central',
     }
   },
@@ -44,7 +46,7 @@ const mockAuthProvider = {
   },
 }
 
-const SESSION_KEY = 'solvus-session'
+export const SESSION_KEY = 'solvus-session'
 const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
@@ -76,8 +78,21 @@ export function AuthProvider({ children }) {
     setUser(null)
   }, [])
 
+  /* Cambia el rol de la sesión activa. Ver nota en lib/permissions.js:
+     es un selector de demostración, no un flujo de autorización real. */
+  const setRole = useCallback((role) => {
+    setUser((prev) => {
+      if (!prev) return prev
+      const next = { ...prev, role }
+      sessionStorage.setItem(SESSION_KEY, JSON.stringify(next))
+      return next
+    })
+  }, [])
+
+  const can = useCallback((permission) => canForRole(user?.role, permission), [user?.role])
+
   return (
-    <AuthContext.Provider value={{ user, pending, signIn, signOut }}>
+    <AuthContext.Provider value={{ user, pending, signIn, signOut, setRole, can }}>
       {children}
     </AuthContext.Provider>
   )

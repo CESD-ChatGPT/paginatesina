@@ -12,6 +12,11 @@
 
 html {
   scroll-behavior: smooth;
+  /* mismo motivo que el overflow-x:hidden de body más abajo: sin esto acá
+     también, un descendiente con su propio scroll horizontal (la barra de
+     pestañas del panel) puede ensanchar el scrollWidth del documento aunque
+     su propio contenedor ya lo recorte visualmente. */
+  overflow-x: hidden;
 }
 
 /* La navbar es fija: sin esto el título de la sección queda detrás */

@@ -1,7 +1,10 @@
 # SOLVUS
 
-Control de inventario con pronóstico de demanda por SKU.
-Landing pública + acceso autenticado a un panel de inventario.
+Control de inventario automatizado: detecta condiciones de stock,
+analiza consumo y precio de mercado, recomienda una acción concreta y
+ayuda a ejecutarla. Landing pública + panel autenticado que funciona
+como centro operativo (valorización, recomendaciones, alertas,
+multidepósito, proveedores, inventario físico, auditoría, roles).
 
 ---
 
@@ -12,12 +15,17 @@ Landing pública + acceso autenticado a un panel de inventario.
 | Aplicar paleta de colores | ✅ Completa | Paleta de marca como tokens CSS; sin colores sueltos por componente |
 | Hacer Login | ⚠️ Completa **con auth mock** | Flujo, rutas y guardas reales; **no hay backend** contra el cual autenticar |
 | Implementar datos reales | ⚠️ Arquitectura completa, **datos aún mock** | No existe fuente real en el proyecto; hay un punto único de conexión |
-| Agregar gráficos y animaciones | ✅ Completa | 2 gráficos con hover, estados y motion con propósito |
+| Agregar gráficos y animaciones | ✅ Completa | Gráficos con hover, estados y motion con propósito, incluido scroll-storytelling |
 | Imágenes y logo SOLVUS | ⚠️ Completa **con logo reconstruido** | Falta el SVG oficial — ver abajo |
+| Valorización estimada del depósito | ⚠️ Motor completo, **fuentes de precio mock** | Arquitectura de providers real; nunca presenta el número como exacto |
+| Recomendaciones y alertas | ✅ Completa | Reglas explícitas sobre datos reales del mock, nunca genéricas |
+| Multidepósito, proveedores, inventario físico, auditoría | ✅ Completa | Mutan el estado en memoria de la sesión — ver nota de `inventory.js` |
+| Roles y permisos | ⚠️ Completa **con selector de demostración** | El modelo de permisos es real; el selector de rol simula, no autentica |
+| Búsqueda global, notificaciones, personalización | ✅ Completa | Persistencia liviana en `localStorage`, sin backend |
 
 Los ⚠️ **no son tareas a medias**: son los límites reales del proyecto hoy.
-Están marcados para que nadie asuma que hay un backend o un asset oficial
-que en realidad no existe.
+Están marcados para que nadie asuma que hay un backend, un asset oficial
+o una fuente de precios real que en realidad no existen.
 
 ---
 
@@ -142,9 +150,9 @@ Tres herramientas, tres trabajos distintos — no se usan dos para resolver lo m
 
 | Herramienta | Para qué | Dónde |
 |---|---|---|
-| **GSAP + ScrollTrigger** | Timeline secuenciada del Hero al montar; reveal por scroll de Features/CTA (`ScrollTrigger.batch`, una vez, sin scrub/pin); count-up de las cifras del Hero; trazo del gráfico de demanda | `Hero.jsx`, `Features.jsx`, `CTA.jsx`, `DemandChart.jsx` |
-| **Framer Motion** | Transiciones ligadas a estado de React: `AnimatePresence` en el swap botón→confirmación del panel; `whileInView` en el llenado de las barras de categoría | `Dashboard.jsx`, `CategoryBars.jsx` — **solo el panel autenticado**, con code-splitting para que un visitante anónimo nunca la descargue |
-| **Web Animation API nativa** | Trazo de la línea observada del gráfico (`stroke-dashoffset`) | `DemandChart.jsx` |
+| **GSAP + ScrollTrigger** | Timeline secuenciada del Hero al montar; reveal por scroll de Features/CTA (`ScrollTrigger.batch`, una vez, sin scrub/pin); count-up de las cifras del Hero; trazo del gráfico de demanda; timeline de automatización con scroll pinneado + scrub en desktop (único lugar del sitio donde eso se justifica — ver más abajo) | `Hero.jsx`, `Features.jsx`, `CTA.jsx`, `DemandChart.jsx`, `AutomationStory.jsx` |
+| **Framer Motion** | Transiciones ligadas a estado de React: `AnimatePresence` en drawers, command palette, centro de notificaciones y el swap botón→confirmación; `whileInView` en el llenado de las barras de categoría | Todo dentro de `Dashboard.jsx` y sus componentes — **solo el panel autenticado**, con code-splitting para que un visitante anónimo nunca la descargue |
+| **Web Animation API nativa** | Trazo de la línea observada del gráfico (`stroke-dashoffset`); indicador de pestaña activa del panel; transición de pasos de la demo interactiva de la landing (`LiveDemo.jsx` usa CSS simple a propósito, no Framer, para no arrastrarlo al bundle público) | `DemandChart.jsx`, `Tabs.jsx`, `LiveDemo.jsx` |
 
 Registro único de plugins GSAP en `src/lib/motion.js`. Todo respeta
 `prefers-reduced-motion` — GSAP vía chequeo explícito + estado final
@@ -157,27 +165,65 @@ computado nunca cambia, porque ese nodo vive fuera del árbol de pintado
 normal. Esa pieza puntual usa GSAP (que hace `setAttribute` directo en
 cada frame) en vez de WAAPI.
 
-**Decisión sobre 3D:** no se implementó. El dominio de SOLVUS (niveles de
-stock, demanda, SKUs) es información 1D/2D; forzar un elemento 3D acá
-sería el "objeto flotante genérico" que la identidad "Ledger" —
+**Decisión sobre 3D (revisada tras sumar el ciclo de automatización):**
+sigue sin implementarse, pero por una razón distinta a la original.
+
+La primera vez, el argumento era que niveles de stock y demanda son
+información 1D/2D. Ese argumento ya no alcanza solo: ahora el producto
+tiene un concepto nuevo que sí podría tentar a alguien a pensar en 3D —
+un **proceso secuencial** (Datos → Analiza → Detecta → Recomienda →
+Acción) y **multidepósito** (dos ubicaciones físicas reales). Se
+reevaluó cada uno con el mismo criterio forma/comportamiento/interacción:
+
+- El ciclo de automatización es una relación **causal y temporal** — cada
+  etapa alimenta a la siguiente — no espacial. Su forma nativa es una
+  línea de tiempo o un diagrama de flujo, no una escena; profundidad (Z)
+  no aporta nada a "esto pasa, y después esto otro". Por eso la sección
+  `AutomationStory.jsx` es un timeline 2D con scroll pinneado, no una
+  escena 3D: el scroll ya representa el avance del proceso sin necesitar
+  una tercera dimensión para hacerlo.
+- Multidepósito con dos nodos reales (Central, Córdoba) no tiene la
+  densidad de datos que justificaría un mapa o una escena 3D — dos
+  números lado a lado en una tabla comunican la comparación más rápido
+  que una cámara para orbitar alrededor de dos marcadores.
+
+En ningún caso un objeto 3D sería más que decoración: no hay geometría,
+rotación ni manipulación que el dominio pida genuinamente. Forzarlo acá
+sería el mismo "objeto flotante genérico" que la identidad "Ledger" —
 explícitamente plana, de hairlines y grilla— existe para evitar.
 
 ## Verificado
 
-- Sin overflow horizontal en 375 / 390 / 768 / 1024 / 1440, en las 3 rutas
-  y en ambos temas.
+- Sin overflow horizontal en 375 / 390 / 768 / 1024 / 1440, en landing,
+  login y las 8 secciones del panel, en ambos temas.
 - Contraste medido en navegador: 0 fallos AA.
-- 0 errores de consola.
+- 0 errores de consola en ningún flujo probado.
 - Flujo de auth end-to-end: guarda de ruta, error de credenciales,
   login, persistencia y logout.
-- Áreas táctiles ≥44px.
-- Motion nuevo probado en navegador real (no solo "compila"): timeline del
-  Hero, reveal progresivo de Features/CTA, trazo del gráfico en sus dos
-  usos (preview y dashboard), swap con `AnimatePresence`, `prefers-reduced-
-  motion` en los tres sistemas, cleanup de `ScrollTrigger` tras navegación
-  repetida.
-- Bundle: framer-motion aislado al chunk del panel (`Dashboard-*.js`,
-  ~49 KB gzip); el chunk principal (landing pública) no lo incluye.
+- Flujos operativos probados de punta a punta contra el motor real (no
+  solo que la UI renderiza): generar orden, transferir stock entre
+  depósitos, cargar un conteo físico y aplicar el ajuste, exportar CSV,
+  buscar y saltar de sección con Cmd/Ctrl+K, marcar notificaciones
+  leídas, ocultar/reordenar KPIs — cada uno confirmado por su efecto real
+  en los datos, no por el clic en sí.
+- Áreas táctiles ≥44px; drawers y command palette con foco atrapado y
+  cierre por Escape.
+- Motion probado en navegador real: timeline del Hero, storytelling de
+  automatización con scroll pinneado (estado intermedio del scrub
+  verificado, no solo inicio/fin), reveal de Features/CTA, trazo del
+  gráfico, `AnimatePresence` en los cuatro overlays del panel,
+  `prefers-reduced-motion` en los tres sistemas, cleanup de
+  `ScrollTrigger`/pin-spacer tras 5 ciclos de navegación repetida (sin
+  crecimiento de nodos en el DOM).
+- Bundle: framer-motion sigue aislado al chunk del panel (`Dashboard-*.js`,
+  ~62 KB gzip); el chunk principal (landing pública, ahora con
+  storytelling y demo interactiva) no lo incluye.
+- Bug real encontrado y corregido en este pase: `<html>` no tenía
+  `overflow-x: hidden` (solo `<body>`), así que un descendiente con su
+  propio scroll horizontal —la barra de pestañas del panel— ensanchaba
+  el `scrollWidth` del documento a pesar de recortarse visualmente. No
+  aparecía en ninguna ruta anterior porque ninguna tenía un elemento con
+  scroll horizontal propio hasta ahora.
 
 ---
 
