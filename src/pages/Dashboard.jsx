@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { AnimatePresence, motion, MotionConfig } from 'framer-motion'
 import { LogOut, AlertTriangle } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { useAsync } from '../hooks/useAsync'
@@ -64,6 +65,11 @@ export default function Dashboard() {
   }
 
   return (
+    // reducedMotion="user": scopeado acá porque Framer Motion solo se usa
+    // en el panel (este swap y las barras de CategoryBars). Ponerlo en la
+    // raíz de App forzaba framer-motion al bundle principal aunque la
+    // landing anónima nunca lo necesite — ver App.jsx.
+    <MotionConfig reducedMotion="user">
     <div className="min-h-screen">
       {/* Barra del panel — distinta de la navbar pública: acá el usuario
           ya está adentro, así que manda la identidad de sesión. */}
@@ -226,23 +232,44 @@ export default function Dashboard() {
               )}
             </div>
 
-            {/* Acción real del panel: hasta ahora no tenía ninguna. */}
-            {rows.status === 'success' &&
-              (order.status === 'done' ? (
-                <p className="t-mono text-[12px]" style={{ color: 'var(--positive)' }}>
-                  Borrador {order.data.id} generado · {order.data.skus.length} SKU
-                </p>
-              ) : (
-                /* Etiqueta corta a propósito: el .button__text del original
-                   trunca con ellipsis, y "Generar orden de reposición" se
-                   cortaba. El subtítulo de arriba ya da el contexto. */
-                <ActionButton
-                  label="Generar orden"
-                  onClick={handleCreateOrder}
-                  pending={order.status === 'pending'}
-                  disabled={lowSkus.length === 0}
-                />
-              ))}
+            {/* Acción real del panel: hasta ahora no tenía ninguna.
+                El swap botón -> confirmación era un pop instantáneo;
+                AnimatePresence lo cruza en vez de cortar. */}
+            {rows.status === 'success' && (
+              <AnimatePresence mode="wait" initial={false}>
+                {order.status === 'done' ? (
+                  <motion.p
+                    key="done"
+                    className="t-mono text-[12px]"
+                    style={{ color: 'var(--positive)' }}
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.25 }}
+                  >
+                    Borrador {order.data.id} generado · {order.data.skus.length} SKU
+                  </motion.p>
+                ) : (
+                  <motion.div
+                    key="action"
+                    initial={{ opacity: 0, y: -6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    {/* Etiqueta corta a propósito: el .button__text del
+                        original trunca con ellipsis, y "Generar orden de
+                        reposición" se cortaba. El subtítulo de arriba ya
+                        da el contexto. */}
+                    <ActionButton
+                      label="Generar orden"
+                      onClick={handleCreateOrder}
+                      pending={order.status === 'pending'}
+                      disabled={lowSkus.length === 0}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            )}
           </div>
 
           {order.status === 'error' && (
@@ -322,5 +349,6 @@ export default function Dashboard() {
         </section>
       </main>
     </div>
+    </MotionConfig>
   )
 }

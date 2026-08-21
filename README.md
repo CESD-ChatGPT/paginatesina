@@ -136,6 +136,32 @@ Dos defectos del CSS original quedaron corregidos: `transform: rotate(2.2)`
 en la navbar no tenía unidad (era inválido y no hacía nada), y el blanco
 fijo sobre el azul daba 2.42:1 al pasar al teal claro del modo oscuro.
 
+## Sistema de motion
+
+Tres herramientas, tres trabajos distintos — no se usan dos para resolver lo mismo:
+
+| Herramienta | Para qué | Dónde |
+|---|---|---|
+| **GSAP + ScrollTrigger** | Timeline secuenciada del Hero al montar; reveal por scroll de Features/CTA (`ScrollTrigger.batch`, una vez, sin scrub/pin); count-up de las cifras del Hero; trazo del gráfico de demanda | `Hero.jsx`, `Features.jsx`, `CTA.jsx`, `DemandChart.jsx` |
+| **Framer Motion** | Transiciones ligadas a estado de React: `AnimatePresence` en el swap botón→confirmación del panel; `whileInView` en el llenado de las barras de categoría | `Dashboard.jsx`, `CategoryBars.jsx` — **solo el panel autenticado**, con code-splitting para que un visitante anónimo nunca la descargue |
+| **Web Animation API nativa** | Trazo de la línea observada del gráfico (`stroke-dashoffset`) | `DemandChart.jsx` |
+
+Registro único de plugins GSAP en `src/lib/motion.js`. Todo respeta
+`prefers-reduced-motion` — GSAP vía chequeo explícito + estado final
+inmediato, Framer vía `<MotionConfig reducedMotion="user">`.
+
+**Bug real encontrado y corregido en el propio proceso:** animar el `width`
+de un `<rect>` dentro de un `<clipPath>` vía WAAPI no surte efecto en este
+motor — la animación termina en estado `"finished"` pero el valor
+computado nunca cambia, porque ese nodo vive fuera del árbol de pintado
+normal. Esa pieza puntual usa GSAP (que hace `setAttribute` directo en
+cada frame) en vez de WAAPI.
+
+**Decisión sobre 3D:** no se implementó. El dominio de SOLVUS (niveles de
+stock, demanda, SKUs) es información 1D/2D; forzar un elemento 3D acá
+sería el "objeto flotante genérico" que la identidad "Ledger" —
+explícitamente plana, de hairlines y grilla— existe para evitar.
+
 ## Verificado
 
 - Sin overflow horizontal en 375 / 390 / 768 / 1024 / 1440, en las 3 rutas
@@ -145,6 +171,13 @@ fijo sobre el azul daba 2.42:1 al pasar al teal claro del modo oscuro.
 - Flujo de auth end-to-end: guarda de ruta, error de credenciales,
   login, persistencia y logout.
 - Áreas táctiles ≥44px.
+- Motion nuevo probado en navegador real (no solo "compila"): timeline del
+  Hero, reveal progresivo de Features/CTA, trazo del gráfico en sus dos
+  usos (preview y dashboard), swap con `AnimatePresence`, `prefers-reduced-
+  motion` en los tres sistemas, cleanup de `ScrollTrigger` tras navegación
+  repetida.
+- Bundle: framer-motion aislado al chunk del panel (`Dashboard-*.js`,
+  ~49 KB gzip); el chunk principal (landing pública) no lo incluye.
 
 ---
 

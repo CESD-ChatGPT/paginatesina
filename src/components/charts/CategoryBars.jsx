@@ -1,11 +1,20 @@
 import { useState } from 'react'
+import { motion } from 'framer-motion'
 
 /* Capital inmovilizado por categoría.
    FORMA: barras horizontales — una sola medida comparada entre
    categorías de nombre largo.
    COLOR: secuencial de un tono (rampa teal), más-es-más-oscuro.
    No es categórico: las categorías no son identidades que haya que
-   distinguir, se están ordenando por magnitud. */
+   distinguir, se están ordenando por magnitud.
+
+   MOTION: las barras aparecían ya llenas — un chart de barras que no
+   comunica magnitud progresivamente pierde la mitad de su punto. Ahora
+   cada una crece desde 0 al entrar en pantalla (whileInView, una vez),
+   con el mismo stagger que el resto de la página. Framer Motion acá y
+   no GSAP: es una transición de layout ligada al estado de un componente
+   React que ya se gestiona a sí mismo (hover, datos), no una coreografía
+   de sección. */
 
 const money = (n) =>
   n >= 1000 ? `${(n / 1000).toFixed(1).replace('.0', '')}k` : String(n)
@@ -51,14 +60,17 @@ export default function CategoryBars({ data, currency = 'USD' }) {
               className="w-full h-2 relative"
               style={{ background: 'var(--surface-sunken)', borderRadius: '1px' }}
             >
-              <div
-                className="h-full transition-all duration-300"
+              <motion.div
+                className="h-full"
                 style={{
-                  width: `${pct}%`,
                   background: RAMP[Math.min(i, RAMP.length - 1)],
                   borderRadius: '1px',
-                  opacity: hover && !isHover ? 0.55 : 1,
                 }}
+                initial={{ width: 0 }}
+                whileInView={{ width: `${pct}%` }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.6, delay: i * 0.06, ease: [0.22, 0.61, 0.36, 1] }}
+                animate={{ opacity: hover && !isHover ? 0.55 : 1 }}
               />
             </div>
           </li>

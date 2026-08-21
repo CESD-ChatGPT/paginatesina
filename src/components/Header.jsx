@@ -1,7 +1,8 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { ThemeToggleButton } from './ThemeToggle'
 import { Isotipo, Logotipo } from './brand/Logo'
 import { useAuth } from '../contexts/AuthContext'
+import { useSectionLink } from '../hooks/useSectionLink'
 
 /* ─────────────────────────────────────────────────────────────
    From Uiverse.io by mymiamo — base real de esta navbar.
@@ -64,27 +65,7 @@ const IconPanel = () => (
 export default function Header() {
   const { user } = useAuth()
   const { pathname } = useLocation()
-  const navigate = useNavigate()
-
-  /* Con HashRouter el hash lo ocupa el router, así que un href="#features"
-     lo interpretaría como ruta y rompería la navegación. Las secciones de
-     la landing se resuelven desplazando a mano. */
-  function goToSection(e, id) {
-    e.preventDefault()
-    const scroll = () =>
-      document.getElementById(id)?.scrollIntoView({
-        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
-          ? 'auto'
-          : 'smooth',
-      })
-
-    if (pathname !== '/') {
-      navigate('/')
-      requestAnimationFrame(() => requestAnimationFrame(scroll))
-    } else {
-      scroll()
-    }
-  }
+  const goToSection = useSectionLink()
 
   // Destinos reales del proyecto, no los del componente original
   const NAV_ITEMS = [

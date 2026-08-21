@@ -1,10 +1,19 @@
+import { useRef, useLayoutEffect } from 'react'
 import { Boxes, Bell, Workflow, Building2, ShieldCheck } from 'lucide-react'
 import DemandChart from './charts/DemandChart'
 import { getDemandPreview } from '../data/inventory'
+import { gsap, ScrollTrigger, prefersReducedMotion } from '../lib/motion'
 
 /* Jerarquía real en lugar de seis cards iguales:
    una capacidad principal (la que define el producto) con evidencia visual,
-   y cinco de soporte como renglones compactos separados por hairlines. */
+   y cinco de soporte como renglones compactos separados por hairlines.
+
+   MOTION: esta sección vivía sin ningún movimiento — todo el contenido
+   aparecía ya puesto apenas cargaba la página, sin relación con el scroll.
+   Ahora el encabezado, el panel principal y cada renglón de soporte entran
+   en cascada la primera vez que se ven, vía ScrollTrigger.batch (una sola
+   vez, sin scrub ni pin — esto es contenido de lectura, no una narrativa
+   de scroll-jacking). */
 
 const SUPPORTING = [
   {
@@ -35,17 +44,47 @@ const SUPPORTING = [
 ]
 
 export default function Features() {
+  const sectionRef = useRef(null)
+
+  useLayoutEffect(() => {
+    const section = sectionRef.current
+    const targets = section.querySelectorAll('.reveal-el')
+
+    if (prefersReducedMotion()) {
+      gsap.set(targets, { clearProps: 'all' })
+      return
+    }
+
+    const ctx = gsap.context(() => {
+      gsap.set(targets, { autoAlpha: 0, y: 16 })
+      ScrollTrigger.batch(targets, {
+        start: 'top 88%',
+        once: true,
+        onEnter: (batch) =>
+          gsap.to(batch, {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.5,
+            stagger: 0.08,
+            ease: 'power2.out',
+          }),
+      })
+    }, section)
+
+    return () => ctx.revert()
+  }, [])
+
   return (
-    <section id="features" className="section-pad rule-bottom">
+    <section id="features" className="section-pad rule-bottom" ref={sectionRef}>
       <div className="shell">
         {/* Encabezado de sección: índice + título, alineado a la izquierda */}
-        <div className="flex items-baseline gap-4 mb-12 md:mb-16">
+        <div className="flex items-baseline gap-4 mb-12 md:mb-16 reveal-el">
           <span className="t-mono text-[13px] text-muted">01</span>
           <h2 className="t-h2 max-w-[18ch]">Qué resuelve, concretamente</h2>
         </div>
 
         {/* Capacidad principal — jerarquía visual dominante */}
-        <div className="panel grid grid-cols-12 gap-y-8 mb-px">
+        <div className="panel grid grid-cols-12 gap-y-8 mb-px reveal-el">
           <div className="col-span-12 lg:col-span-6 p-6 md:p-8">
             <p className="t-label mb-4" style={{ color: 'var(--accent)' }}>
               Capacidad principal
@@ -95,7 +134,7 @@ export default function Features() {
               <li
                 key={item.title}
                 className={[
-                  'group flex gap-4 py-6 md:py-7 border-b border-rule',
+                  'group flex gap-4 py-6 md:py-7 border-b border-rule reveal-el',
                   isOrphan
                     ? 'md:col-span-2'
                     : i % 2 === 0

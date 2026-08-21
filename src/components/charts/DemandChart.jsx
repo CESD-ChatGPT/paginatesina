@@ -1,11 +1,29 @@
-import { useState, useMemo, useId } from 'react'
+import { useState, useMemo, useId, useRef, useEffect } from 'react'
+import { gsap, prefersReducedMotion } from '../../lib/motion'
 
 /* Demanda observada vs proyectada.
    FORMA: línea (tendencia temporal).
    COLOR: énfasis — la proyección (lo que el producto aporta) lleva el
    acento; lo observado es contexto en gris. No es categórico: es la
    misma métrica partida por certeza, así que además se distingue por
-   trazo (continuo vs punteado), no solo por color. */
+   trazo (continuo vs punteado), no solo por color.
+
+   MOTION: las dos líneas se "trazan" la primera vez que el gráfico entra
+   en pantalla. Un IntersectionObserver local decide el "cuándo" — este
+   componente se usa en dos lugares (preview del hero y dashboard) sin
+   depender de la orquestación de scroll de la página que lo aloja.
+
+   La línea observada se traza con la Web Animation API nativa
+   (stroke-dashoffset): un solo elemento, sin plugins, funciona bien.
+   La proyección NO puede usar el mismo truco — es punteada en reposo
+   (strokeDasharray="5 4" fijo) y pisarle el dasharray para el trazo la
+   dejaría sólida para siempre. Se revela con un clip-rect en su lugar.
+   Verificado en navegador: animar el ancho de ese rect vía WAAPI no
+   surte efecto porque vive dentro de un <clipPath> (nodo de definición,
+   fuera del árbol de pintado normal) — el estado de la animación termina
+   en "finished" pero el valor computado nunca cambia. GSAP sí funciona
+   ahí porque hace setAttribute en cada frame en lugar de depender del
+   pipeline de composición CSS, así que esa pieza puntual usa GSAP. */
 
 const W = 640
 const H = 220
@@ -19,6 +37,10 @@ const monthLabel = (t) => {
 export default function DemandChart({ observed, forecast, unitLabel = 'unidades' }) {
   const [hover, setHover] = useState(null)
   const clipId = useId()
+  const fcClipId = useId()
+  const containerRef = useRef(null)
+  const obsLineRef = useRef(null)
+  const fcClipRectRef = useRef(null)
 
   const { points, scaleX, scaleY, ticks, obsPath, fcPath, splitX } = useMemo(() => {
     const all = [
@@ -49,6 +71,58 @@ export default function DemandChart({ observed, forecast, unitLabel = 'unidades'
     }
   }, [observed, forecast])
 
+  useEffect(() => {
+    const container = containerRef.current
+    const obsLine = obsLineRef.current
+    const fcClipRect = fcClipRectRef.current
+    if (!container || !obsLine || !fcClipRect) return
+
+    if (prefersReducedMotion()) {
+      // El clip-rect arranca en 0 (para no destaparse antes de tiempo);
+      // sin animación hay que abrirlo a mano de una vez.
+      fcClipRect.setAttribute('width', fcClipRect.getAttribute('data-full-width'))
+      return
+    }
+
+    // Observado: línea sólida — dasharray/dashoffset la "traza" sin
+    // efectos secundarios, porque en reposo no tiene un patrón propio.
+    const obsLen = obsLine.getTotalLength()
+    obsLine.style.strokeDasharray = `${obsLen}`
+    obsLine.style.strokeDashoffset = `${obsLen}`
+
+    // Proyectada: es punteada en reposo (strokeDasharray="5 4" fijo en el
+    // JSX). Usar dashoffset acá pisaría ese patrón y la dejaría sólida
+    // para siempre al terminar. En su lugar, un clip-rect la revela de
+    // izquierda a derecha — que además lee como "la proyección se
+    // extiende hacia adelante desde hoy".
+    const fcWidth = fcClipRect.getAttribute('data-full-width')
+
+    let done = false
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (done || !entries[0].isIntersecting) return
+        done = true
+
+        obsLine.animate(
+          [{ strokeDashoffset: obsLen }, { strokeDashoffset: 0 }],
+          { duration: 900, easing: 'cubic-bezier(.22,.61,.36,1)', fill: 'forwards' }
+        )
+        // GSAP acá y no WAAPI: setAttribute directo en cada frame, que sí
+        // fuerza el recálculo del clipPath (ver nota arriba del archivo).
+        gsap.to(fcClipRect, {
+          attr: { width: fcWidth },
+          duration: 0.7,
+          delay: 0.25,
+          ease: 'power2.out',
+        })
+        io.disconnect()
+      },
+      { threshold: 0.4 }
+    )
+    io.observe(container)
+    return () => io.disconnect()
+  }, [observed, forecast])
+
   function handleMove(e) {
     const rect = e.currentTarget.getBoundingClientRect()
     const x = ((e.clientX - rect.left) / rect.width) * W
@@ -60,7 +134,7 @@ export default function DemandChart({ observed, forecast, unitLabel = 'unidades'
   }
 
   return (
-    <div className="relative">
+    <div className="relative" ref={containerRef}>
       {/* Leyenda: siempre presente con 2 series */}
       <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 mb-3">
         <span className="inline-flex items-center gap-2 t-mono text-[11px] text-graphite">
@@ -93,6 +167,19 @@ export default function DemandChart({ observed, forecast, unitLabel = 'unidades'
         <defs>
           <clipPath id={clipId}>
             <rect x={PAD.left} y={0} width={W - PAD.left - PAD.right} height={H} />
+          </clipPath>
+          {/* Revela la proyección de izquierda a derecha desde "hoy".
+              Arranca en 0: si JS no corre (o antes de que el observer
+              dispare), no debe mostrarse ya completa. */}
+          <clipPath id={fcClipId}>
+            <rect
+              ref={fcClipRectRef}
+              data-full-width={W - PAD.right - splitX}
+              x={splitX}
+              y={0}
+              width={0}
+              height={H}
+            />
           </clipPath>
         </defs>
 
@@ -140,14 +227,22 @@ export default function DemandChart({ observed, forecast, unitLabel = 'unidades'
         </text>
 
         <g clipPath={`url(#${clipId})`}>
-          <polyline points={obsPath} fill="none" stroke="var(--chart-context)" strokeWidth="2" />
           <polyline
-            points={fcPath}
+            ref={obsLineRef}
+            points={obsPath}
             fill="none"
-            stroke="var(--accent)"
+            stroke="var(--chart-context)"
             strokeWidth="2"
-            strokeDasharray="5 4"
           />
+          <g clipPath={`url(#${fcClipId})`}>
+            <polyline
+              points={fcPath}
+              fill="none"
+              stroke="var(--accent)"
+              strokeWidth="2"
+              strokeDasharray="5 4"
+            />
+          </g>
         </g>
 
         {/* Etiquetas de eje X: solo extremos y corte, para no saturar */}
