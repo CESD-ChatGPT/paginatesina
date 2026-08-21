@@ -3,8 +3,6 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: ["main", "claude/landing-page-react-multilang-gdh9gp"]
-  pull_request:
-    branches: ["main"]
 
 jobs:
   build-and-deploy:
@@ -41,7 +39,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist'
+          path: './docs'
 
       - name: Deploy to GitHub Pages
         id: deployment
