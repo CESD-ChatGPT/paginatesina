@@ -1,26 +1,41 @@
-import { createContext, useContext, useState, useCallback } from 'react'
+import { createContext, useContext, useState, useCallback, useEffect } from 'react'
 import { can as canForRole } from '../lib/permissions'
+import { getSupabase, isSupabaseConfigured } from '../lib/supabase'
 
 /* ═══════════════════════════════════════════════════════════════
    AUTENTICACIÓN
 
-   ESTADO ACTUAL: **MOCK.** El proyecto es un sitio estático servido
-   por GitHub Pages: no hay backend contra el cual autenticar, así que
-   no existe un login "real" posible hoy.
+   Dos modos, elegidos automáticamente según haya credenciales:
 
-   Lo que sí es real acá: la arquitectura. El resto de la app consume
-   `useAuth()` y no sabe nada del origen. Para conectar un backend,
-   reemplazá el cuerpo de `signIn`/`signOut` en `mockAuthProvider` por
-   las llamadas HTTP correspondientes — no cambia nada más.
+   1. **Supabase (real)** — si VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY
+      están configuradas. Registro y login reales contra Supabase Auth:
+      las cuentas viven en un servidor, la contraseña se hashea del lado
+      de ellos, la sesión se renueva sola y sobrevive a cerrar el navegador.
 
-   ⚠ La sesión se guarda en sessionStorage. Eso es adecuado para una
-   demo, NO para producción: un backend real debe emitir un token
-   httpOnly y validarlo del lado del servidor. No trates esto como
-   una barrera de seguridad — es solo navegación.
+   2. **Mock (demo)** — si no hay credenciales. Credenciales fijas,
+      sesión en sessionStorage. Sirve para que el proyecto siga siendo
+      navegable sin configurar nada, pero **no es seguridad**: es
+      navegación. El registro está deshabilitado en este modo, porque
+      no habría dónde guardar la cuenta.
+
+   El resto de la app consume `useAuth()` y no sabe en cuál de los dos
+   está — salvo el Login, que muestra u oculta el registro según
+   `canRegister`.
    ═══════════════════════════════════════════════════════════════ */
 
 const DEMO_EMAIL = 'demo@solvus.io'
 const DEMO_PASSWORD = 'solvus2026'
+
+export const SESSION_KEY = 'solvus-session'
+
+/* Rol por defecto de una cuenta recién registrada. NO es 'administrador'
+   a propósito: quien se registra solo no debería auto-asignarse el rol
+   con más permisos. 'operador' es el mínimo que permite operar de verdad
+   (transferir, ajustar) sin habilitar compras ni auditoría. Un backend
+   real lo elevaría desde un panel de administración. */
+const DEFAULT_ROLE = 'operador'
+
+/* ── Provider mock ─────────────────────────────────────────────── */
 
 const mockAuthProvider = {
   async signIn({ email, password }) {
@@ -32,39 +47,179 @@ const mockAuthProvider = {
       throw err
     }
 
-    return {
+    const user = {
       name: 'Paula Ferrari',
       email: DEMO_EMAIL,
       jobTitle: 'Jefa de operaciones',
       role: 'administrador',
       warehouse: 'Depósito central',
     }
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify(user))
+    return user
   },
 
   async signOut() {
     await new Promise((r) => setTimeout(r, 150))
+    sessionStorage.removeItem(SESSION_KEY)
   },
-}
 
-export const SESSION_KEY = 'solvus-session'
-const AuthContext = createContext(null)
-
-export function AuthProvider({ children }) {
-  const [user, setUser] = useState(() => {
+  async restore() {
     try {
       const raw = sessionStorage.getItem(SESSION_KEY)
       return raw ? JSON.parse(raw) : null
     } catch {
       return null
     }
-  })
+  },
+
+  onChange() {
+    return () => {} // el mock no emite cambios externos
+  },
+}
+
+/* ── Provider Supabase ─────────────────────────────────────────── */
+
+/* Supabase devuelve su propio objeto de usuario; el resto de la app
+   espera la forma {name, email, jobTitle, role, warehouse}. La traducción
+   vive acá y en ningún otro lado. */
+function toAppUser(supabaseUser) {
+  if (!supabaseUser) return null
+  const meta = supabaseUser.user_metadata ?? {}
+  return {
+    name: meta.name || supabaseUser.email?.split('@')[0] || 'Usuario',
+    email: supabaseUser.email,
+    jobTitle: meta.jobTitle || 'Sin puesto asignado',
+    role: meta.role || DEFAULT_ROLE,
+    warehouse: meta.warehouse || 'Depósito central',
+  }
+}
+
+/* Los mensajes de error de Supabase vienen en inglés y a veces son
+   crípticos. Se traducen acá para que el Login no tenga que saber de
+   Supabase, manteniendo un código estable que la UI sí entiende. */
+function translateError(error) {
+  const msg = (error?.message || '').toLowerCase()
+  const err = new Error(error?.message || 'Error de autenticación')
+
+  if (msg.includes('invalid login credentials')) err.code = 'invalid_credentials'
+  else if (msg.includes('already registered') || msg.includes('already been registered')) {
+    err.code = 'email_taken'
+  } else if (msg.includes('email not confirmed')) err.code = 'email_not_confirmed'
+  else if (msg.includes('password should be')) err.code = 'weak_password'
+  else if (msg.includes('rate limit') || msg.includes('too many')) err.code = 'rate_limited'
+  else err.code = 'unknown'
+
+  return err
+}
+
+const supabaseAuthProvider = {
+  async signIn({ email, password }) {
+    const supabase = await getSupabase()
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email.trim(),
+      password,
+    })
+    if (error) throw translateError(error)
+    return toAppUser(data.user)
+  },
+
+  async signUp({ name, email, password }) {
+    const supabase = await getSupabase()
+    const { data, error } = await supabase.auth.signUp({
+      email: email.trim(),
+      password,
+      options: {
+        // Queda en user_metadata; es lo que lee toAppUser al restaurar sesión.
+        data: { name: name.trim(), role: DEFAULT_ROLE, warehouse: 'Depósito central' },
+        emailRedirectTo: `${window.location.origin}${import.meta.env.BASE_URL}#/login`,
+      },
+    })
+    if (error) throw translateError(error)
+
+    /* Si el proyecto tiene confirmación por email activada (default de
+       Supabase), acá NO viene sesión: la cuenta existe pero está pendiente
+       de verificar. Se distingue del alta directa para que el Login pueda
+       mostrar "revisá tu correo" en vez de mandar al panel. */
+    return {
+      user: toAppUser(data.user),
+      needsEmailConfirmation: !data.session,
+    }
+  },
+
+  async signOut() {
+    const supabase = await getSupabase()
+    const { error } = await supabase.auth.signOut()
+    if (error) throw translateError(error)
+  },
+
+  async restore() {
+    const supabase = await getSupabase()
+    const { data, error } = await supabase.auth.getSession()
+    if (error || !data.session) return null
+    return toAppUser(data.session.user)
+  },
+
+  /* Supabase renueva el token solo y puede cerrar sesión desde otra
+     pestaña; sin esto la UI quedaría mostrando un usuario que ya no está.
+     La suscripción se arma cuando termina de cargar el SDK, así que el
+     cleanup tiene que contemplar que todavía no exista. */
+  onChange(handler) {
+    let subscription = null
+    let cancelled = false
+
+    getSupabase().then((supabase) => {
+      if (cancelled || !supabase) return
+      const { data } = supabase.auth.onAuthStateChange((_event, session) => {
+        handler(toAppUser(session?.user))
+      })
+      subscription = data.subscription
+    })
+
+    return () => {
+      cancelled = true
+      subscription?.unsubscribe()
+    }
+  },
+}
+
+const provider = isSupabaseConfigured ? supabaseAuthProvider : mockAuthProvider
+
+const AuthContext = createContext(null)
+
+export function AuthProvider({ children }) {
+  const [user, setUser] = useState(null)
   const [pending, setPending] = useState(false)
+  /* Restaurar la sesión de Supabase es asincrónico. Sin este estado, el
+     guard de ruta vería user=null en el primer render y patearía al login
+     a alguien que sí tenía sesión abierta. */
+  const [initializing, setInitializing] = useState(true)
+
+  useEffect(() => {
+    let alive = true
+
+    provider
+      .restore()
+      .then((restored) => {
+        if (alive) setUser(restored)
+      })
+      .finally(() => {
+        if (alive) setInitializing(false)
+      })
+
+    const unsubscribe = provider.onChange((next) => {
+      if (alive) setUser(next)
+    })
+
+    return () => {
+      alive = false
+      unsubscribe()
+    }
+  }, [])
 
   const signIn = useCallback(async (credentials) => {
     setPending(true)
     try {
-      const u = await mockAuthProvider.signIn(credentials)
-      sessionStorage.setItem(SESSION_KEY, JSON.stringify(u))
+      const u = await provider.signIn(credentials)
       setUser(u)
       return u
     } finally {
@@ -72,19 +227,35 @@ export function AuthProvider({ children }) {
     }
   }, [])
 
+  const signUp = useCallback(async (data) => {
+    if (!isSupabaseConfigured) {
+      const err = new Error('El registro necesita un backend de autenticación configurado.')
+      err.code = 'registration_unavailable'
+      throw err
+    }
+    setPending(true)
+    try {
+      const result = await provider.signUp(data)
+      if (!result.needsEmailConfirmation) setUser(result.user)
+      return result
+    } finally {
+      setPending(false)
+    }
+  }, [])
+
   const signOut = useCallback(async () => {
-    await mockAuthProvider.signOut()
-    sessionStorage.removeItem(SESSION_KEY)
+    await provider.signOut()
     setUser(null)
   }, [])
 
   /* Cambia el rol de la sesión activa. Ver nota en lib/permissions.js:
-     es un selector de demostración, no un flujo de autorización real. */
+     es un selector de demostración, no un flujo de autorización real.
+     Solo afecta el estado local — no persiste contra Supabase. */
   const setRole = useCallback((role) => {
     setUser((prev) => {
       if (!prev) return prev
       const next = { ...prev, role }
-      sessionStorage.setItem(SESSION_KEY, JSON.stringify(next))
+      if (!isSupabaseConfigured) sessionStorage.setItem(SESSION_KEY, JSON.stringify(next))
       return next
     })
   }, [])
@@ -92,7 +263,20 @@ export function AuthProvider({ children }) {
   const can = useCallback((permission) => canForRole(user?.role, permission), [user?.role])
 
   return (
-    <AuthContext.Provider value={{ user, pending, signIn, signOut, setRole, can }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        pending,
+        initializing,
+        signIn,
+        signUp,
+        signOut,
+        setRole,
+        can,
+        canRegister: isSupabaseConfigured,
+        isMockAuth: !isSupabaseConfigured,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   )
@@ -104,6 +288,7 @@ export function useAuth() {
   return ctx
 }
 
-/* Credenciales de la demo, mostradas en la pantalla de login.
-   Se exportan para que exista un solo lugar donde viven. */
+/* Credenciales de la demo, mostradas en la pantalla de login cuando no
+   hay backend real configurado. Se exportan para que exista un solo
+   lugar donde viven. */
 export const DEMO_CREDENTIALS = { email: DEMO_EMAIL, password: DEMO_PASSWORD }

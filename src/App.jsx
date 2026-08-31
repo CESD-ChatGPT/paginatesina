@@ -40,8 +40,13 @@ function Landing() {
 }
 
 function RequireAuth({ children }) {
-  const { user } = useAuth()
+  const { user, initializing } = useAuth()
   const location = useLocation()
+
+  /* Con auth real, recuperar la sesión es asincrónico: en el primer
+     render todavía no se sabe si hay usuario. Redirigir acá patearía al
+     login a alguien que sí tiene sesión abierta cada vez que recarga. */
+  if (initializing) return <RouteFallback />
 
   if (!user) {
     return <Navigate to="/login" replace state={{ from: location.pathname }} />
@@ -57,7 +62,7 @@ function RouteFallback() {
 }
 
 function AppRoutes() {
-  const { user } = useAuth()
+  const { user, initializing } = useAuth()
 
   return (
     <Suspense fallback={<RouteFallback />}>
@@ -65,7 +70,7 @@ function AppRoutes() {
         <Route path="/" element={<Landing />} />
         <Route
           path="/login"
-          element={user ? <Navigate to="/panel" replace /> : <Login />}
+          element={initializing ? <RouteFallback /> : user ? <Navigate to="/panel" replace /> : <Login />}
         />
         <Route
           path="/panel"

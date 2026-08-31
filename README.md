@@ -13,7 +13,8 @@ multidepósito, proveedores, inventario físico, auditoría, roles).
 | Tarea | Estado | Detalle |
 |---|---|---|
 | Aplicar paleta de colores | ✅ Completa | Paleta de marca como tokens CSS; sin colores sueltos por componente |
-| Hacer Login | ⚠️ Completa **con auth mock** | Flujo, rutas y guardas reales; **no hay backend** contra el cual autenticar |
+| Hacer Login | ✅ Completa | Auth real con Supabase (registro, login, verificación por email); cae a modo demo si no hay credenciales |
+| Registro de usuarios | ⚠️ Código completo, **falta configurar el proyecto** | Necesita dos claves de Supabase — ver abajo. Sin ellas el registro queda oculto, no roto |
 | Implementar datos reales | ⚠️ Arquitectura completa, **datos aún mock** | No existe fuente real en el proyecto; hay un punto único de conexión |
 | Agregar gráficos y animaciones | ✅ Completa | Gráficos con hover, estados y motion con propósito, incluido scroll-storytelling |
 | Imágenes y logo SOLVUS | ⚠️ Completa **con logo reconstruido** | Falta el SVG oficial — ver abajo |
@@ -43,17 +44,44 @@ login, footer y favicon consumen ese componente.
 También conviene reemplazar `public/favicon.svg`, que replica el mismo
 trazado a mano.
 
-### 2. Backend de autenticación
-`src/contexts/AuthContext.jsx` tiene un `mockAuthProvider` con
-credenciales fijas. La sesión vive en `sessionStorage`, lo cual sirve para
-una demo pero **no es una barrera de seguridad**: es navegación, no
-protección. Un backend real debe emitir un token httpOnly y validarlo del
-lado del servidor.
+### 2. Activar el registro real (Supabase)
 
-**Para conectarlo:** reemplazá el cuerpo de `signIn`/`signOut`. El resto de
-la app consume `useAuth()` y no sabe nada del origen.
+El código de registro y login real **ya está escrito**. Lo único que falta
+son dos claves, que solo puede generar quien sea dueño del proyecto.
 
-Credenciales de la demo: `demo@solvus.io` / `solvus2026`
+Mientras no estén, la app **no se rompe**: detecta que no hay backend, cae
+al login de demostración (`demo@solvus.io` / `solvus2026`) y oculta el
+formulario de registro en vez de mostrar uno que no podría crear nada.
+
+**Los cuatro pasos:**
+
+1. Creá un proyecto gratuito en [supabase.com](https://supabase.com).
+2. En el panel del proyecto: **Settings → API**.
+3. Copiá `.env.example` a `.env` y completá:
+   - `VITE_SUPABASE_URL` ← el valor de *Project URL*
+   - `VITE_SUPABASE_ANON_KEY` ← el valor de *Project API keys → anon public*
+4. `npm run build`. Al arrancar, el login ya muestra "¿No tenés cuenta?".
+
+> ⚠️ Usá siempre la clave **anon public**, nunca la `service_role`: esa
+> bypassea todas las reglas de seguridad y jamás debe salir de un servidor.
+> La anon key es pública por diseño y viaja al navegador; lo que protege
+> los datos es Row Level Security configurado en Supabase.
+
+**Qué hace hoy el flujo real:** registro con nombre + correo + contraseña
+(mínimo 8 caracteres, con confirmación), verificación por correo antes del
+primer acceso, login, cierre de sesión y sesión persistente que se renueva
+sola y sobrevive a cerrar el navegador.
+
+**Rol de las cuentas nuevas:** `operador`, no `administrador`. Quien se
+registra solo no debería auto-asignarse el rol con más permisos; puede
+transferir stock y ajustar conteos, pero no generar órdenes de compra ni
+ver la auditoría. Elevar un usuario es, hoy, una edición manual de su
+`user_metadata` desde el panel de Supabase.
+
+**Lo que sigue faltando para producción:** las cifras del inventario
+siguen siendo mock (punto 3), así que todos los usuarios reales verían los
+mismos datos inventados. Row Level Security todavía no está configurado
+del lado de Supabase, porque no hay tablas de negocio que proteger.
 
 ### 3. Fuente de datos
 `src/data/inventory.js` expone `inventoryService`, que hoy resuelve contra

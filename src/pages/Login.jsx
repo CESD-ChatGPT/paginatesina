@@ -1,19 +1,38 @@
 import { useState } from 'react'
 import { useNavigate, Link, useLocation } from 'react-router-dom'
-import { AlertCircle, Loader2 } from 'lucide-react'
+import { AlertCircle, Loader2, MailCheck } from 'lucide-react'
 import { useAuth, DEMO_CREDENTIALS } from '../contexts/AuthContext'
 import { Isologotipo } from '../components/brand/Logo'
 
+/* Login y registro comparten pantalla: son el mismo formulario con un
+   campo más y otro botón, no dos rutas distintas. Separarlos obligaría a
+   navegar para corregir un "me equivoqué, ya tengo cuenta".
+
+   El registro solo aparece si hay un backend de auth configurado
+   (`canRegister`). Sin backend no se muestra un formulario que no podría
+   crear nada — ver AuthContext. */
+
+const MIN_PASSWORD = 8
+
 export default function Login() {
-  const { signIn, pending } = useAuth()
+  const { signIn, signUp, pending, canRegister, isMockAuth } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
   const from = location.state?.from ?? '/panel'
 
+  const [mode, setMode] = useState('login') // 'login' | 'register'
+  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirm, setConfirm] = useState('')
   const [touched, setTouched] = useState({})
   const [formError, setFormError] = useState(null)
+  const [awaitingConfirmation, setAwaitingConfirmation] = useState(null)
+
+  const isRegister = mode === 'register'
+
+  const nameError =
+    isRegister && touched.name && !name.trim() ? 'Ingresá tu nombre' : null
 
   const emailError =
     touched.email && !email.trim()
@@ -22,29 +41,92 @@ export default function Login() {
       ? 'El formato del correo no es válido'
       : null
 
-  const passwordError = touched.password && !password ? 'Ingresá tu contraseña' : null
+  const passwordError =
+    touched.password && !password
+      ? 'Ingresá tu contraseña'
+      : isRegister && touched.password && password.length < MIN_PASSWORD
+      ? `Usá al menos ${MIN_PASSWORD} caracteres`
+      : null
+
+  const confirmError =
+    isRegister && touched.confirm && confirm !== password
+      ? 'Las contraseñas no coinciden'
+      : null
+
+  function switchMode(next) {
+    setMode(next)
+    setFormError(null)
+    setTouched({})
+    setPassword('')
+    setConfirm('')
+  }
 
   async function handleSubmit(e) {
     e.preventDefault()
-    setTouched({ email: true, password: true })
     setFormError(null)
+    setTouched({ name: true, email: true, password: true, confirm: true })
 
     if (!email.trim() || !password || emailError) return
+    if (isRegister && (!name.trim() || password.length < MIN_PASSWORD || confirm !== password)) return
 
     try {
-      await signIn({ email, password })
-      navigate(from, { replace: true })
+      if (isRegister) {
+        const result = await signUp({ name, email, password })
+        if (result.needsEmailConfirmation) {
+          setAwaitingConfirmation(email.trim())
+          return
+        }
+        navigate('/panel', { replace: true })
+      } else {
+        await signIn({ email, password })
+        navigate(from, { replace: true })
+      }
     } catch (err) {
-      setFormError(
-        err.code === 'invalid_credentials'
-          ? 'Correo o contraseña incorrectos. Revisá los datos e intentá de nuevo.'
-          : 'No pudimos iniciar sesión. Intentá otra vez en unos segundos.'
-      )
+      setFormError(messageFor(err, isRegister))
     }
   }
 
   const field =
     'w-full px-3 py-2.5 text-[15px] bg-surface border text-ink placeholder:text-muted transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-[var(--accent)]'
+
+  /* Pantalla posterior al alta cuando Supabase pide verificar el correo:
+     la cuenta ya existe pero todavía no hay sesión. Mandar al panel acá
+     sería mentir sobre el estado real. */
+  if (awaitingConfirmation) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-6">
+        <div className="w-full max-w-[420px] text-center">
+          <span className="inline-flex mb-8 text-ink">
+            <Isologotipo size={28} />
+          </span>
+          <MailCheck
+            className="w-8 h-8 mx-auto mb-5"
+            style={{ color: 'var(--accent)' }}
+            strokeWidth={1.5}
+            aria-hidden="true"
+          />
+          <h1 className="t-h2 text-[1.5rem] mb-3">Revisá tu correo</h1>
+          <p className="t-body text-[15px] mb-2">
+            Enviamos un enlace de confirmación a{' '}
+            <span className="t-mono text-[14px] text-ink">{awaitingConfirmation}</span>.
+          </p>
+          <p className="t-small mb-8">
+            Tu cuenta ya está creada, pero necesitás confirmar el correo antes de poder
+            entrar. Si no lo ves, revisá la carpeta de spam.
+          </p>
+          <button
+            onClick={() => {
+              setAwaitingConfirmation(null)
+              switchMode('login')
+            }}
+            className="t-mono text-[12px] underline underline-offset-4 hover:text-[var(--accent)]"
+          >
+            Volver al inicio de sesión
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen grid lg:grid-cols-2">
@@ -80,27 +162,39 @@ export default function Login() {
             <Isologotipo size={28} />
           </Link>
 
-          <h1 className="t-h2 text-[1.75rem] mb-2">Iniciar sesión</h1>
-          <p className="t-small mb-8">Accedé al panel de tu depósito.</p>
+          <h1 className="t-h2 text-[1.75rem] mb-2">
+            {isRegister ? 'Crear cuenta' : 'Iniciar sesión'}
+          </h1>
+          <p className="t-small mb-8">
+            {isRegister
+              ? 'Registrate para acceder al panel de tu depósito.'
+              : 'Accedé al panel de tu depósito.'}
+          </p>
 
-          {/* Credenciales de demo: el proyecto no tiene backend todavía */}
-          <div
-            className="mb-6 p-3 border text-[13px] leading-relaxed"
-            style={{
-              background: 'var(--accent-wash)',
-              borderColor: 'var(--rule)',
-              borderRadius: '2px',
-            }}
-          >
-            <p className="t-label mb-1.5" style={{ color: 'var(--accent)' }}>
-              Entorno de demostración
-            </p>
-            <p className="text-graphite">
-              Usuario <span className="t-mono text-ink">{DEMO_CREDENTIALS.email}</span>
-              <br />
-              Clave <span className="t-mono text-ink">{DEMO_CREDENTIALS.password}</span>
-            </p>
-          </div>
+          {/* Credenciales de demo: solo cuando no hay backend real */}
+          {isMockAuth && (
+            <div
+              className="mb-6 p-3 border text-[13px] leading-relaxed"
+              style={{
+                background: 'var(--accent-wash)',
+                borderColor: 'var(--rule)',
+                borderRadius: '2px',
+              }}
+            >
+              <p className="t-label mb-1.5" style={{ color: 'var(--accent)' }}>
+                Entorno de demostración
+              </p>
+              <p className="text-graphite">
+                Usuario <span className="t-mono text-ink">{DEMO_CREDENTIALS.email}</span>
+                <br />
+                Clave <span className="t-mono text-ink">{DEMO_CREDENTIALS.password}</span>
+              </p>
+              <p className="text-muted text-[12px] mt-2 leading-snug">
+                El registro está deshabilitado porque no hay un backend de autenticación
+                configurado todavía.
+              </p>
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} noValidate>
             {/* Error general — anunciado a lectores de pantalla */}
@@ -118,6 +212,35 @@ export default function Login() {
                 <p className="text-[13px] leading-snug" style={{ color: 'var(--alert)' }}>
                   {formError}
                 </p>
+              </div>
+            )}
+
+            {isRegister && (
+              <div className="mb-4">
+                <label htmlFor="name" className="t-label block mb-1.5">
+                  Nombre
+                </label>
+                <input
+                  id="name"
+                  type="text"
+                  autoComplete="name"
+                  className={field}
+                  style={{
+                    borderRadius: '2px',
+                    borderColor: nameError ? 'var(--alert)' : 'var(--rule-strong)',
+                  }}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  onBlur={() => setTouched((t) => ({ ...t, name: true }))}
+                  aria-invalid={!!nameError}
+                  aria-describedby={nameError ? 'name-error' : undefined}
+                  placeholder="Paula Ferrari"
+                />
+                {nameError && (
+                  <p id="name-error" className="text-[12px] mt-1.5" style={{ color: 'var(--alert)' }}>
+                    {nameError}
+                  </p>
+                )}
               </div>
             )}
 
@@ -149,14 +272,14 @@ export default function Login() {
               )}
             </div>
 
-            <div className="mb-6">
+            <div className={isRegister ? 'mb-4' : 'mb-6'}>
               <label htmlFor="password" className="t-label block mb-1.5">
                 Contraseña
               </label>
               <input
                 id="password"
                 type="password"
-                autoComplete="current-password"
+                autoComplete={isRegister ? 'new-password' : 'current-password'}
                 className={field}
                 style={{
                   borderRadius: '2px',
@@ -166,10 +289,10 @@ export default function Login() {
                 onChange={(e) => setPassword(e.target.value)}
                 onBlur={() => setTouched((t) => ({ ...t, password: true }))}
                 aria-invalid={!!passwordError}
-                aria-describedby={passwordError ? 'password-error' : undefined}
+                aria-describedby={passwordError ? 'password-error' : isRegister ? 'password-hint' : undefined}
                 placeholder="••••••••"
               />
-              {passwordError && (
+              {passwordError ? (
                 <p
                   id="password-error"
                   className="text-[12px] mt-1.5"
@@ -177,8 +300,47 @@ export default function Login() {
                 >
                   {passwordError}
                 </p>
+              ) : (
+                isRegister && (
+                  <p id="password-hint" className="t-mono text-[11px] text-muted mt-1.5">
+                    Mínimo {MIN_PASSWORD} caracteres.
+                  </p>
+                )
               )}
             </div>
+
+            {isRegister && (
+              <div className="mb-6">
+                <label htmlFor="confirm" className="t-label block mb-1.5">
+                  Repetir contraseña
+                </label>
+                <input
+                  id="confirm"
+                  type="password"
+                  autoComplete="new-password"
+                  className={field}
+                  style={{
+                    borderRadius: '2px',
+                    borderColor: confirmError ? 'var(--alert)' : 'var(--rule-strong)',
+                  }}
+                  value={confirm}
+                  onChange={(e) => setConfirm(e.target.value)}
+                  onBlur={() => setTouched((t) => ({ ...t, confirm: true }))}
+                  aria-invalid={!!confirmError}
+                  aria-describedby={confirmError ? 'confirm-error' : undefined}
+                  placeholder="••••••••"
+                />
+                {confirmError && (
+                  <p
+                    id="confirm-error"
+                    className="text-[12px] mt-1.5"
+                    style={{ color: 'var(--alert)' }}
+                  >
+                    {confirmError}
+                  </p>
+                )}
+              </div>
+            )}
 
             <button
               type="submit"
@@ -190,14 +352,30 @@ export default function Login() {
                 borderRadius: '2px',
               }}
             >
-              {pending && (
-                <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
-              )}
-              {pending ? 'Verificando…' : 'Entrar'}
+              {pending && <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />}
+              {pending
+                ? isRegister
+                  ? 'Creando cuenta…'
+                  : 'Verificando…'
+                : isRegister
+                ? 'Crear cuenta'
+                : 'Entrar'}
             </button>
           </form>
 
-          <p className="t-small mt-6 text-center">
+          {canRegister && (
+            <p className="t-small mt-6 text-center">
+              {isRegister ? '¿Ya tenés cuenta? ' : '¿No tenés cuenta? '}
+              <button
+                onClick={() => switchMode(isRegister ? 'login' : 'register')}
+                className="underline underline-offset-4 hover:text-[var(--accent)]"
+              >
+                {isRegister ? 'Iniciar sesión' : 'Crear una'}
+              </button>
+            </p>
+          )}
+
+          <p className="t-small mt-4 text-center">
             <Link to="/" className="underline underline-offset-4 hover:text-[var(--accent)]">
               Volver al sitio
             </Link>
@@ -206,4 +384,26 @@ export default function Login() {
       </div>
     </div>
   )
+}
+
+/* Los códigos los normaliza AuthContext; acá solo se eligen las palabras. */
+function messageFor(err, isRegister) {
+  switch (err.code) {
+    case 'invalid_credentials':
+      return 'Correo o contraseña incorrectos. Revisá los datos e intentá de nuevo.'
+    case 'email_taken':
+      return 'Ya existe una cuenta con ese correo. Probá iniciar sesión.'
+    case 'email_not_confirmed':
+      return 'Todavía no confirmaste tu correo. Buscá el enlace que te enviamos.'
+    case 'weak_password':
+      return `La contraseña es demasiado débil. Usá al menos ${MIN_PASSWORD} caracteres.`
+    case 'rate_limited':
+      return 'Demasiados intentos seguidos. Esperá un minuto antes de volver a probar.'
+    case 'registration_unavailable':
+      return 'El registro no está disponible: falta configurar el backend de autenticación.'
+    default:
+      return isRegister
+        ? 'No pudimos crear la cuenta. Intentá otra vez en unos segundos.'
+        : 'No pudimos iniciar sesión. Intentá otra vez en unos segundos.'
+  }
 }
