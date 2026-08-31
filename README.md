@@ -52,6 +52,23 @@ con confirmación), verificación por correo antes del primer acceso, login,
 cierre de sesión y sesión persistente que se renueva sola y sobrevive a
 cerrar el navegador.
 
+> ### ⚠️ El correo integrado de Supabase casi no envía
+> El SMTP que viene por defecto es **solo para pruebas**: permite unos
+> pocos mails por hora y después deja de enviar sin aviso. Si el correo
+> "dejó de llegar", es casi siempre esto.
+>
+> Dos salidas, según para qué sea el proyecto:
+> - **Demo / portfolio:** apagá la confirmación por correo en
+>   **Authentication → Providers → Email → Confirm email**. El registro
+>   pasa a ser instantáneo y desaparece toda la dependencia del mail. La
+>   app ya contempla este caso: si Supabase devuelve sesión en el alta,
+>   entra derecho al panel sin pedir confirmación.
+> - **Producción:** configurá un SMTP propio en **Authentication → Emails
+>   → SMTP Settings** (Resend, Brevo, SendGrid; todos tienen plan gratis).
+>
+> Para desbloquear una cuenta puntual sin correo: **Authentication →
+> Users**, abrir el usuario y confirmarlo a mano.
+
 > ### ⚠️ Configurá las URLs en Supabase
 > **Authentication → URL Configuration**, en el panel de Supabase:
 > - **Site URL**: `https://cesd-chatgpt.github.io/paginatesina/`

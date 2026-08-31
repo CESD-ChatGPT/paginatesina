@@ -32,15 +32,25 @@ export default function Login() {
   /* 'idle' | 'sending' | 'sent' | 'error' — reenvío del correo de
      confirmación, para quien se quedó con un enlace vencido. */
   const [resend, setResend] = useState('idle')
+  const [resendError, setResendError] = useState(null)
 
   const isRegister = mode === 'register'
 
   async function handleResend(target) {
     setResend('sending')
+    setResendError(null)
     try {
       await resendConfirmation(target)
       setResend('sent')
-    } catch {
+    } catch (err) {
+      /* El motivo importa y no son intercambiables: un tope por segundos
+         se espera, uno por hora no. Decir "esperá un minuto" cuando el
+         límite es horario manda a la gente a reintentar en vano. */
+      setResendError(
+        err.code === 'rate_limited'
+          ? 'Supabase limitó los envíos por ahora. El correo integrado permite muy pocos por hora; si esto se repite, hay que configurar un SMTP propio.'
+          : 'No pudimos reenviarlo. Intentá de nuevo en un rato.'
+      )
       setResend('error')
     }
   }
@@ -49,7 +59,7 @@ export default function Login() {
     if (resend === 'sent') {
       return (
         <p className="t-mono text-[11px] mt-2" style={{ color: 'var(--positive)' }}>
-          Listo, te enviamos un enlace nuevo. Revisá tu correo.
+          Listo, te enviamos un enlace nuevo. Revisá tu correo — puede tardar unos minutos.
         </p>
       )
     }
@@ -64,9 +74,7 @@ export default function Login() {
           {resend === 'sending' ? 'Enviando…' : 'Enviar un enlace nuevo'}
         </button>
         {resend === 'error' && (
-          <p className="t-mono text-[11px] mt-1 text-muted">
-            No pudimos reenviarlo. Esperá un minuto e intentá de nuevo.
-          </p>
+          <p className="t-mono text-[11px] mt-1 text-muted leading-snug">{resendError}</p>
         )}
       </>
     )
@@ -455,7 +463,9 @@ function messageFor(err, isRegister) {
     case 'weak_password':
       return `La contraseña es demasiado débil. Usá al menos ${MIN_PASSWORD} caracteres.`
     case 'rate_limited':
-      return 'Demasiados intentos seguidos. Esperá un minuto antes de volver a probar.'
+      return isRegister
+        ? 'Supabase limitó el envío de correos por ahora. El servicio integrado permite muy pocos por hora; probá más tarde.'
+        : 'Demasiados intentos seguidos. Esperá un momento antes de volver a probar.'
     case 'registration_unavailable':
       return 'El registro no está disponible: falta configurar el backend de autenticación.'
     default:
