@@ -15,7 +15,7 @@ import { Isologotipo } from '../components/brand/Logo'
 const MIN_PASSWORD = 8
 
 export default function Login() {
-  const { signIn, signUp, pending, canRegister, isMockAuth } = useAuth()
+  const { signIn, signUp, resendConfirmation, pending, canRegister, isMockAuth } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
   const from = location.state?.from ?? '/panel'
@@ -27,9 +27,50 @@ export default function Login() {
   const [confirm, setConfirm] = useState('')
   const [touched, setTouched] = useState({})
   const [formError, setFormError] = useState(null)
+  const [formErrorCode, setFormErrorCode] = useState(null)
   const [awaitingConfirmation, setAwaitingConfirmation] = useState(null)
+  /* 'idle' | 'sending' | 'sent' | 'error' — reenvío del correo de
+     confirmación, para quien se quedó con un enlace vencido. */
+  const [resend, setResend] = useState('idle')
 
   const isRegister = mode === 'register'
+
+  async function handleResend(target) {
+    setResend('sending')
+    try {
+      await resendConfirmation(target)
+      setResend('sent')
+    } catch {
+      setResend('error')
+    }
+  }
+
+  function ResendControl({ target }) {
+    if (resend === 'sent') {
+      return (
+        <p className="t-mono text-[11px] mt-2" style={{ color: 'var(--positive)' }}>
+          Listo, te enviamos un enlace nuevo. Revisá tu correo.
+        </p>
+      )
+    }
+    return (
+      <>
+        <button
+          type="button"
+          onClick={() => handleResend(target)}
+          disabled={resend === 'sending'}
+          className="t-mono text-[11px] mt-2 underline underline-offset-4 hover:text-[var(--accent)] disabled:opacity-60"
+        >
+          {resend === 'sending' ? 'Enviando…' : 'Enviar un enlace nuevo'}
+        </button>
+        {resend === 'error' && (
+          <p className="t-mono text-[11px] mt-1 text-muted">
+            No pudimos reenviarlo. Esperá un minuto e intentá de nuevo.
+          </p>
+        )}
+      </>
+    )
+  }
 
   const nameError =
     isRegister && touched.name && !name.trim() ? 'Ingresá tu nombre' : null
@@ -56,6 +97,7 @@ export default function Login() {
   function switchMode(next) {
     setMode(next)
     setFormError(null)
+    setFormErrorCode(null)
     setTouched({})
     setPassword('')
     setConfirm('')
@@ -64,6 +106,7 @@ export default function Login() {
   async function handleSubmit(e) {
     e.preventDefault()
     setFormError(null)
+    setFormErrorCode(null)
     setTouched({ name: true, email: true, password: true, confirm: true })
 
     if (!email.trim() || !password || emailError) return
@@ -83,6 +126,7 @@ export default function Login() {
       }
     } catch (err) {
       setFormError(messageFor(err, isRegister))
+      setFormErrorCode(err.code)
     }
   }
 
@@ -110,10 +154,18 @@ export default function Login() {
             Enviamos un enlace de confirmación a{' '}
             <span className="t-mono text-[14px] text-ink">{awaitingConfirmation}</span>.
           </p>
-          <p className="t-small mb-8">
+          <p className="t-small mb-2">
             Tu cuenta ya está creada, pero necesitás confirmar el correo antes de poder
             entrar. Si no lo ves, revisá la carpeta de spam.
           </p>
+          {/* div y no p: ResendControl puede renderizar un <p>, y un
+              párrafo dentro de otro es anidado inválido. */}
+          <div className="mb-8">
+            <p className="t-mono text-[11px] text-muted">
+              El enlace vence a las 24 horas y sirve una sola vez.
+            </p>
+            <ResendControl target={awaitingConfirmation} />
+          </div>
           <button
             onClick={() => {
               setAwaitingConfirmation(null)
@@ -209,9 +261,14 @@ export default function Login() {
                   style={{ color: 'var(--alert)' }}
                   aria-hidden="true"
                 />
-                <p className="text-[13px] leading-snug" style={{ color: 'var(--alert)' }}>
-                  {formError}
-                </p>
+                <div className="min-w-0">
+                  <p className="text-[13px] leading-snug" style={{ color: 'var(--alert)' }}>
+                    {formError}
+                  </p>
+                  {/* Cuenta sin confirmar: sin esto queda encerrado — no
+                      puede entrar ni volver a registrarse. */}
+                  {formErrorCode === 'email_not_confirmed' && <ResendControl target={email} />}
+                </div>
               </div>
             )}
 

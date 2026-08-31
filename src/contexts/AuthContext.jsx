@@ -151,6 +151,20 @@ const supabaseAuthProvider = {
     }
   },
 
+  /* Los enlaces de confirmación son de un solo uso y vencen (24 h por
+     defecto). Sin esto, a quien se le vence queda encerrado: no puede
+     entrar porque la cuenta está sin confirmar, y tampoco puede
+     registrarse de nuevo porque el correo ya existe. */
+  async resendConfirmation(email) {
+    const supabase = await getSupabase()
+    const { error } = await supabase.auth.resend({
+      type: 'signup',
+      email: email.trim(),
+      options: { emailRedirectTo: `${window.location.origin}${import.meta.env.BASE_URL}` },
+    })
+    if (error) throw translateError(error)
+  },
+
   async signOut() {
     const supabase = await getSupabase()
     const { error } = await supabase.auth.signOut()
@@ -267,6 +281,15 @@ export function AuthProvider({ children }) {
     }
   }, [])
 
+  const resendConfirmation = useCallback(async (email) => {
+    if (!isSupabaseConfigured) {
+      const err = new Error('No hay backend de autenticación configurado.')
+      err.code = 'registration_unavailable'
+      throw err
+    }
+    return provider.resendConfirmation(email)
+  }, [])
+
   const signOut = useCallback(async () => {
     await provider.signOut()
     setUser(null)
@@ -295,6 +318,7 @@ export function AuthProvider({ children }) {
         signIn,
         signUp,
         signOut,
+        resendConfirmation,
         setRole,
         can,
         canRegister: isSupabaseConfigured,
