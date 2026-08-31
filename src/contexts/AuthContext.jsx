@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useCallback, useEffect } from 'react'
 import { can as canForRole } from '../lib/permissions'
-import { getSupabase, isSupabaseConfigured } from '../lib/supabase'
+import { getSupabase, isSupabaseConfigured, hasStoredSession } from '../lib/supabase'
 
 /* ═══════════════════════════════════════════════════════════════
    AUTENTICACIÓN
@@ -131,7 +131,12 @@ const supabaseAuthProvider = {
       options: {
         // Queda en user_metadata; es lo que lee toAppUser al restaurar sesión.
         data: { name: name.trim(), role: DEFAULT_ROLE, warehouse: 'Depósito central' },
-        emailRedirectTo: `${window.location.origin}${import.meta.env.BASE_URL}#/login`,
+        /* A la raíz, SIN ruta de hash: Supabase agrega los tokens al
+           fragmento, y `#/login#access_token=...` no es un callback que
+           el SDK sepa leer. Con la raíz queda `#access_token=...`, que
+           sí lo es. Quien lo consume es main.jsx, antes de que el router
+           toque la URL. */
+        emailRedirectTo: `${window.location.origin}${import.meta.env.BASE_URL}`,
       },
     })
     if (error) throw translateError(error)
@@ -153,6 +158,9 @@ const supabaseAuthProvider = {
   },
 
   async restore() {
+    /* Sin sesión guardada no hay nada que restaurar, así que se evita
+       descargar el SDK — ver hasStoredSession() en lib/supabase.js. */
+    if (!hasStoredSession()) return null
     const supabase = await getSupabase()
     const { data, error } = await supabase.auth.getSession()
     if (error || !data.session) return null
@@ -206,15 +214,31 @@ export function AuthProvider({ children }) {
         if (alive) setInitializing(false)
       })
 
+    return () => {
+      alive = false
+    }
+  }, [])
+
+  /* Escuchar cambios de sesión solo tiene sentido cuando hay una: sirve
+     para el refresco de token y para el cierre de sesión desde otra
+     pestaña. Suscribirse siempre obligaría a descargar el SDK también
+     para el visitante anónimo de la landing, que es justo lo que se
+     quiere evitar. La dependencia es un booleano y no el objeto `user`,
+     así que un evento de sesión no vuelve a disparar este efecto. */
+  const hasSession = Boolean(user)
+  useEffect(() => {
+    if (!isSupabaseConfigured) return
+    if (!hasSession && !hasStoredSession()) return
+
+    let alive = true
     const unsubscribe = provider.onChange((next) => {
       if (alive) setUser(next)
     })
-
     return () => {
       alive = false
       unsubscribe()
     }
-  }, [])
+  }, [hasSession])
 
   const signIn = useCallback(async (credentials) => {
     setPending(true)

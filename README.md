@@ -52,6 +52,25 @@ con confirmación), verificación por correo antes del primer acceso, login,
 cierre de sesión y sesión persistente que se renueva sola y sobrevive a
 cerrar el navegador.
 
+> ### ⚠️ Configurá las URLs en Supabase
+> **Authentication → URL Configuration**, en el panel de Supabase:
+> - **Site URL**: `https://cesd-chatgpt.github.io/paginatesina/`
+> - **Redirect URLs**: agregá esa misma URL.
+>
+> Si no están, Supabase ignora el `redirect_to` que manda la app y usa su
+> valor por defecto (`http://localhost:3000`): el enlace del correo lleva a
+> una página muerta y el usuario nunca queda logueado, aunque la cuenta sí
+> se haya creado.
+
+**El fragmento de la URL y HashRouter.** Supabase devuelve los tokens de
+sesión en el `#` de la URL, que esta app ya usa para rutear. Los dos se
+pisan. Por eso `main.jsx` consume el callback **antes** de montar React —
+es el único momento en que el router todavía no tocó la URL— y
+`lib/supabase.js` además tolera la forma vieja (`#/login#access_token=…`)
+para que los correos ya enviados sigan funcionando. Está verificado en
+navegador con las dos formas; si algún día se cambia el ruteo o el
+`emailRedirectTo`, hay que volver a probarlo.
+
 > ### ⚠️ Las credenciales de demo ya no funcionan
 > `demo@solvus.io` / `solvus2026` solo existían en el modo mock. Ahora que
 > hay auth real, esa cuenta **no existe en Supabase** y el login la

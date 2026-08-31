@@ -51,6 +51,91 @@ export const isSupabaseConfigured = Boolean(
   url && anonKey && !url.includes('tu-proyecto') && !anonKey.includes('tu-anon-key')
 )
 
+/* ── Vuelta desde el enlace del correo ──────────────────────────
+
+   Supabase devuelve los tokens en el FRAGMENTO de la URL
+   (`.../#access_token=...`). Esta app usa HashRouter, así que el
+   fragmento ya está ocupado por el ruteo: los dos se pelean por el
+   mismo `#`.
+
+   Verificado en navegador que sin esto la confirmación no funciona de
+   ninguna de las dos formas:
+   - con `redirect_to` a `#/login`, el fragmento queda
+     `#/login#access_token=...` y el SDK no lo reconoce como callback;
+   - con `redirect_to` a la raíz, el fragmento sí es válido, pero React
+     Router lo reescribe a `#/` (regla `path="*"`) antes de que el SDK
+     alcance a leerlo.
+
+   El resultado en ambos casos es el mismo y es el peor posible: la
+   cuenta queda creada y confirmada en Supabase, pero el usuario vuelve
+   al sitio sin sesión — parece que el registro no se guardó.
+
+   Por eso los tokens se consumen ANTES de montar React (ver main.jsx),
+   que es el único momento en que nadie más toca la URL. */
+
+const AUTH_CALLBACK = /(access_token|refresh_token|error_description|error_code)=/
+
+export function hasAuthCallback() {
+  if (typeof window === 'undefined') return false
+  return AUTH_CALLBACK.test(window.location.hash) || AUTH_CALLBACK.test(window.location.search)
+}
+
+/* Rescata los enlaces con la forma vieja: hasta este arreglo el
+   `redirect_to` incluía una ruta (`#/login`), así que Supabase devolvía
+   `#/login#access_token=...` — dos fragmentos pegados que el SDK no
+   reconoce. Los correos ya enviados siguen teniendo esa forma, y si no
+   se contempla acá quedan rotos para siempre. Se recorta la parte de
+   ruteo dejando el fragmento que el SDK sí entiende.
+
+   Se usa replaceState y no `location.hash = ...` para no dejar el enlace
+   roto en el historial: si no, el botón "atrás" vuelve a él. */
+function normalizeLegacyFragment() {
+  const { hash, pathname, search } = window.location
+  const nested = hash.indexOf('#', 1)
+  if (nested === -1 || !AUTH_CALLBACK.test(hash.slice(nested))) return
+  window.history.replaceState(null, '', pathname + search + hash.slice(nested))
+}
+
+/* Devuelve true si quedó una sesión abierta, para que el arranque pueda
+   mandar al panel en vez de dejar al usuario en la landing preguntándose
+   si el registro funcionó. */
+export async function consumeAuthCallback() {
+  if (!isSupabaseConfigured || !hasAuthCallback()) return false
+  try {
+    normalizeLegacyFragment()
+    const supabase = await getSupabase()
+    // getSession() espera a la inicialización, que es donde el SDK lee
+    // el fragmento, guarda la sesión y limpia la URL.
+    const { data } = await supabase.auth.getSession()
+    return Boolean(data.session)
+  } catch {
+    return false // un enlace vencido o ya usado no debe romper el arranque
+  }
+}
+
+/* ¿Hay una sesión guardada de antes? supabase-js la persiste en
+   localStorage bajo `sb-<ref>-auth-token`. Mirarlo primero permite que
+   un visitante anónimo de la landing —que es la mayoría del tráfico— ni
+   siquiera descargue el SDK, en vez de bajar 59 KB para descubrir que no
+   había sesión.
+
+   Ante la duda devuelve true: si el nombre de la clave cambiara en una
+   versión futura del SDK, o si localStorage no se puede leer, se carga y
+   se pregunta de verdad. Equivocarse hacia "cargar de más" cuesta unos
+   KB; equivocarse hacia "no cargar" dejaría a alguien con sesión abierta
+   viéndose como desconectado, que es mucho peor. */
+export function hasStoredSession() {
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i)
+      if (k && k.startsWith('sb-') && k.includes('auth-token')) return true
+    }
+    return false
+  } catch {
+    return true
+  }
+}
+
 let clientPromise = null
 
 /* Devuelve el cliente, creándolo la primera vez. Memoizado a nivel de
