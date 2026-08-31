@@ -13,8 +13,8 @@ multidepósito, proveedores, inventario físico, auditoría, roles).
 | Tarea | Estado | Detalle |
 |---|---|---|
 | Aplicar paleta de colores | ✅ Completa | Paleta de marca como tokens CSS; sin colores sueltos por componente |
-| Hacer Login | ✅ Completa | Auth real con Supabase (registro, login, verificación por email); cae a modo demo si no hay credenciales |
-| Registro de usuarios | ⚠️ Código completo, **falta configurar el proyecto** | Necesita dos claves de Supabase — ver abajo. Sin ellas el registro queda oculto, no roto |
+| Hacer Login | ✅ Completa | Auth real con Supabase, proyecto ya conectado |
+| Registro de usuarios | ✅ Completa | Alta con verificación por correo; las cuentas viven en Supabase, no en el navegador |
 | Implementar datos reales | ⚠️ Arquitectura completa, **datos aún mock** | No existe fuente real en el proyecto; hay un punto único de conexión |
 | Agregar gráficos y animaciones | ✅ Completa | Gráficos con hover, estados y motion con propósito, incluido scroll-storytelling |
 | Imágenes y logo SOLVUS | ⚠️ Completa **con logo reconstruido** | Falta el SVG oficial — ver abajo |
@@ -44,33 +44,37 @@ login, footer y favicon consumen ese componente.
 También conviene reemplazar `public/favicon.svg`, que replica el mismo
 trazado a mano.
 
-### 2. Activar el registro real (Supabase)
+### 2. Autenticación (Supabase — ya conectado)
 
-El código de registro y login real **ya está escrito**. Lo único que falta
-son dos claves, que solo puede generar quien sea dueño del proyecto.
+El proyecto Supabase `sncbnwuwjrdkvzuyenue` está conectado y el registro
+real funciona: alta con nombre + correo + contraseña (mínimo 8 caracteres,
+con confirmación), verificación por correo antes del primer acceso, login,
+cierre de sesión y sesión persistente que se renueva sola y sobrevive a
+cerrar el navegador.
 
-Mientras no estén, la app **no se rompe**: detecta que no hay backend, cae
-al login de demostración (`demo@solvus.io` / `solvus2026`) y oculta el
-formulario de registro en vez de mostrar uno que no podría crear nada.
+> ### ⚠️ Las credenciales de demo ya no funcionan
+> `demo@solvus.io` / `solvus2026` solo existían en el modo mock. Ahora que
+> hay auth real, esa cuenta **no existe en Supabase** y el login la
+> rechaza. Para volver a tener un acceso de demostración, registrala como
+> cuenta real desde el propio formulario, o creala desde el panel de
+> Supabase (Authentication → Users → Add user, con *Auto Confirm User*
+> activado para saltear la verificación por correo).
 
-**Los cuatro pasos:**
+**Dónde viven las claves.** En `src/lib/supabase.js` como valores de
+respaldo, y opcionalmente en `.env` (que tiene prioridad) si se quiere
+apuntar a otro proyecto sin tocar código — ver `.env.example`.
 
-1. Creá un proyecto gratuito en [supabase.com](https://supabase.com).
-2. En el panel del proyecto: **Settings → API**.
-3. Copiá `.env.example` a `.env` y completá:
-   - `VITE_SUPABASE_URL` ← el valor de *Project URL*
-   - `VITE_SUPABASE_ANON_KEY` ← el valor de *Project API keys → anon public*
-4. `npm run build`. Al arrancar, el login ya muestra "¿No tenés cuenta?".
+Están en el repo a propósito: `.env` está gitignoreado, así que un build
+desde otra máquina no lo tendría y la app caería a modo demo en silencio,
+haciendo desaparecer el registro del sitio publicado sin ningún error
+visible. La anon key es **pública por diseño** — ya viaja dentro del bundle
+que sirve GitHub Pages y cualquiera puede leerla desde el navegador.
 
-> ⚠️ Usá siempre la clave **anon public**, nunca la `service_role`: esa
-> bypassea todas las reglas de seguridad y jamás debe salir de un servidor.
-> La anon key es pública por diseño y viaja al navegador; lo que protege
-> los datos es Row Level Security configurado en Supabase.
-
-**Qué hace hoy el flujo real:** registro con nombre + correo + contraseña
-(mínimo 8 caracteres, con confirmación), verificación por correo antes del
-primer acceso, login, cierre de sesión y sesión persistente que se renueva
-sola y sobrevive a cerrar el navegador.
+> ⚠️ Lo que **nunca** puede entrar acá es la `service_role` key: esa
+> bypassea todas las reglas de seguridad. Y en cuanto se creen tablas de
+> negocio en Supabase, hay que activarles **Row Level Security**: con la
+> anon key pública, RLS es lo único que separa "cualquiera puede leer sus
+> propios datos" de "cualquiera puede leer los de todos".
 
 **Rol de las cuentas nuevas:** `operador`, no `administrador`. Quien se
 registra solo no debería auto-asignarse el rol con más permisos; puede
