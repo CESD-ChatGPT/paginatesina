@@ -1,0 +1,292 @@
+@import './fonts.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* mismo motivo que el overflow-x:hidden de body más abajo: sin esto acá
+     también, un descendiente con su propio scroll horizontal (la barra de
+     pestañas del panel) puede ensanchar el scrollWidth del documento aunque
+     su propio contenedor ya lo recorte visualmente. */
+  overflow-x: hidden;
+}
+
+/* La navbar es fija: sin esto el título de la sección queda detrás */
+section[id] {
+  scroll-margin-top: 96px;
+}
+
+/* ============================================================
+   SISTEMA "LEDGER" — precisión operativa · PALETA SOLVUS
+   Marca:  teal #1F6C82 · petróleo #0B2C40 · blanco #FFFFFF · negro #0A0A0A
+   Todos los contrastes verificados en navegador (mínimo AA 4.5:1).
+   Los grises y la rampa de gráficos son extensiones tonales de la marca,
+   no colores nuevos.
+   ============================================================ */
+:root,
+:root[data-theme="light"] {
+  --paper: #f6f8f9;        /* página: blanco con una pizca de petróleo */
+  --surface: #ffffff;      /* blanco puro de marca — paneles */
+  --surface-sunken: #edf1f3;
+  --ink: #0a0a0a;          /* negro profundo de marca — 17.4:1 peor caso */
+  --graphite: #485a64;     /* 6.32:1 peor caso */
+  --muted: #5a6b75;        /* 4.87:1 peor caso — AA en 11px */
+  --rule: #dde4e8;
+  --rule-strong: #c2ced4;
+
+  --accent: #1f6c82;       /* teal de marca — ÚNICO acento · 5.24:1 peor caso */
+  --accent-ink: #ffffff;   /* 5.96:1 sobre el teal */
+  --accent-wash: #eaf2f5;
+
+  /* Estados: reservados a datos, siempre acompañados de etiqueta de texto */
+  --positive: #1a7f5a;
+  --warning: #8a6a1f;
+  --alert: #b8460e;
+
+  --inverse-bg: #0b2c40;   /* la banda invertida usa el petróleo de marca */
+  --inverse-ink: #ffffff;
+  --inverse-graphite: #93a7b1;
+  --inverse-rule: #1d4257;
+
+  /* Gráficos: rampa secuencial de un solo tono (verificada monotónica) */
+  --seq-1: #b4d3dd;
+  --seq-2: #7fb0c1;
+  --seq-3: #4a8ca3;
+  --seq-4: #1f6c82;
+  --seq-5: #154b5b;
+  --chart-context: #5a6b75;  /* serie de contexto en gráficos de énfasis */
+  --chart-grid: #dde4e8;
+}
+
+:root[data-theme="dark"] {
+  --paper: #071a26;        /* más profundo que el petróleo, para que éste sea superficie */
+  --surface: #0b2c40;      /* azul petróleo de marca */
+  --surface-sunken: #08222f;
+  --ink: #f2f6f7;
+  --graphite: #b3c4cc;     /* 8.07:1 peor caso */
+  --muted: #93a7b1;        /* 5.80:1 peor caso */
+  --rule: #16394d;
+  --rule-strong: #21506a;
+
+  --accent: #4fb3ce;       /* teal de marca aclarado: el original da 2.43:1 sobre
+                              petróleo y fallaría. Mismo tono, otro escalón. */
+  --accent-ink: #0b2c40;   /* 5.99:1 sobre el teal claro */
+  --accent-wash: #0f3a4f;
+
+  --positive: #3fae82;
+  --warning: #d2a73e;
+  --alert: #e07340;
+
+  --inverse-bg: #ffffff;
+  --inverse-ink: #0a0a0a;
+  --inverse-graphite: #485a64;
+  --inverse-rule: #dde4e8;
+
+  --seq-1: #1a5468;
+  --seq-2: #256d85;
+  --seq-3: #3d90a8;
+  --seq-4: #4fb3ce;
+  --seq-5: #82cde0;
+  --chart-context: #93a7b1;
+  --chart-grid: #16394d;
+}
+
+body {
+  font-family: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: hidden;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   TIPOGRAFÍA
+   Escala apretada arriba (densidad operativa), cómoda en cuerpo.
+   ============================================================ */
+.t-display {
+  font-size: clamp(2.5rem, 6.2vw, 4.5rem);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 0.98;
+}
+
+.t-h2 {
+  font-size: clamp(1.75rem, 3.6vw, 2.75rem);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.08;
+}
+
+.t-h3 {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+.t-body {
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--graphite);
+  max-width: 62ch;          /* longitud de línea legible */
+}
+
+.t-small {
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--graphite);
+}
+
+/* Mono = lenguaje de datos: SKUs, cantidades, deltas, índices, etiquetas */
+.t-mono {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.t-label {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+}
+
+.t-figure {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+/* ============================================================
+   ESTRUCTURA — la grilla ES la identidad
+   ============================================================ */
+.shell {
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+@media (min-width: 768px) {
+  .shell {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+}
+
+/* Hairline estructural: divide como renglón de libro mayor */
+.rule-top {
+  border-top: 1px solid var(--rule);
+}
+
+.rule-bottom {
+  border-bottom: 1px solid var(--rule);
+}
+
+.section-pad {
+  padding-top: 72px;
+  padding-bottom: 72px;
+}
+
+@media (min-width: 768px) {
+  .section-pad {
+    padding-top: 112px;
+    padding-bottom: 112px;
+  }
+}
+
+/* Superficie: bordes rectos, sin glass, sin sombra pesada */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+}
+
+/* ============================================================
+   MOTION — solo con función. Nada de movimiento permanente.
+   ============================================================ */
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal {
+  animation: reveal 420ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================================
+   BASE INTERACTIVA
+   ============================================================ */
+button,
+a,
+[role="button"] {
+  transition: color 180ms ease, background-color 180ms ease,
+    border-color 180ms ease;
+}
+
+a,
+button {
+  cursor: pointer;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 1px;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--surface-sunken);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--rule-strong);
+  border: 3px solid var(--surface-sunken);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+}
