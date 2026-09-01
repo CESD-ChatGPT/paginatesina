@@ -8,8 +8,11 @@ export default function RoleSwitcher() {
   const { user, setRole } = useAuth()
   if (!user) return null
 
+  /* Oculto abajo de md: en 375 px la barra no entra, y entre un simulador
+     de roles de demo y poder ver "Salir" —la única forma de cerrar la
+     sesión— gana lo segundo. Desde md aparece igual que siempre. */
   return (
-    <label className="flex items-center gap-2">
+    <label className="hidden md:flex items-center gap-2">
       <span className="t-mono text-[10px] text-muted whitespace-nowrap hidden lg:inline">Rol (demo)</span>
       <select
         value={user.role}

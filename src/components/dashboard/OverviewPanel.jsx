@@ -14,7 +14,13 @@ import BarsLoader from '../BarsLoader'
 function StatTile({ label, value, prefix, note, tone }) {
   return (
     <div className="py-5 px-4 sm:px-5" style={{ background: 'var(--surface)' }}>
-      <p className="t-label mb-2">{label}</p>
+      {/* Dos líneas reservadas siempre. "Capital inmovilizado" y "Bajo punto
+          de reposición" envuelven y las otras cuatro no, así que sin esto
+          los seis números de la fila más visible del panel arrancaban a dos
+          alturas distintas —17 px de desfasaje— y la fila perdía la línea
+          de base. Con el alto fijo, todos los valores y todas las notas
+          quedan alineados sin depender del largo de cada etiqueta. */}
+      <p className="t-label mb-2 min-h-[3.2em]">{label}</p>
       <p className="mb-1.5 leading-none" style={tone ? { color: tone } : undefined}>
         {prefix && <span className="t-mono text-[12px] text-muted mr-1">{prefix}</span>}
         <span className="t-figure text-[22px] sm:text-[26px]">{value}</span>

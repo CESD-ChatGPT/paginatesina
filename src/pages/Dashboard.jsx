@@ -19,15 +19,20 @@ import SuppliersPanel from '../components/dashboard/SuppliersPanel'
 import PhysicalCountPanel from '../components/dashboard/PhysicalCountPanel'
 import AuditTrailPanel from '../components/dashboard/AuditTrailPanel'
 
+/* `title` es el encabezado de la vista y `label` el de la pestaña: el
+   título más largo no entra en la barra, y la barra sola no alcanza como
+   encabezado. Antes el H1 decía "Panel de inventario" en las ocho
+   pestañas: el tipo más grande de la página gastado en algo que nunca
+   cambia, mientras lo que sí cambiaba quedaba en la etiqueta más chica. */
 const TABS = [
-  { id: 'resumen', label: 'Resumen', Panel: OverviewPanel },
-  { id: 'valorizacion', label: 'Valorización', Panel: ValorizationPanel },
-  { id: 'recomendaciones', label: 'Recomienda', Panel: RecommendationsPanel },
-  { id: 'alertas', label: 'Alertas', Panel: AlertsPanel },
-  { id: 'depositos', label: 'Depósitos', Panel: WarehousesPanel },
-  { id: 'proveedores', label: 'Proveedores', Panel: SuppliersPanel },
-  { id: 'fisico', label: 'Inventario físico', Panel: PhysicalCountPanel },
-  { id: 'auditoria', label: 'Auditoría', Panel: AuditTrailPanel },
+  { id: 'resumen', label: 'Resumen', title: 'Resumen operativo', Panel: OverviewPanel },
+  { id: 'valorizacion', label: 'Valorización', title: 'Valorización del depósito', Panel: ValorizationPanel },
+  { id: 'recomendaciones', label: 'Recomienda', title: 'Acciones recomendadas', Panel: RecommendationsPanel },
+  { id: 'alertas', label: 'Alertas', title: 'Alertas de stock', Panel: AlertsPanel },
+  { id: 'depositos', label: 'Depósitos', title: 'Depósitos y transferencias', Panel: WarehousesPanel },
+  { id: 'proveedores', label: 'Proveedores', title: 'Proveedores y órdenes', Panel: SuppliersPanel },
+  { id: 'fisico', label: 'Inventario físico', title: 'Conteo físico', Panel: PhysicalCountPanel },
+  { id: 'auditoria', label: 'Auditoría', title: 'Registro de auditoría', Panel: AuditTrailPanel },
 ]
 
 export default function Dashboard() {
@@ -55,7 +60,8 @@ export default function Dashboard() {
     else if (item.kind === 'audit') setTab('auditoria')
   }
 
-  const ActivePanel = TABS.find((t) => t.id === tab)?.Panel ?? OverviewPanel
+  const activeTab = TABS.find((t) => t.id === tab) ?? TABS[0]
+  const ActivePanel = activeTab.Panel
 
   return (
     // reducedMotion="user": scopeado acá porque Framer Motion solo se usa
@@ -65,12 +71,15 @@ export default function Dashboard() {
       {/* Barra del panel — distinta de la navbar pública: acá el usuario
           ya está adentro, así que manda la identidad de sesión. */}
       <header className="rule-bottom sticky top-0 z-40" style={{ background: 'var(--surface)' }}>
-        <div className="shell py-3 flex items-center justify-between gap-4">
-          <span className="text-ink">
+        <div className="shell py-3 flex items-center justify-between gap-3 md:gap-4">
+          <span className="text-ink shrink-0">
             <Isologotipo size={24} />
           </span>
 
-          <div className="flex items-center gap-4">
+          {/* min-w-0 + shrink-0 en el botón de salida: sin esto, en 375 px
+              la fila se pasaba del ancho y "Salir" quedaba recortado fuera
+              de pantalla, sin ninguna forma visible de cerrar sesión. */}
+          <div className="flex items-center gap-2 md:gap-4 min-w-0">
             <CommandPalette onSelect={handleSearchSelect} />
             <NotificationsCenter onNavigate={setTab} />
             <ThemeToggleButton />
@@ -81,7 +90,12 @@ export default function Dashboard() {
             </div>
             <button
               onClick={handleSignOut}
-              className="inline-flex items-center gap-2 min-h-[44px] px-3 text-[13px] font-medium text-graphite hover:text-[var(--accent)] transition-colors"
+              /* Abajo de xs el texto se oculta con display:none, que también
+                 lo saca del árbol de accesibilidad: sin este aria-label el
+                 botón quedaba sin nombre para un lector de pantalla justo
+                 en el tamaño donde es solo un ícono. */
+              aria-label="Salir"
+              className="inline-flex shrink-0 items-center gap-2 min-h-[44px] px-2 md:px-3 text-[13px] font-medium text-graphite hover:text-[var(--accent)] transition-colors"
             >
               <LogOut className="w-4 h-4" aria-hidden="true" />
               <span className="hidden xs:inline">Salir</span>
@@ -93,7 +107,10 @@ export default function Dashboard() {
 
       <main className="shell py-8 md:py-10">
         <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 mb-8">
-          <h1 className="t-h2 text-[1.75rem]">Panel de inventario</h1>
+          <div>
+            <p className="t-mono text-[11px] text-muted uppercase tracking-[0.14em] mb-1">Panel de inventario</p>
+            <h1 className="t-h2 text-[1.75rem]">{activeTab.title}</h1>
+          </div>
           <p className="t-mono text-[11px] text-muted">{user?.jobTitle}</p>
         </div>
 
