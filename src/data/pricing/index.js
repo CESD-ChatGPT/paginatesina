@@ -1,6 +1,6 @@
 /* Punto único de conexión de la capa de valorización — igual que
    `inventoryService` en inventory.js, la UI solo debe importar esto. */
-import { getProductValuation, getDepotValorization, CONFIDENCE_LABEL, CONFIDENCE_TOKEN } from './valuation'
+import { getProductValuation, getDepotValorization, invalidateValuation, CONFIDENCE_LABEL, CONFIDENCE_TOKEN } from './valuation'
 import { CustomProvider } from './providers'
 import { inventoryService } from '../inventory'
 
@@ -14,5 +14,9 @@ export const pricingService = {
     if (!row) throw new Error(`No se encontró el SKU ${sku}.`)
     return getProductValuation(row)
   },
-  setCustomPrice: (sku, price, currency) => CustomProvider.set(sku, price, currency),
+  setCustomPrice: (sku, price, currency) => {
+    CustomProvider.set(sku, price, currency)
+    // si no, el precio nuevo se ignora hasta que venza el memo de 2 min
+    invalidateValuation(sku)
+  },
 }

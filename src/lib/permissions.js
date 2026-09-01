@@ -28,6 +28,21 @@ const PERMISSIONS = {
   consulta: { transfer: false, adjust: false, createOrder: false, viewAudit: false },
 }
 
+/* ⚠️ ESTE CHEQUEO NO ES UNA BARRERA DE SEGURIDAD.
+
+   Hoy el rol viaja en `user_metadata` de Supabase, y ese campo lo puede
+   reescribir el propio usuario:
+
+       supabase.auth.updateUser({ data: { role: 'administrador' } })
+
+   O sea que cualquiera con cuenta puede darse el rol más alto. Hoy no
+   tiene consecuencia —solo esconde botones sobre datos que son iguales
+   para todos— pero deja de ser inocuo en cuanto haya datos reales.
+
+   Cuando se migre a tablas en Supabase, el rol tiene que mudarse a una
+   tabla `profiles` donde el usuario pueda LEER su fila pero no escribir
+   la columna `role`, y las políticas RLS tienen que consultar esa tabla,
+   nunca este valor. Este `can()` se queda solo para decidir qué mostrar. */
 export function can(role, permission) {
   return Boolean(PERMISSIONS[role]?.[permission])
 }

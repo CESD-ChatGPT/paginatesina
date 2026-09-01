@@ -14,8 +14,14 @@ export default function NotificationsCenter({ onNavigate }) {
   const rootRef = useRef(null)
 
   async function load() {
-    const data = await getNotifications()
-    setItems(data)
+    /* Sin catch, un rechazo dejaba items en null y el panel colgado en el
+       skeleton para siempre. Es el único consumidor de datos de acá que
+       no pasa por useAsync, así que el manejo va a mano. */
+    try {
+      setItems(await getNotifications())
+    } catch {
+      setItems([])
+    }
   }
 
   useEffect(() => {

@@ -14,6 +14,48 @@ import { Isologotipo } from '../components/brand/Logo'
 
 const MIN_PASSWORD = 8
 
+/* Fuera de Login a propósito: declarado adentro, React lo trata como un
+   tipo de componente nuevo en cada render y lo desmonta/remonta, con lo
+   que el botón pierde el foco del teclado en medio de la interacción. */
+function ResendControl({ state, error, onResend }) {
+  if (state === 'sent') {
+    return (
+      <p className="t-mono text-[11px] mt-2" style={{ color: 'var(--positive)' }}>
+        Listo, te enviamos un enlace nuevo. Revisá tu correo — puede tardar unos minutos.
+      </p>
+    )
+  }
+  return (
+    <>
+      <button
+        type="button"
+        onClick={onResend}
+        disabled={state === 'sending'}
+        className="t-mono text-[11px] mt-2 underline underline-offset-4 hover:text-[var(--accent)] disabled:opacity-60"
+      >
+        {state === 'sending' ? 'Enviando…' : 'Enviar un enlace nuevo'}
+      </button>
+      {state === 'error' && (
+        <p className="t-mono text-[11px] mt-1 text-muted leading-snug">{error}</p>
+      )}
+    </>
+  )
+}
+
+/* Motivo por el que rebotó el enlace del correo, puesto por main.jsx. */
+function readAuthError() {
+  const q = window.location.hash.split('?')[1]
+  if (!q) return null
+  const code = new URLSearchParams(q).get('authError')
+  if (code === 'expired') {
+    return 'Ese enlace de confirmación ya venció o fue usado. Pedí uno nuevo desde acá.'
+  }
+  if (code === 'invalid') {
+    return 'No pudimos validar ese enlace de confirmación. Pedí uno nuevo desde acá.'
+  }
+  return null
+}
+
 export default function Login() {
   const { signIn, signUp, resendConfirmation, pending, canRegister, isMockAuth } = useAuth()
   const navigate = useNavigate()
@@ -26,8 +68,8 @@ export default function Login() {
   const [password, setPassword] = useState('')
   const [confirm, setConfirm] = useState('')
   const [touched, setTouched] = useState({})
-  const [formError, setFormError] = useState(null)
-  const [formErrorCode, setFormErrorCode] = useState(null)
+  const [formError, setFormError] = useState(readAuthError)
+  const [formErrorCode, setFormErrorCode] = useState(() => (readAuthError() ? 'email_not_confirmed' : null))
   const [awaitingConfirmation, setAwaitingConfirmation] = useState(null)
   /* 'idle' | 'sending' | 'sent' | 'error' — reenvío del correo de
      confirmación, para quien se quedó con un enlace vencido. */
@@ -53,31 +95,6 @@ export default function Login() {
       )
       setResend('error')
     }
-  }
-
-  function ResendControl({ target }) {
-    if (resend === 'sent') {
-      return (
-        <p className="t-mono text-[11px] mt-2" style={{ color: 'var(--positive)' }}>
-          Listo, te enviamos un enlace nuevo. Revisá tu correo — puede tardar unos minutos.
-        </p>
-      )
-    }
-    return (
-      <>
-        <button
-          type="button"
-          onClick={() => handleResend(target)}
-          disabled={resend === 'sending'}
-          className="t-mono text-[11px] mt-2 underline underline-offset-4 hover:text-[var(--accent)] disabled:opacity-60"
-        >
-          {resend === 'sending' ? 'Enviando…' : 'Enviar un enlace nuevo'}
-        </button>
-        {resend === 'error' && (
-          <p className="t-mono text-[11px] mt-1 text-muted leading-snug">{resendError}</p>
-        )}
-      </>
-    )
   }
 
   const nameError =
@@ -106,6 +123,10 @@ export default function Login() {
     setMode(next)
     setFormError(null)
     setFormErrorCode(null)
+    // sin esto quedaba el 'ya lo enviamos' viejo y sin botón: el usuario
+    // no podía volver a pedir un enlace en el siguiente intento
+    setResend('idle')
+    setResendError(null)
     setTouched({})
     setPassword('')
     setConfirm('')
@@ -172,7 +193,7 @@ export default function Login() {
             <p className="t-mono text-[11px] text-muted">
               El enlace vence a las 24 horas y sirve una sola vez.
             </p>
-            <ResendControl target={awaitingConfirmation} />
+            <ResendControl state={resend} error={resendError} onResend={() => handleResend(awaitingConfirmation)} />
           </div>
           <button
             onClick={() => {
@@ -275,7 +296,9 @@ export default function Login() {
                   </p>
                   {/* Cuenta sin confirmar: sin esto queda encerrado — no
                       puede entrar ni volver a registrarse. */}
-                  {formErrorCode === 'email_not_confirmed' && <ResendControl target={email} />}
+                  {formErrorCode === 'email_not_confirmed' && (
+                    <ResendControl state={resend} error={resendError} onResend={() => handleResend(email)} />
+                  )}
                 </div>
               </div>
             )}

@@ -40,6 +40,12 @@ function confidenceTier(quotes) {
   return 'baja'
 }
 
+/* Un precio cargado a mano tiene que verse ya, no cuando venza el TTL. */
+export function invalidateValuation(sku) {
+  if (sku) cache.delete(sku)
+  else cache.clear()
+}
+
 /* `product` acepta cualquier objeto con {sku, unitCost, ean}: las filas
    de getStockRows() ya cumplen esa forma, así que no hace falta volver
    a resolver el producto acá. */

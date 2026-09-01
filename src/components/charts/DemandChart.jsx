@@ -125,7 +125,13 @@ export default function DemandChart({ observed, forecast, unitLabel = 'unidades'
 
   function handleMove(e) {
     const rect = e.currentTarget.getBoundingClientRect()
-    const x = ((e.clientX - rect.left) / rect.width) * W
+    /* Un TouchEvent no tiene clientX: hay que sacarlo del primer toque.
+       Sin esto, en mobile x quedaba NaN y la búsqueda del punto más
+       cercano devolvía siempre el primero — todos los toques mostraban
+       el mes inicial. */
+    const clientX = e.clientX ?? e.touches?.[0]?.clientX
+    if (clientX == null) return
+    const x = ((clientX - rect.left) / rect.width) * W
     let nearest = points[0]
     for (const p of points) {
       if (Math.abs(p.x - x) < Math.abs(nearest.x - x)) nearest = p

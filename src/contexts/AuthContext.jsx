@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useCallback, useEffect } from 'react'
 import { can as canForRole } from '../lib/permissions'
 import { getSupabase, isSupabaseConfigured, hasStoredSession } from '../lib/supabase'
+import { setAuditUser } from '../data/audit'
 
 /* ═══════════════════════════════════════════════════════════════
    AUTENTICACIÓN
@@ -215,6 +216,7 @@ export function AuthProvider({ children }) {
      guard de ruta vería user=null en el primer render y patearía al login
      a alguien que sí tenía sesión abierta. */
   const [initializing, setInitializing] = useState(true)
+  const [roleOverride, setRoleOverride] = useState(null)
 
   useEffect(() => {
     let alive = true
@@ -239,6 +241,13 @@ export function AuthProvider({ children }) {
      para el visitante anónimo de la landing, que es justo lo que se
      quiere evitar. La dependencia es un booleano y no el objeto `user`,
      así que un evento de sesión no vuelve a disparar este efecto. */
+  /* La auditoría necesita saber quién opera, y no puede deducirlo del
+     almacenamiento porque cada provider guarda distinto. Se le informa
+     desde acá, que es el único lugar que conoce la sesión activa. */
+  useEffect(() => {
+    setAuditUser(user?.name)
+  }, [user?.name])
+
   const hasSession = Boolean(user)
   useEffect(() => {
     if (!isSupabaseConfigured) return
@@ -291,28 +300,50 @@ export function AuthProvider({ children }) {
   }, [])
 
   const signOut = useCallback(async () => {
-    await provider.signOut()
+    /* Cerrar sesión localmente pase lo que pase. Si el token ya venció o
+       fue revocado, Supabase devuelve error — y si eso propaga, el
+       usuario se queda "adentro" después de apretar Salir, que es
+       justamente lo contrario de lo que pidió. El estado local manda. */
+    try {
+      await provider.signOut()
+    } catch {
+      // el servidor ya no reconoce la sesión: cerrarla acá igual
+    }
     setUser(null)
+    setRoleOverride(null)
   }, [])
 
   /* Cambia el rol de la sesión activa. Ver nota en lib/permissions.js:
      es un selector de demostración, no un flujo de autorización real.
-     Solo afecta el estado local — no persiste contra Supabase. */
+
+     Se guarda aparte del usuario y no dentro de él: Supabase reconstruye
+     el objeto desde user_metadata en cada refresco de token o al volver
+     a la pestaña, y eso pisaba el rol elegido en medio de una demo. */
   const setRole = useCallback((role) => {
-    setUser((prev) => {
-      if (!prev) return prev
-      const next = { ...prev, role }
-      if (!isSupabaseConfigured) sessionStorage.setItem(SESSION_KEY, JSON.stringify(next))
-      return next
-    })
+    setRoleOverride(role)
+    if (!isSupabaseConfigured) {
+      setUser((prev) => {
+        if (!prev) return prev
+        const next = { ...prev, role }
+        sessionStorage.setItem(SESSION_KEY, JSON.stringify(next))
+        return next
+      })
+    }
   }, [])
 
-  const can = useCallback((permission) => canForRole(user?.role, permission), [user?.role])
+  /* El usuario que ve la app: el de la sesión, con el rol simulado
+     encima si hay uno elegido. */
+  const effectiveUser = user && roleOverride ? { ...user, role: roleOverride } : user
+
+  const can = useCallback(
+    (permission) => canForRole(effectiveUser?.role, permission),
+    [effectiveUser?.role]
+  )
 
   return (
     <AuthContext.Provider
       value={{
-        user,
+        user: effectiveUser,
         pending,
         initializing,
         signIn,

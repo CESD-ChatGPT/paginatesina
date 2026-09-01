@@ -184,6 +184,18 @@ const mockAdapter = {
     await delay(600)
     const row = stockByWarehouse.find((r) => r.sku === sku && r.warehouseId === warehouseId)
     if (!row) throw new Error('No se encontró el registro de stock para ese depósito.')
+
+    /* El conteo se carga consolidado (todos los depósitos) pero el ajuste
+       se asienta en uno solo, así que la diferencia puede superar lo que
+       ese depósito tiene. Sin este control quedaba stock negativo, que
+       después envenena KPIs, alertas y transferencias de toda la sesión. */
+    if (!Number.isFinite(newQty) || newQty < 0) {
+      throw new Error(
+        `El ajuste dejaría el stock en ${newQty} u. Elegí el depósito donde ` +
+          `realmente sobra o falta la diferencia, o cargá el conteo por depósito.`
+      )
+    }
+
     const before = row.stock
     row.stock = newQty
     recordEvent({

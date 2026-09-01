@@ -99,17 +99,36 @@ function normalizeLegacyFragment() {
 /* Devuelve true si quedó una sesión abierta, para que el arranque pueda
    mandar al panel en vez de dejar al usuario en la landing preguntándose
    si el registro funcionó. */
+/* Supabase informa el fallo en el propio fragmento
+   (`#error=...&error_description=...`). Se lee ANTES de que el SDK
+   limpie la URL, para poder decirle al usuario por qué no entró en vez
+   de dejarlo en la landing sin explicación — que es exactamente el
+   "peor caso" que este módulo existe para evitar. */
+function readCallbackError() {
+  const source = window.location.hash.replace(/^#\/?/, '') || window.location.search.slice(1)
+  const params = new URLSearchParams(source)
+  const code = params.get('error_code')
+  const description = params.get('error_description')
+  if (!code && !description) return null
+  return { code, description: description ? description.replace(/\+/g, ' ') : null }
+}
+
 export async function consumeAuthCallback() {
-  if (!isSupabaseConfigured || !hasAuthCallback()) return false
+  if (!isSupabaseConfigured || !hasAuthCallback()) return { session: false, error: null }
+
+  const error = readCallbackError()
+  if (error) return { session: false, error }
+
   try {
     normalizeLegacyFragment()
     const supabase = await getSupabase()
     // getSession() espera a la inicialización, que es donde el SDK lee
     // el fragmento, guarda la sesión y limpia la URL.
     const { data } = await supabase.auth.getSession()
-    return Boolean(data.session)
+    return { session: Boolean(data.session), error: null }
   } catch {
-    return false // un enlace vencido o ya usado no debe romper el arranque
+    // un enlace vencido o ya usado no debe romper el arranque
+    return { session: false, error: { code: 'unknown', description: null } }
   }
 }
 

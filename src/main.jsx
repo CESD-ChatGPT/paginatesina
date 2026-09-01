@@ -22,10 +22,18 @@ function arrancar() {
 }
 
 if (hasAuthCallback()) {
-  consumeAuthCallback().then((haySesion) => {
-    // Recién confirmado: entra derecho al panel en vez de caer en la
-    // landing sin señal de que el registro funcionó.
-    if (haySesion) window.location.hash = '#/panel'
+  consumeAuthCallback().then(({ session, error }) => {
+    if (session) {
+      // Recién confirmado: entra derecho al panel en vez de caer en la
+      // landing sin señal de que el registro funcionó.
+      window.location.hash = '#/panel'
+    } else if (error) {
+      /* Enlace vencido o ya usado. Se manda al login con el motivo, que
+         además ofrece reenviar uno nuevo; dejarlo caer en la landing sin
+         decir nada era el peor final posible para este camino. */
+      const motivo = error.code === 'otp_expired' ? 'expired' : 'invalid'
+      window.location.hash = `#/login?authError=${motivo}`
+    }
     arrancar()
   })
 } else {
