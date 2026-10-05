@@ -25,9 +25,45 @@ import { gsap, prefersReducedMotion } from '../../lib/motion'
    ahí porque hace setAttribute en cada frame en lugar de depender del
    pipeline de composición CSS, así que esa pieza puntual usa GSAP. */
 
-const W = 640
-const H = 220
-const PAD = { top: 16, right: 16, bottom: 28, left: 40 }
+/* El viewBox SIGUE AL ANCHO REAL del contenedor en vez de ser fijo.
+
+   Con un viewBox fijo de 640 y `w-full h-auto`, el SVG se escala
+   uniformemente: en 375 px el factor era 0,46, así que las etiquetas
+   declaradas en 10 px y 9 px se renderizaban a 4,6 px y 4,1 px —
+   ilegibles— y el trazo de 2 px quedaba en 0,92. Escalar un dibujo
+   escala también su tipografía, que es lo que no se quiere.
+
+   Con las unidades de usuario pegadas a los píxeles, un `fontSize=11`
+   mide 11 px en pantalla en cualquier ancho. El alto baja en pantallas
+   angostas para no comerse el scroll, pero nunca por debajo de lo que
+   la grilla necesita para respirar. */
+const W_FALLBACK = 640
+const H_ANCHO = 220
+const H_ANGOSTO = 190
+const ANGOSTO = 520
+
+/* El eje Y necesita más margen cuando no se achica con el dibujo. */
+const PAD_ANCHO = { top: 16, right: 16, bottom: 28, left: 40 }
+const PAD_ANGOSTO = { top: 14, right: 12, bottom: 26, left: 34 }
+
+/* Mide el contenedor y mantiene el viewBox a su medida. El primer valor
+   llega después del primer render, así que hasta entonces se dibuja con
+   el ancho de escritorio: es el caso más común y evita un salto visible
+   en la mayoría de las cargas. */
+function useAnchoDelContenedor(ref) {
+  const [ancho, setAncho] = useState(W_FALLBACK)
+  useEffect(() => {
+    const nodo = ref.current
+    if (!nodo || typeof ResizeObserver === 'undefined') return
+    const ro = new ResizeObserver(([entrada]) => {
+      const w = Math.round(entrada.contentRect.width)
+      if (w > 0) setAncho(w)
+    })
+    ro.observe(nodo)
+    return () => ro.disconnect()
+  }, [ref])
+  return ancho
+}
 
 const monthLabel = (t) => {
   const [y, m] = t.split('-')
@@ -41,6 +77,11 @@ export default function DemandChart({ observed, forecast, unitLabel = 'unidades'
   const containerRef = useRef(null)
   const obsLineRef = useRef(null)
   const fcClipRectRef = useRef(null)
+
+  const W = useAnchoDelContenedor(containerRef)
+  const angosto = W < ANGOSTO
+  const H = angosto ? H_ANGOSTO : H_ANCHO
+  const PAD = angosto ? PAD_ANGOSTO : PAD_ANCHO
 
   const { points, scaleX, scaleY, ticks, obsPath, fcPath, splitX } = useMemo(() => {
     const all = [
@@ -69,7 +110,15 @@ export default function DemandChart({ observed, forecast, unitLabel = 'unidades'
       fcPath: line([obs[obs.length - 1], ...fc]),
       splitX: obs[obs.length - 1].x,
     }
-  }, [observed, forecast])
+  }, [observed, forecast, W, H, PAD])
+
+  /* El trazado es de una sola vez. Como la geometría ahora depende del
+     ancho, este efecto se vuelve a correr en cada resize —y al entrar,
+     porque la primera medición del contenedor ya cambia W—. Sin esta
+     guarda, cada cambio de ancho volvería a esconder la línea y la
+     redibujaría: un parpadeo al rotar el teléfono o al arrastrar el
+     borde de la ventana. */
+  const yaTrazado = useRef(false)
 
   useEffect(() => {
     const container = containerRef.current
@@ -77,7 +126,18 @@ export default function DemandChart({ observed, forecast, unitLabel = 'unidades'
     const fcClipRect = fcClipRectRef.current
     if (!container || !obsLine || !fcClipRect) return
 
+    /* Ya se dibujó: solo hay que reponer el estado final sobre la
+       geometría nueva, sin volver a animar. */
+    if (yaTrazado.current) {
+      obsLine.style.strokeDasharray = ''
+      obsLine.style.strokeDashoffset = ''
+      obsLine.getAnimations?.().forEach((a) => a.cancel())
+      fcClipRect.setAttribute('width', fcClipRect.getAttribute('data-full-width'))
+      return
+    }
+
     if (prefersReducedMotion()) {
+      yaTrazado.current = true
       // El clip-rect arranca en 0 (para no destaparse antes de tiempo);
       // sin animación hay que abrirlo a mano de una vez.
       fcClipRect.setAttribute('width', fcClipRect.getAttribute('data-full-width'))
@@ -102,6 +162,7 @@ export default function DemandChart({ observed, forecast, unitLabel = 'unidades'
       (entries) => {
         if (done || !entries[0].isIntersecting) return
         done = true
+        yaTrazado.current = true
 
         obsLine.animate(
           [{ strokeDashoffset: obsLen }, { strokeDashoffset: 0 }],
@@ -121,7 +182,7 @@ export default function DemandChart({ observed, forecast, unitLabel = 'unidades'
     )
     io.observe(container)
     return () => io.disconnect()
-  }, [observed, forecast])
+  }, [observed, forecast, W, H, PAD])
 
   function handleMove(e) {
     const rect = e.currentTarget.getBoundingClientRect()
@@ -162,7 +223,13 @@ export default function DemandChart({ observed, forecast, unitLabel = 'unidades'
 
       <svg
         viewBox={`0 0 ${W} ${H}`}
-        className="w-full h-auto touch-none"
+        width={W}
+        height={H}
+        /* El viewBox ya está en píxeles reales: con `h-auto` el SVG
+           volvía a escalarse por relación de aspecto y arrastraba al
+           texto. Con el alto explícito, una unidad de usuario es un
+           píxel y un fontSize de 11 mide 11 en cualquier pantalla. */
+        className="block max-w-full touch-none"
         role="img"
         aria-label={`Demanda mensual en ${unitLabel}. ${observed.length} meses observados, con una proyección de ${forecast.length} meses que continúa la tendencia al alza.`}
         onMouseMove={handleMove}
@@ -205,7 +272,7 @@ export default function DemandChart({ observed, forecast, unitLabel = 'unidades'
               y={scaleY(t) + 4}
               textAnchor="end"
               className="t-mono"
-              fontSize="10"
+              fontSize="11"
               fill="var(--muted)"
             >
               {t}
@@ -226,7 +293,7 @@ export default function DemandChart({ observed, forecast, unitLabel = 'unidades'
           x={splitX + 5}
           y={PAD.top + 9}
           className="t-mono"
-          fontSize="9"
+          fontSize="11"
           fill="var(--muted)"
         >
           hoy
@@ -259,7 +326,7 @@ export default function DemandChart({ observed, forecast, unitLabel = 'unidades'
             y={H - 8}
             textAnchor={i === 0 ? 'start' : 'end'}
             className="t-mono"
-            fontSize="10"
+            fontSize="11"
             fill="var(--muted)"
           >
             {monthLabel(p.t)}
