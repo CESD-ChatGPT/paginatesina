@@ -5,6 +5,7 @@ import { useAsync } from '../../hooks/useAsync'
 import { loadKpiPrefs, saveKpiPrefs } from '../../lib/dashboardPrefs'
 import { compareDemandPeriods } from '../../lib/periodCompare'
 import { toCsv, downloadCsv } from '../../lib/csv'
+import { exportarPdf, nombreDeArchivo } from '../../lib/pdf'
 import DemandChart from '../charts/DemandChart'
 import CategoryBars from '../charts/CategoryBars'
 import { LoadingBlock, ErrorBlock, EmptyBlock } from '../States'
@@ -193,18 +194,52 @@ export default function OverviewPanel() {
   const comparison =
     demand.status === 'success' ? compareDemandPeriods(serie.observed, compareMonths) : null
 
+  /* Una sola definición de columnas para los dos formatos: si se
+     agrega una, no puede quedar en uno y faltar en el otro. */
+  const COLUMNAS_INVENTARIO = [
+    { label: 'SKU', value: (r) => r.sku },
+    { label: 'Producto', value: (r) => r.name },
+    { label: 'Categoría', value: (r) => r.category },
+    { label: 'Stock', value: (r) => r.stock },
+    { label: 'Punto de reposición', value: (r) => r.reorder },
+    { label: 'Estado', value: (r) => STATE_LABEL[stockState(r)] },
+    { label: 'Costo unitario (USD)', value: (r) => r.unitCost },
+  ]
+
   function handleExportInventory() {
     if (rows.status !== 'success') return
-    const csv = toCsv(rows.data, [
-      { label: 'SKU', value: (r) => r.sku },
-      { label: 'Producto', value: (r) => r.name },
-      { label: 'Categoría', value: (r) => r.category },
-      { label: 'Stock', value: (r) => r.stock },
-      { label: 'Punto de reposición', value: (r) => r.reorder },
-      { label: 'Estado', value: (r) => STATE_LABEL[stockState(r)] },
-      { label: 'Costo unitario (USD)', value: (r) => r.unitCost },
-    ])
-    downloadCsv(`solvus-inventario-${new Date().toISOString().slice(0, 10)}.csv`, csv)
+    downloadCsv(
+      `solvus-inventario-${new Date().toISOString().slice(0, 10)}.csv`,
+      toCsv(rows.data, COLUMNAS_INVENTARIO)
+    )
+  }
+
+  /* 'idle' | 'generando' — jsPDF baja recién al apretar, así que hay
+     una espera real que hay que mostrar. */
+  const [pdfState, setPdfState] = useState('idle')
+
+  async function handleExportPdf() {
+    if (rows.status !== 'success' || pdfState === 'generando') return
+    setPdfState('generando')
+    try {
+      const k = kpis.status === 'success' ? kpis.data : null
+      await exportarPdf({
+        titulo: 'Inventario',
+        bajada: 'Estado del depósito al momento de la exportación. Las cifras de valorización son estimaciones, no precios de venta.',
+        resumen: k && [
+          { label: 'SKU activos', value: k.skuCount },
+          { label: 'Capital inmovilizado', value: `USD ${(k.capital / 1000).toFixed(1)}k` },
+          { label: 'Bajo punto de reposición', value: k.belowReorder, tono: [184, 70, 14] },
+          { label: 'Por quebrar', value: k.atRisk, tono: [138, 106, 31] },
+          { label: 'Sobrestock', value: k.overstock, tono: [138, 106, 31] },
+        ],
+        columnas: COLUMNAS_INVENTARIO.map((c) => c.label),
+        filas: rows.data.map((r) => COLUMNAS_INVENTARIO.map((c) => String(c.value(r)))),
+        archivo: nombreDeArchivo('inventario'),
+      })
+    } finally {
+      setPdfState('idle')
+    }
   }
 
   return (
@@ -349,12 +384,21 @@ export default function OverviewPanel() {
             <div className="flex items-baseline gap-3">
               <h2 className="t-h3">Inventario</h2>
               {rows.status === 'success' && rows.data.length > 0 && (
-                <button
-                  onClick={handleExportInventory}
-                  className="t-mono text-[11px] underline underline-offset-4 text-muted hover:text-[var(--accent)]"
-                >
-                  Exportar CSV
-                </button>
+                <>
+                  <button
+                    onClick={handleExportInventory}
+                    className="t-mono text-[11px] underline underline-offset-4 text-muted hover:text-[var(--accent)]"
+                  >
+                    Exportar CSV
+                  </button>
+                  <button
+                    onClick={handleExportPdf}
+                    disabled={pdfState === 'generando'}
+                    className="t-mono text-[11px] underline underline-offset-4 text-muted hover:text-[var(--accent)] disabled:opacity-50"
+                  >
+                    {pdfState === 'generando' ? 'Generando PDF…' : 'Exportar PDF'}
+                  </button>
+                </>
               )}
             </div>
             {lowSkus.length > 0 && order.status !== 'done' && (
