@@ -15,3 +15,9 @@ yarn-error.log*
 *.swo
 *~
 .turbo/
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/.playwright/

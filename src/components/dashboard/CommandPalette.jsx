@@ -71,6 +71,10 @@ export default function CommandPalette({ onSelect }) {
     <>
       <button
         onClick={() => setOpen(true)}
+        /* Abajo de sm el texto se oculta con display:none, que también
+           lo saca del árbol de accesibilidad: sin este aria-label el
+           botón quedaba sin nombre justo donde es solo una lupa. */
+        aria-label="Buscar"
         className="inline-flex items-center gap-2 min-h-[36px] px-3 t-mono text-[11px] text-muted border transition-colors hover:text-[var(--accent)]"
         style={{ borderColor: 'var(--rule-strong)', borderRadius: '2px' }}
       >
