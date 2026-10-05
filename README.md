@@ -52,6 +52,16 @@ con confirmación), verificación por correo antes del primer acceso, login,
 cierre de sesión y sesión persistente que se renueva sola y sobrevive a
 cerrar el navegador.
 
+También está la **recuperación de contraseña**: "¿Olvidaste tu
+contraseña?" en el login manda un enlace, y ese enlace lleva a elegir
+una nueva. El aviso de envío es siempre el mismo exista o no la cuenta —
+decir "ese correo no está registrado" le confirma a cualquiera quién
+tiene cuenta acá.
+
+> Para que los enlaces de confirmación y de recuperación funcionen,
+> **Authentication → URL Configuration → Site URL** tiene que apuntar al
+> sitio publicado, no a `localhost`.
+
 > ### ⚠️ El correo integrado de Supabase casi no envía
 > El SMTP que viene por defecto es **solo para pruebas**: permite unos
 > pocos mails por hora y después deja de enviar sin aviso. Si el correo
@@ -123,13 +133,57 @@ siguen siendo mock (punto 3), así que todos los usuarios reales verían los
 mismos datos inventados. Row Level Security todavía no está configurado
 del lado de Supabase, porque no hay tablas de negocio que proteger.
 
-### 3. Fuente de datos
-`src/data/inventory.js` expone `inventoryService`, que hoy resuelve contra
-`mockAdapter`. Las cifras son inventadas y están rotuladas como tales en la
-propia interfaz del panel.
+### 3. Fuente de datos — inventario propio
 
-**Para conectarlo:** poné `USE_MOCK = false` y completá `apiAdapter`
-respetando las firmas existentes. Ningún componente cambia.
+`src/data/inventory.js` expone `inventoryService` y elige entre dos
+fuentes según lo que encuentre:
+
+| Fuente | Cuándo | Qué sirve |
+|---|---|---|
+| `supabaseAdapter` | Supabase configurado **y** esquema corrido | El inventario del usuario, aislado por RLS |
+| `mockAdapter` | Sin Supabase, sin sesión o sin esquema | El depósito de ejemplo, rotulado como tal |
+
+La elección es asincrónica porque depende de si las tablas existen, y
+eso solo se sabe preguntando. Se resuelve una vez por sesión.
+
+**Para activar el inventario real — un solo paso:**
+
+1. Panel de Supabase → **SQL Editor** → **New query**.
+2. Pegá todo el contenido de [`supabase/schema.sql`](supabase/schema.sql) y **Run**.
+3. Recargá la app.
+
+Es idempotente: se puede volver a correr sin romper nada.
+
+A partir de ahí cada cuenta arranca **vacía** y carga su propio
+inventario desde la pestaña **Cargar**. No se siembran productos de
+ejemplo a propósito: un depósito con datos inventados es peor que uno
+vacío, porque parece que el sistema sabe algo que no sabe.
+
+Mientras el esquema no esté corrido, el panel no se cae — muestra el
+depósito de ejemplo y dice en pantalla qué falta.
+
+#### Sobre el rol y la seguridad
+
+El rol vive en la tabla `profiles`, **no** en `user_metadata`. La
+diferencia no es cosmética: `user_metadata` lo reescribe el propio
+usuario con una línea desde la consola del navegador —
+
+```js
+supabase.auth.updateUser({ data: { role: 'administrador' } })
+```
+
+— o sea que cualquiera con cuenta podía darse el rol más alto. En
+`profiles` el candado está en los permisos de columna: el cliente puede
+actualizar su nombre y su puesto, nunca su rol. Cambiar un rol se hace
+desde el panel de Supabase.
+
+`can()` en `src/lib/permissions.js` decide **qué mostrar** y nada más.
+Corre en el navegador, así que no es ni puede ser una barrera de
+seguridad: quién puede escribir qué lo deciden las políticas de RLS.
+
+El selector de rol del panel es un simulador de demostración y solo
+afecta a `can()`: cambiar de rol ahí no cambia lo que el servidor
+permite.
 
 ---
 
@@ -141,6 +195,8 @@ respetando las firmas existentes. Ningún componente cambia.
 - IBM Plex Sans / Mono **autoalojadas** (`public/fonts`, 8 archivos, 180 KB)
 - lucide-react para iconografía
 - Gráficos en SVG propio — sin librería de charts
+- jsPDF + autotable para el export PDF, **detrás de un `import()` dinámico**
+- Playwright para los tests end-to-end
 
 ## Rutas
 
@@ -153,11 +209,39 @@ respetando las firmas existentes. Ningún componente cambia.
 ## Desarrollo
 
 ```bash
-npm install
-npm run dev       # desarrollo
-npm run build     # compila a docs/ (GitHub Pages sirve desde ahí)
+./scripts/setup.sh   # dependencias + navegador de Playwright
+npm run dev          # desarrollo
+npm run build        # compila a docs/ (GitHub Pages sirve desde ahí)
 npm run preview
+npm run lint
+npm test             # suite end-to-end
 ```
+
+### Tests
+
+63 tests de Playwright contra el **build real** servido por `vite
+preview`, no contra el dev server: el base path, el code splitting y el
+orden de los chunks solo fallan en producción. Corren en escritorio y
+en 375 px.
+
+| Archivo | Cubre |
+|---|---|
+| `tests/panel.spec.js` | Las ocho pestañas, el detalle por SKU, transferencias, la línea de base de los KPI |
+| `tests/auth.spec.js` | Carga diferida del SDK, sesión persistente, cuenta sin confirmar, tope de correos, enlace vencido |
+| `tests/recuperacion.spec.js` | Pedido del enlace, pantalla de contraseña nueva, validaciones |
+| `tests/datos.spec.js` | Elección de fuente, esquema faltante, el rol que manda |
+| `tests/grafico.spec.js` | Tamaño **efectivo** del texto del gráfico, trazado tras un resize |
+| `tests/exportar.spec.js` | CSV, PDF real (magic number) y que jsPDF no entre al bundle |
+| `tests/a11y-responsive.spec.js` | Foco y Escape en drawers, nombres accesibles, overflow, área táctil |
+
+Las fixtures interceptan Supabase y devuelven una sesión válida: el
+panel recorre el mismo camino de código que con auth real, sin salir de
+la máquina. Cualquier error de consola o excepción no atrapada rompe el
+test — sin eso, una promesa rechazada pasa por verde mientras la
+pantalla se ve bien.
+
+`scripts/setup.sh` deja la sesión lista y lo corre solo el hook
+`SessionStart` de `.claude/settings.json` al abrir una sesión en la web.
 
 ---
 

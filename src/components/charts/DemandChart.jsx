@@ -83,7 +83,7 @@ export default function DemandChart({ observed, forecast, unitLabel = 'unidades'
   const H = angosto ? H_ANGOSTO : H_ANCHO
   const PAD = angosto ? PAD_ANGOSTO : PAD_ANCHO
 
-  const { points, scaleX, scaleY, ticks, obsPath, fcPath, splitX } = useMemo(() => {
+  const { points, scaleY, ticks, obsPath, fcPath, splitX } = useMemo(() => {
     const all = [
       ...observed.map((d) => ({ ...d, kind: 'obs' })),
       ...forecast.map((d) => ({ ...d, kind: 'fc' })),
@@ -102,7 +102,6 @@ export default function DemandChart({ observed, forecast, unitLabel = 'unidades'
 
     return {
       points: pts,
-      scaleX: sx,
       scaleY: sy,
       ticks: [0, niceMax / 2, niceMax],
       obsPath: line(obs),
