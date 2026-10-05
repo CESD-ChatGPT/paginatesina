@@ -185,8 +185,13 @@ export default function OverviewPanel() {
   const visibleKpis = kpiPrefs.order.filter((id) => !kpiPrefs.hidden.includes(id))
 
   const [compareMonths, setCompareMonths] = useState(1)
+  /* Una cuenta recién creada no tiene movimientos, así que no hay serie
+     que devolver: el adaptador real responde null antes que inventar
+     una curva. Se normaliza acá para que todo lo de abajo trabaje con
+     la misma forma. */
+  const serie = demand.data ?? { sku: null, observed: [], forecast: [], confidence: null }
   const comparison =
-    demand.status === 'success' ? compareDemandPeriods(demand.data.observed, compareMonths) : null
+    demand.status === 'success' ? compareDemandPeriods(serie.observed, compareMonths) : null
 
   function handleExportInventory() {
     if (rows.status !== 'success') return
@@ -241,10 +246,12 @@ export default function OverviewPanel() {
         {/* Pronóstico */}
         <section className="col-span-12 lg:col-span-7 panel p-5" aria-label="Pronóstico de demanda">
           <div className="flex items-baseline justify-between gap-3 mb-4">
-            <h2 className="t-h3">Demanda · MB-1180</h2>
-            {demand.status === 'success' && (
+            {/* El SKU viene de los datos: con inventario real es el que
+                más salidas tiene, no uno fijo del depósito de ejemplo. */}
+            <h2 className="t-h3">{serie.sku ? `Demanda · ${serie.sku}` : 'Demanda'}</h2>
+            {demand.status === 'success' && serie.confidence != null && (
               <span className="t-mono text-[11px] text-muted">
-                confianza {(demand.data.confidence * 100).toFixed(0)}%
+                confianza {(serie.confidence * 100).toFixed(0)}%
               </span>
             )}
           </div>
@@ -257,14 +264,14 @@ export default function OverviewPanel() {
           )}
           {demand.status === 'error' && <ErrorBlock error={demand.error} />}
           {demand.status === 'success' &&
-            (demand.data.observed.length === 0 ? (
+            (serie.observed.length === 0 ? (
               <EmptyBlock
-                title="Sin histórico suficiente"
-                hint="Necesitamos al menos 3 meses de ventas para proyectar demanda."
+                title="Todavía no hay demanda que proyectar"
+                hint="La curva se arma con las salidas registradas. Cargá productos y movimientos: con tres meses de ventas aparece la proyección."
               />
             ) : (
               <>
-                <DemandChart observed={demand.data.observed} forecast={demand.data.forecast} />
+                <DemandChart observed={serie.observed} forecast={serie.forecast} />
 
                 {/* Comparación de período: sobre la serie mensual real, no
                     una serie diaria que no existe en este mock. */}

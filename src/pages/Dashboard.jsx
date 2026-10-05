@@ -1,9 +1,9 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { MotionConfig } from 'framer-motion'
 import { LogOut, AlertTriangle } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
-import { IS_MOCK_DATA } from '../data/inventory'
+import { getDataSourceState, inventoryService } from '../data/inventory'
 import { Isologotipo } from '../components/brand/Logo'
 import { ThemeToggleButton } from '../components/ThemeToggle'
 import Tabs from '../components/dashboard/Tabs'
@@ -18,6 +18,7 @@ import WarehousesPanel from '../components/dashboard/WarehousesPanel'
 import SuppliersPanel from '../components/dashboard/SuppliersPanel'
 import PhysicalCountPanel from '../components/dashboard/PhysicalCountPanel'
 import AuditTrailPanel from '../components/dashboard/AuditTrailPanel'
+import NewProductPanel from '../components/dashboard/NewProductPanel'
 
 /* `title` es el encabezado de la vista y `label` el de la pestaña: el
    título más largo no entra en la barra, y la barra sola no alcanza como
@@ -31,6 +32,7 @@ const TABS = [
   { id: 'alertas', label: 'Alertas', title: 'Alertas de stock', Panel: AlertsPanel },
   { id: 'depositos', label: 'Depósitos', title: 'Depósitos y transferencias', Panel: WarehousesPanel },
   { id: 'proveedores', label: 'Proveedores', title: 'Proveedores y órdenes', Panel: SuppliersPanel },
+  { id: 'alta', label: 'Cargar', title: 'Alta de productos', Panel: NewProductPanel },
   { id: 'fisico', label: 'Inventario físico', title: 'Conteo físico', Panel: PhysicalCountPanel },
   { id: 'auditoria', label: 'Auditoría', title: 'Registro de auditoría', Panel: AuditTrailPanel },
 ]
@@ -59,6 +61,18 @@ export default function Dashboard() {
     else if (item.kind === 'warehouse') setTab('depositos')
     else if (item.kind === 'audit') setTab('auditoria')
   }
+
+  /* Qué fuente atiende se sabe recién después de preguntarle a
+     Supabase si el esquema existe; hasta entonces no se muestra
+     ningún aviso, para no afirmar "demo" sobre datos reales. */
+  const [fuente, setFuente] = useState(getDataSourceState)
+  useEffect(() => {
+    let vivo = true
+    inventoryService.getKpis()
+      .catch(() => {})
+      .then(() => { if (vivo) setFuente(getDataSourceState()) })
+    return () => { vivo = false }
+  }, [])
 
   const activeTab = TABS.find((t) => t.id === tab) ?? TABS[0]
   const ActivePanel = activeTab.Panel
@@ -114,8 +128,9 @@ export default function Dashboard() {
           <p className="t-mono text-[11px] text-muted">{user?.jobTitle}</p>
         </div>
 
-        {/* Aviso honesto: no hay backend conectado todavía */}
-        {IS_MOCK_DATA && (
+        {/* Aviso honesto sobre qué fuente está atendiendo. Cuando el
+            inventario es real no aparece nada: no hay nada que aclarar. */}
+        {fuente.modo === 'demo' && (
           <div
             className="flex gap-2.5 items-start p-3 mb-8 border"
             style={{ borderColor: 'var(--rule-strong)', borderRadius: '2px' }}
@@ -126,9 +141,22 @@ export default function Dashboard() {
               aria-hidden="true"
             />
             <p className="text-[13px] text-graphite leading-snug">
-              <span className="font-medium text-ink">Datos de demostración.</span> El
-              proyecto todavía no tiene un backend conectado; estas cifras provienen
-              del adaptador mock en <span className="t-mono text-[12px]">src/data/inventory.js</span>.
+              <span className="font-medium text-ink">Datos de demostración.</span>{' '}
+              {fuente.motivo === 'sin-esquema' ? (
+                <>
+                  Supabase está conectado pero las tablas de inventario todavía no
+                  existen. Corré{' '}
+                  <span className="t-mono text-[12px]">supabase/schema.sql</span> en el
+                  SQL Editor de tu proyecto y recargá: a partir de ahí cargás tu propio
+                  inventario desde cero.
+                </>
+              ) : (
+                <>
+                  No hay un inventario propio conectado; estas cifras provienen del
+                  depósito de ejemplo en{' '}
+                  <span className="t-mono text-[12px]">src/data/inventory.js</span>.
+                </>
+              )}
             </p>
           </div>
         )}

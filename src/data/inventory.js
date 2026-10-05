@@ -1,28 +1,31 @@
 /* ═══════════════════════════════════════════════════════════════
    CAPA DE DATOS DE INVENTARIO
 
-   ESTADO ACTUAL: **TODO ES MOCK.**
-   El proyecto no tiene backend, API ni archivo de datos: es un sitio
-   estático. No se inventaron "datos reales" — se construyó la capa que
-   los va a servir, con un punto único de conexión.
+   Dos fuentes detrás de un punto único de conexión:
 
-   Las mutaciones (transferir, ajustar por conteo físico, generar orden)
-   sí modifican el estado en memoria de este módulo durante la sesión —
-   sin eso, "confirmar una transferencia" no tendría ningún efecto visible
-   y el criterio de "responde correctamente" quedaría incumplido. Se
-   resetea al recargar la página porque no hay dónde persistirlo: es
-   honesto sobre esa limitación, no la esconde.
+   · `supabaseAdapter` — datos reales del usuario, una cuenta = un
+     inventario, aislado por Row Level Security. Es el que manda
+     cuando hay Supabase configurado Y el esquema corrido.
 
-   PARA CONECTAR UNA API REAL:
-   cambiá `USE_MOCK` a false y completá las funciones de `apiAdapter`.
-   Ningún componente necesita cambiar: todos consumen `inventoryService`.
+   · `mockAdapter` — el depósito de demostración. Queda para la
+     landing pública y para cuando alguien conectó Supabase pero
+     todavía no corrió supabase/schema.sql: en ese caso la app no se
+     cae, muestra la demo y avisa qué falta.
+
+   La elección es asincrónica porque depende de si las tablas existen,
+   y eso solo se sabe preguntando. `resolveDataSource()` lo hace una
+   sola vez por sesión y cachea el resultado.
+
+   Para conectar: correr supabase/schema.sql en el panel de Supabase.
+   Ningún componente cambia — todos consumen `inventoryService`.
    ═══════════════════════════════════════════════════════════════ */
 
 import { SUPPLIERS } from './suppliers'
 import { WAREHOUSES } from './warehouses'
 import { recordEvent } from './audit'
+import { isSupabaseConfigured } from '../lib/supabase'
+import { supabaseAdapter, EsquemaFaltanteError } from './supabaseAdapter'
 
-const USE_MOCK = true
 const delay = (ms) => new Promise((r) => setTimeout(r, ms))
 
 /* ── Catálogo (sin cantidad: la cantidad vive por depósito) ──── */
@@ -210,19 +213,64 @@ const mockAdapter = {
   },
 }
 
-const apiAdapter = {
-  // Cuando exista backend: reemplazar por las llamadas reales.
-  async getStockRows() { throw new Error('API de inventario no configurada') },
-  async getStockByWarehouse() { throw new Error('API de depósitos no configurada') },
-  async getDemandSeries() { throw new Error('API de demanda no configurada') },
-  async createReplenishmentOrder() { throw new Error('API de órdenes de compra no configurada') },
-  async transferStock() { throw new Error('API de transferencias no configurada') },
-  async setPhysicalCount() { throw new Error('API de inventario físico no configurada') },
-  async getPhysicalCounts() { throw new Error('API de inventario físico no configurada') },
-  async applyInventoryAdjustment() { throw new Error('API de ajustes no configurada') },
+/* ── Elección de fuente ────────────────────────────────────────────
+   Si hay Supabase configurado se intenta usarlo. La única forma de
+   saber si el esquema está corrido es preguntarle, así que se hace
+   una consulta barata y el resultado se cachea para toda la sesión.
+   Cuando las tablas no existen se cae al mock con un motivo, en vez
+   de dejar el panel roto. */
+
+let sourcePromise = null
+let estadoFuente = { modo: isSupabaseConfigured ? 'resolviendo' : 'demo', motivo: null }
+
+async function resolveDataSource() {
+  if (!isSupabaseConfigured) {
+    estadoFuente = { modo: 'demo', motivo: 'sin-supabase' }
+    return mockAdapter
+  }
+  try {
+    await supabaseAdapter.getStockRows()
+    estadoFuente = { modo: 'real', motivo: null }
+    return supabaseAdapter
+  } catch (e) {
+    if (e instanceof EsquemaFaltanteError) {
+      estadoFuente = { modo: 'demo', motivo: 'sin-esquema' }
+    } else {
+      /* Sin sesión activa también cae acá: la landing pública usa la
+         demo y eso es lo correcto. */
+      estadoFuente = { modo: 'demo', motivo: 'sin-sesion' }
+    }
+    return mockAdapter
+  }
 }
 
-const source = USE_MOCK ? mockAdapter : apiAdapter
+function getSource() {
+  if (!sourcePromise) sourcePromise = resolveDataSource()
+  return sourcePromise
+}
+
+/* Al entrar o salir de una sesión la fuente puede cambiar: hay que
+   volver a resolver en vez de servir la decisión del usuario anterior. */
+export function resetDataSource() {
+  sourcePromise = null
+  estadoFuente = { modo: isSupabaseConfigured ? 'resolviendo' : 'demo', motivo: null }
+}
+
+export function getDataSourceState() {
+  return estadoFuente
+}
+
+const source = {
+  getStockRows: async () => (await getSource()).getStockRows(),
+  getStockByWarehouse: async () => (await getSource()).getStockByWarehouse(),
+  getDemandSeries: async () => (await getSource()).getDemandSeries(),
+  createReplenishmentOrder: async (skus) => (await getSource()).createReplenishmentOrder(skus),
+  transferStock: async (args) => (await getSource()).transferStock(args),
+  setPhysicalCount: async (sku, counted) => (await getSource()).setPhysicalCount(sku, counted),
+  getPhysicalCounts: async () => (await getSource()).getPhysicalCounts(),
+  applyInventoryAdjustment: async (sku, warehouseId, newQty, reason) =>
+    (await getSource()).applyInventoryAdjustment(sku, warehouseId, newQty, reason),
+}
 
 /* ── Servicio público: lo único que la UI debe importar ─────────── */
 
@@ -236,6 +284,30 @@ export const inventoryService = {
   getPhysicalCounts: () => source.getPhysicalCounts(),
   applyInventoryAdjustment: (sku, warehouseId, newQty, reason) =>
     source.applyInventoryAdjustment(sku, warehouseId, newQty, reason),
+
+  createProduct: async (datos) => {
+    const s = await getSource()
+    if (!s.createProduct) {
+      throw new Error(
+        'El depósito de demostración no acepta altas. Conectá Supabase y ' +
+          'corré supabase/schema.sql para cargar tu propio inventario.'
+      )
+    }
+    return s.createProduct(datos)
+  },
+  createWarehouse: async (datos) => {
+    const s = await getSource()
+    if (!s.createWarehouse) throw new Error('El depósito de demostración no acepta altas.')
+    return s.createWarehouse(datos)
+  },
+  createSupplier: async (datos) => {
+    const s = await getSource()
+    if (!s.createSupplier) throw new Error('El depósito de demostración no acepta altas.')
+    return s.createSupplier(datos)
+  },
+  async aceptaAltas() {
+    return Boolean((await getSource()).createProduct)
+  },
 
   async getKpis() {
     const rows = await source.getStockRows()
@@ -291,5 +363,7 @@ export function getDemandPreview() {
   return { observed: DEMAND_MB1180.observed, forecast: DEMAND_MB1180.forecast }
 }
 
-export const IS_MOCK_DATA = USE_MOCK
+/* El aviso de "datos de demostración" ya no es una constante: depende
+   de qué fuente terminó atendiendo, y eso se resuelve en runtime.
+   Se exporta la función; los componentes leen getDataSourceState(). */
 export { PRODUCTS, WAREHOUSES, SUPPLIERS }

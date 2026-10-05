@@ -28,21 +28,27 @@ const PERMISSIONS = {
   consulta: { transfer: false, adjust: false, createOrder: false, viewAudit: false },
 }
 
-/* ⚠️ ESTE CHEQUEO NO ES UNA BARRERA DE SEGURIDAD.
+/* ⚠️ ESTE CHEQUEO NO ES UNA BARRERA DE SEGURIDAD, y nunca lo será.
 
-   Hoy el rol viaja en `user_metadata` de Supabase, y ese campo lo puede
-   reescribir el propio usuario:
+   `can()` decide qué MOSTRAR. Nada más. Corre en el navegador, donde
+   el usuario puede cambiar cualquier valor que quiera.
+
+   Quién puede escribir qué lo decide Postgres, en las políticas de Row
+   Level Security de supabase/schema.sql. Ahí el rol se lee de la tabla
+   `profiles`, y esa tabla tiene el candado donde tiene que estar: el
+   cliente puede actualizar su nombre y su puesto, nunca su rol —
+
+       revoke update on public.profiles from authenticated;
+       grant  update (name, job_title) on public.profiles to authenticated;
+
+   Antes el rol vivía en `user_metadata` de Supabase, que el propio
+   usuario reescribe con una línea:
 
        supabase.auth.updateUser({ data: { role: 'administrador' } })
 
-   O sea que cualquiera con cuenta puede darse el rol más alto. Hoy no
-   tiene consecuencia —solo esconde botones sobre datos que son iguales
-   para todos— pero deja de ser inocuo en cuanto haya datos reales.
-
-   Cuando se migre a tablas en Supabase, el rol tiene que mudarse a una
-   tabla `profiles` donde el usuario pueda LEER su fila pero no escribir
-   la columna `role`, y las políticas RLS tienen que consultar esa tabla,
-   nunca este valor. Este `can()` se queda solo para decidir qué mostrar. */
+   El selector de rol del panel sigue existiendo como simulador de
+   demostración y solo afecta a este `can()`: cambiar de rol ahí no
+   cambia lo que el servidor deja hacer. */
 export function can(role, permission) {
   return Boolean(PERMISSIONS[role]?.[permission])
 }

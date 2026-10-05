@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useCallback, useEffect } from 'rea
 import { can as canForRole } from '../lib/permissions'
 import { getSupabase, isSupabaseConfigured, hasStoredSession } from '../lib/supabase'
 import { setAuditUser } from '../data/audit'
+import { resetDataSource } from '../data/inventory'
 
 /* ═══════════════════════════════════════════════════════════════
    AUTENTICACIÓN
@@ -87,11 +88,50 @@ function toAppUser(supabaseUser) {
   if (!supabaseUser) return null
   const meta = supabaseUser.user_metadata ?? {}
   return {
+    id: supabaseUser.id,
     name: meta.name || supabaseUser.email?.split('@')[0] || 'Usuario',
     email: supabaseUser.email,
     jobTitle: meta.jobTitle || 'Sin puesto asignado',
-    role: meta.role || DEFAULT_ROLE,
+    /* Provisorio: el rol de verdad está en la tabla `profiles` y lo
+       completa fetchProfile(). Se arranca con el mínimo privilegio
+       porque entre mostrar de más y mostrar de menos, de menos. */
+    role: DEFAULT_ROLE,
     warehouse: meta.warehouse || 'Depósito central',
+  }
+}
+
+/* El rol se lee de `profiles`, no de user_metadata: ese campo lo
+   reescribe el propio usuario con una línea. En `profiles` la columna
+   `role` no tiene permiso de UPDATE para el cliente (ver schema.sql),
+   así que lo que vuelve de acá es lo que el servidor cree, no lo que
+   el navegador diga.
+
+   Si la tabla todavía no existe —esquema sin correr— se queda con el
+   rol mínimo en vez de romper la sesión. */
+async function fetchProfile(supabase, userId) {
+  try {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('name, job_title, role')
+      .eq('id', userId)
+      .maybeSingle()
+    if (error || !data) return null
+    return data
+  } catch {
+    return null
+  }
+}
+
+async function withProfile(supabase, supabaseUser) {
+  const base = toAppUser(supabaseUser)
+  if (!base) return null
+  const perfil = await fetchProfile(supabase, supabaseUser.id)
+  if (!perfil) return base
+  return {
+    ...base,
+    name: perfil.name || base.name,
+    jobTitle: perfil.job_title || base.jobTitle,
+    role: perfil.role || DEFAULT_ROLE,
   }
 }
 
@@ -121,7 +161,7 @@ const supabaseAuthProvider = {
       password,
     })
     if (error) throw translateError(error)
-    return toAppUser(data.user)
+    return withProfile(supabase, data.user)
   },
 
   async signUp({ name, email, password }) {
@@ -130,8 +170,10 @@ const supabaseAuthProvider = {
       email: email.trim(),
       password,
       options: {
-        // Queda en user_metadata; es lo que lee toAppUser al restaurar sesión.
-        data: { name: name.trim(), role: DEFAULT_ROLE, warehouse: 'Depósito central' },
+        /* Solo datos de presentación. El rol NO va acá: user_metadata
+           lo reescribe el propio usuario. Lo asigna el trigger
+           handle_new_user() en la tabla profiles, siempre 'operador'. */
+        data: { name: name.trim(), warehouse: 'Depósito central' },
         /* A la raíz, SIN ruta de hash: Supabase agrega los tokens al
            fragmento, y `#/login#access_token=...` no es un callback que
            el SDK sepa leer. Con la raíz queda `#access_token=...`, que
@@ -179,7 +221,7 @@ const supabaseAuthProvider = {
     const supabase = await getSupabase()
     const { data, error } = await supabase.auth.getSession()
     if (error || !data.session) return null
-    return toAppUser(data.session.user)
+    return withProfile(supabase, data.session.user)
   },
 
   /* Supabase renueva el token solo y puede cerrar sesión desde otra
@@ -193,7 +235,12 @@ const supabaseAuthProvider = {
     getSupabase().then((supabase) => {
       if (cancelled || !supabase) return
       const { data } = supabase.auth.onAuthStateChange((_event, session) => {
-        handler(toAppUser(session?.user))
+        if (!session?.user) return handler(null)
+        /* El rol vive en una tabla, así que resolverlo es asincrónico.
+           No se puede emitir toAppUser() primero "mientras tanto": eso
+           haría parpadear el rol de operador al real en cada refresco
+           de token. */
+        withProfile(supabase, session.user).then(handler)
       })
       subscription = data.subscription
     })
@@ -247,6 +294,15 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     setAuditUser(user?.name)
   }, [user?.name])
+
+  /* La fuente de datos depende de quién está adentro: el inventario de
+     una cuenta no es el de otra, y sin sesión manda la demo. Al entrar
+     o salir hay que volver a resolverla en vez de seguir sirviendo la
+     decisión del usuario anterior. */
+  const userId = user?.id ?? null
+  useEffect(() => {
+    resetDataSource()
+  }, [userId])
 
   const hasSession = Boolean(user)
   useEffect(() => {
