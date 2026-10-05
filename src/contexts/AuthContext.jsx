@@ -74,6 +74,15 @@ const mockAuthProvider = {
     }
   },
 
+  async requestPasswordReset() {
+    await new Promise((r) => setTimeout(r, 200))
+    throw new Error('El modo demo no envía correos. Conectá Supabase para recuperar la contraseña.')
+  },
+
+  async updatePassword() {
+    throw new Error('El modo demo no guarda contraseñas.')
+  },
+
   onChange() {
     return () => {} // el mock no emite cambios externos
   },
@@ -205,6 +214,30 @@ const supabaseAuthProvider = {
       email: email.trim(),
       options: { emailRedirectTo: `${window.location.origin}${import.meta.env.BASE_URL}` },
     })
+    if (error) throw translateError(error)
+  },
+
+  /* Sin esto, quien olvida la contraseña queda afuera para siempre: no
+     puede entrar, y registrarse de nuevo tampoco porque el correo ya
+     existe. Es el mismo callejón sin salida que tenía la confirmación
+     de alta antes del reenvío.
+
+     El enlace vuelve a la raíz con `type=recovery` en el fragmento, y
+     lo consume main.jsx antes de montar React — misma razón que el de
+     confirmación: HashRouter reescribe el `#` y se perderían los
+     tokens. */
+  async requestPasswordReset(email) {
+    const supabase = await getSupabase()
+    const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+      redirectTo: `${window.location.origin}${import.meta.env.BASE_URL}`,
+    })
+    if (error) throw translateError(error)
+  },
+
+  /* Corre con la sesión temporal que dejó el enlace de recuperación. */
+  async updatePassword(password) {
+    const supabase = await getSupabase()
+    const { error } = await supabase.auth.updateUser({ password })
     if (error) throw translateError(error)
   },
 
@@ -355,6 +388,14 @@ export function AuthProvider({ children }) {
     return provider.resendConfirmation(email)
   }, [])
 
+  const requestPasswordReset = useCallback(async (email) => {
+    return provider.requestPasswordReset(email)
+  }, [])
+
+  const updatePassword = useCallback(async (password) => {
+    return provider.updatePassword(password)
+  }, [])
+
   const signOut = useCallback(async () => {
     /* Cerrar sesión localmente pase lo que pase. Si el token ya venció o
        fue revocado, Supabase devuelve error — y si eso propaga, el
@@ -406,6 +447,8 @@ export function AuthProvider({ children }) {
         signUp,
         signOut,
         resendConfirmation,
+        requestPasswordReset,
+        updatePassword,
         setRole,
         can,
         canRegister: isSupabaseConfigured,

@@ -43,6 +43,14 @@ function ResendControl({ state, error, onResend }) {
 }
 
 /* Motivo por el que rebotó el enlace del correo, puesto por main.jsx. */
+/* main.jsx manda acá con ?recovery=1 cuando el enlace del correo era de
+   recuperación: hay sesión temporal, pero todavía falta elegir la
+   contraseña nueva. */
+function startsInRecovery() {
+  const q = window.location.hash.split('?')[1]
+  return Boolean(q && new URLSearchParams(q).get('recovery'))
+}
+
 function readAuthError() {
   const q = window.location.hash.split('?')[1]
   if (!q) return null
@@ -57,12 +65,16 @@ function readAuthError() {
 }
 
 export default function Login() {
-  const { signIn, signUp, resendConfirmation, pending, canRegister, isMockAuth } = useAuth()
+  const { signIn, signUp, resendConfirmation, requestPasswordReset, updatePassword,
+          pending, canRegister, isMockAuth } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
   const from = location.state?.from ?? '/panel'
 
-  const [mode, setMode] = useState('login') // 'login' | 'register'
+  // 'login' | 'register' | 'forgot' | 'recovery'
+  const [mode, setMode] = useState(() => (startsInRecovery() ? 'recovery' : 'login'))
+  /* 'idle' | 'sending' | 'sent' — pedido del enlace de recuperación. */
+  const [resetState, setResetState] = useState('idle')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -77,6 +89,8 @@ export default function Login() {
   const [resendError, setResendError] = useState(null)
 
   const isRegister = mode === 'register'
+  const isForgot = mode === 'forgot'
+  const isRecovery = mode === 'recovery'
 
   async function handleResend(target) {
     setResend('sending')
@@ -127,6 +141,7 @@ export default function Login() {
     // no podía volver a pedir un enlace en el siguiente intento
     setResend('idle')
     setResendError(null)
+    setResetState('idle')
     setTouched({})
     setPassword('')
     setConfirm('')
@@ -137,6 +152,41 @@ export default function Login() {
     setFormError(null)
     setFormErrorCode(null)
     setTouched({ name: true, email: true, password: true, confirm: true })
+
+    /* Pedir el enlace solo necesita el correo; elegir la contraseña
+       nueva ya no lo necesita, porque la sesión del enlace dice quién
+       es. Las validaciones de abajo son para login y registro. */
+    if (isForgot) {
+      if (!email.trim() || emailError) return
+      setResetState('sending')
+      try {
+        await requestPasswordReset(email)
+        /* Siempre el mismo mensaje, exista o no la cuenta: decir "ese
+           correo no está registrado" le confirma a cualquiera quién
+           tiene cuenta acá. */
+        setResetState('sent')
+      } catch (err) {
+        setResetState('idle')
+        setFormError(
+          err.code === 'rate_limited'
+            ? 'Supabase limitó los envíos por ahora. El correo integrado permite muy pocos por hora.'
+            : 'No pudimos enviar el enlace. Intentá de nuevo en un rato.'
+        )
+      }
+      return
+    }
+
+    if (isRecovery) {
+      if (password.length < MIN_PASSWORD || confirm !== password) return
+      try {
+        await updatePassword(password)
+        navigate('/panel', { replace: true })
+      } catch (err) {
+        setFormError(messageFor(err, false))
+        setFormErrorCode(err.code)
+      }
+      return
+    }
 
     if (!email.trim() || !password || emailError) return
     if (isRegister && (!name.trim() || password.length < MIN_PASSWORD || confirm !== password)) return
@@ -244,11 +294,15 @@ export default function Login() {
           </Link>
 
           <h1 className="t-h2 text-[1.75rem] mb-2">
-            {isRegister ? 'Crear cuenta' : 'Iniciar sesión'}
+            {isRecovery ? 'Elegí una contraseña nueva'
+              : isForgot ? 'Recuperar el acceso'
+              : isRegister ? 'Crear cuenta'
+              : 'Iniciar sesión'}
           </h1>
           <p className="t-small mb-8">
-            {isRegister
-              ? 'Registrate para acceder al panel de tu depósito.'
+            {isRecovery ? 'El enlace ya te identificó. Escribí la contraseña con la que vas a entrar de ahora en más.'
+              : isForgot ? 'Te mandamos un enlace para elegir una contraseña nueva.'
+              : isRegister ? 'Registrate para acceder al panel de tu depósito.'
               : 'Accedé al panel de tu depósito.'}
           </p>
 
@@ -332,6 +386,7 @@ export default function Login() {
               </div>
             )}
 
+            {!isRecovery && (
             <div className="mb-4">
               <label htmlFor="email" className="t-label block mb-1.5">
                 Correo
@@ -359,15 +414,18 @@ export default function Login() {
                 </p>
               )}
             </div>
+            )}
 
-            <div className={isRegister ? 'mb-4' : 'mb-6'}>
+            {/* Pedir el enlace solo necesita el correo. */}
+            {!isForgot && (
+            <div className={isRegister || isRecovery ? 'mb-4' : 'mb-6'}>
               <label htmlFor="password" className="t-label block mb-1.5">
                 Contraseña
               </label>
               <input
                 id="password"
                 type="password"
-                autoComplete={isRegister ? 'new-password' : 'current-password'}
+                autoComplete={isRegister || isRecovery ? 'new-password' : 'current-password'}
                 className={field}
                 style={{
                   borderRadius: '2px',
@@ -389,15 +447,16 @@ export default function Login() {
                   {passwordError}
                 </p>
               ) : (
-                isRegister && (
+                (isRegister || isRecovery) && (
                   <p id="password-hint" className="t-mono text-[11px] text-muted mt-1.5">
                     Mínimo {MIN_PASSWORD} caracteres.
                   </p>
                 )
               )}
             </div>
+            )}
 
-            {isRegister && (
+            {(isRegister || isRecovery) && (
               <div className="mb-6">
                 <label htmlFor="confirm" className="t-label block mb-1.5">
                   Repetir contraseña
@@ -440,25 +499,55 @@ export default function Login() {
                 borderRadius: '2px',
               }}
             >
-              {pending && <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />}
-              {pending
-                ? isRegister
-                  ? 'Creando cuenta…'
-                  : 'Verificando…'
-                : isRegister
-                ? 'Crear cuenta'
+              {(pending || resetState === 'sending') && (
+                <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
+              )}
+              {resetState === 'sending' ? 'Enviando…'
+                : pending ? (isRegister ? 'Creando cuenta…' : 'Verificando…')
+                : isRecovery ? 'Guardar contraseña'
+                : isForgot ? 'Enviar enlace'
+                : isRegister ? 'Crear cuenta'
                 : 'Entrar'}
             </button>
           </form>
 
-          {canRegister && (
-            <p className="t-small mt-6 text-center">
-              {isRegister ? '¿Ya tenés cuenta? ' : '¿No tenés cuenta? '}
+          {/* Mismo texto exista o no la cuenta: decir "ese correo no está
+              registrado" le confirma a cualquiera quién tiene cuenta acá. */}
+          {resetState === 'sent' && (
+            <div
+              className="mt-5 p-3 border text-[13px] leading-relaxed reveal"
+              style={{ borderColor: 'var(--rule-strong)', borderRadius: '2px' }}
+            >
+              <p className="text-ink font-medium mb-1">Revisá tu correo.</p>
+              <p className="text-graphite">
+                Si hay una cuenta con esa dirección, le mandamos un enlace para
+                elegir una contraseña nueva. Vence a las 24 h y sirve una sola vez.
+              </p>
+            </div>
+          )}
+
+          {/* Sin esto, quien olvida la contraseña queda afuera para
+              siempre: no puede entrar, y registrarse de nuevo tampoco
+              porque el correo ya existe. */}
+          {canRegister && mode === 'login' && (
+            <p className="t-small mt-5 text-center">
               <button
-                onClick={() => switchMode(isRegister ? 'login' : 'register')}
+                onClick={() => switchMode('forgot')}
                 className="underline underline-offset-4 hover:text-[var(--accent)]"
               >
-                {isRegister ? 'Iniciar sesión' : 'Crear una'}
+                ¿Olvidaste tu contraseña?
+              </button>
+            </p>
+          )}
+
+          {canRegister && !isRecovery && (
+            <p className="t-small mt-6 text-center">
+              {isForgot ? '¿Te acordaste? ' : isRegister ? '¿Ya tenés cuenta? ' : '¿No tenés cuenta? '}
+              <button
+                onClick={() => switchMode(isRegister || isForgot ? 'login' : 'register')}
+                className="underline underline-offset-4 hover:text-[var(--accent)]"
+              >
+                {isRegister || isForgot ? 'Iniciar sesión' : 'Crear una'}
               </button>
             </p>
           )}

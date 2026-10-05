@@ -57,6 +57,15 @@ function RequireAuth({ children }) {
 /* Fallback mínimo mientras baja el chunk de Login/Dashboard — en una
    conexión normal no llega a verse; en una lenta, es más honesto que una
    pantalla en blanco. */
+/* El enlace de recuperación llega CON sesión —el token del correo la
+   abre— así que el rebote normal de /login al panel se la llevaría
+   puesta y nunca llegaría a elegir contraseña nueva. La vieja seguiría
+   siendo la única que conoce. Es la única excepción al rebote. */
+function enRecuperacion() {
+  const q = window.location.hash.split('?')[1]
+  return Boolean(q && new URLSearchParams(q).get('recovery'))
+}
+
 function RouteFallback() {
   return <div className="min-h-screen" style={{ background: 'var(--paper)' }} />
 }
@@ -70,7 +79,15 @@ function AppRoutes() {
         <Route path="/" element={<Landing />} />
         <Route
           path="/login"
-          element={initializing ? <RouteFallback /> : user ? <Navigate to="/panel" replace /> : <Login />}
+          element={
+            initializing ? (
+              <RouteFallback />
+            ) : user && !enRecuperacion() ? (
+              <Navigate to="/panel" replace />
+            ) : (
+              <Login />
+            )
+          }
         />
         <Route
           path="/panel"

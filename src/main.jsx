@@ -22,8 +22,14 @@ function arrancar() {
 }
 
 if (hasAuthCallback()) {
-  consumeAuthCallback().then(({ session, error }) => {
-    if (session) {
+  consumeAuthCallback().then(({ session, error, recovery }) => {
+    if (recovery && session) {
+      /* Recuperación de contraseña: hay sesión, pero mandarla al panel
+         sería dejarla adentro sin haber elegido contraseña nueva — la
+         vieja seguiría siendo la única que conoce, y la sesión se
+         vencería sin que pueda volver a entrar. Frena acá. */
+      window.location.hash = '#/login?recovery=1'
+    } else if (session) {
       // Recién confirmado: entra derecho al panel en vez de caer en la
       // landing sin señal de que el registro funcionó.
       window.location.hash = '#/panel'

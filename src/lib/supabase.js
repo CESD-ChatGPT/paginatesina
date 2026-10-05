@@ -113,11 +113,26 @@ function readCallbackError() {
   return { code, description: description ? description.replace(/\+/g, ' ') : null }
 }
 
+/* Supabase marca el enlace de recuperación con `type=recovery` en el
+   mismo fragmento donde vienen los tokens. Distinguirlo importa: la
+   confirmación de alta manda al panel, pero la recuperación tiene que
+   frenar en una pantalla donde la persona elija su contraseña nueva.
+   Si no, entraría al panel con una sesión que no sabe que tiene y la
+   contraseña vieja seguiría siendo la única que conoce. */
+function esRecuperacion() {
+  const source = window.location.hash.replace(/^#\/?/, '') || window.location.search.slice(1)
+  return new URLSearchParams(source).get('type') === 'recovery'
+}
+
 export async function consumeAuthCallback() {
-  if (!isSupabaseConfigured || !hasAuthCallback()) return { session: false, error: null }
+  if (!isSupabaseConfigured || !hasAuthCallback()) {
+    return { session: false, error: null, recovery: false }
+  }
 
   const error = readCallbackError()
-  if (error) return { session: false, error }
+  if (error) return { session: false, error, recovery: false }
+
+  const recovery = esRecuperacion()
 
   try {
     normalizeLegacyFragment()
@@ -125,10 +140,10 @@ export async function consumeAuthCallback() {
     // getSession() espera a la inicialización, que es donde el SDK lee
     // el fragmento, guarda la sesión y limpia la URL.
     const { data } = await supabase.auth.getSession()
-    return { session: Boolean(data.session), error: null }
+    return { session: Boolean(data.session), error: null, recovery }
   } catch {
     // un enlace vencido o ya usado no debe romper el arranque
-    return { session: false, error: { code: 'unknown', description: null } }
+    return { session: false, error: { code: 'unknown', description: null }, recovery }
   }
 }
 
