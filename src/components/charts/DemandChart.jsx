@@ -71,10 +71,6 @@ const monthLabel = (t) => {
 }
 
 export default function DemandChart({ observed, forecast, unitLabel = 'unidades' }) {
-  /* Menos de dos puntos no se dibuja: quien lo use tiene que mostrar
-     su propio estado vacío. Se devuelve null en vez de un lienzo roto. */
-  if (!observed?.length || observed.length + (forecast?.length ?? 0) < 2) return null
-
   const [hover, setHover] = useState(null)
   const clipId = useId()
   const fcClipId = useId()
@@ -206,6 +202,15 @@ export default function DemandChart({ observed, forecast, unitLabel = 'unidades'
     }
     setHover(nearest)
   }
+
+  /* Menos de dos puntos no se dibuja: una serie de un punto no es una
+     línea, y quien use el componente muestra su propio estado vacío.
+
+     La guarda va ACÁ y no arriba de todo: un `return` temprano antes
+     de los hooks cambia cuántos se ejecutan según los datos, y React
+     exige que sean siempre los mismos y en el mismo orden. Puesta
+     arriba, pasar de un punto a dos rompía el componente. */
+  if ((observed?.length ?? 0) + (forecast?.length ?? 0) < 2) return null
 
   return (
     <div className="relative" ref={containerRef}>
