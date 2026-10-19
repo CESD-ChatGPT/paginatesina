@@ -49,6 +49,16 @@ export default [
     },
   },
   {
+    /* Se pega en la consola del ChatBot Stock: corre en el navegador,
+       no en Node, por más que viva en scripts/. */
+    files: ['scripts/*.js'],
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: 'script',
+      globals: { ...globals.browser },
+    },
+  },
+  {
     files: ['tests/**/*.js', 'playwright.config.js', 'eslint.config.js'],
     languageOptions: {
       ecmaVersion: 2022,
