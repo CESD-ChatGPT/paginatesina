@@ -309,10 +309,12 @@ export default function OverviewPanel() {
           )}
           {demand.status === 'error' && <ErrorBlock error={demand.error} />}
           {demand.status === 'success' &&
-            (serie.observed.length === 0 ? (
+            (serie.observed.length < 2 ? (
               <EmptyBlock
                 title="Todavía no hay demanda que proyectar"
-                hint="La curva se arma con las salidas registradas. Cargá productos y movimientos: con tres meses de ventas aparece la proyección."
+                hint={serie.observed.length === 1
+                  ? 'Hay un mes de salidas registradas. Con dos se dibuja la curva y con tres aparece la proyección.'
+                  : 'La curva se arma con las salidas registradas. Registrá entradas y salidas en la pestaña Movimientos.'}
               />
             ) : (
               <>

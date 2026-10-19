@@ -19,6 +19,7 @@ import SuppliersPanel from '../components/dashboard/SuppliersPanel'
 import PhysicalCountPanel from '../components/dashboard/PhysicalCountPanel'
 import AuditTrailPanel from '../components/dashboard/AuditTrailPanel'
 import NewProductPanel from '../components/dashboard/NewProductPanel'
+import MovementsPanel from '../components/dashboard/MovementsPanel'
 
 /* `title` es el encabezado de la vista y `label` el de la pestaña: el
    título más largo no entra en la barra, y la barra sola no alcanza como
@@ -33,6 +34,7 @@ const TABS = [
   { id: 'depositos', label: 'Depósitos', title: 'Depósitos y transferencias', Panel: WarehousesPanel },
   { id: 'proveedores', label: 'Proveedores', title: 'Proveedores y órdenes', Panel: SuppliersPanel },
   { id: 'alta', label: 'Cargar', title: 'Alta de productos', Panel: NewProductPanel },
+  { id: 'movimientos', label: 'Movimientos', title: 'Entradas y salidas', Panel: MovementsPanel },
   { id: 'fisico', label: 'Inventario físico', title: 'Conteo físico', Panel: PhysicalCountPanel },
   { id: 'auditoria', label: 'Auditoría', title: 'Registro de auditoría', Panel: AuditTrailPanel },
 ]

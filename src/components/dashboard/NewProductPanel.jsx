@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { PackagePlus, Warehouse } from 'lucide-react'
 import { inventoryService, WAREHOUSES } from '../../data/inventory'
+import BarcodeScanner from './BarcodeScanner'
+import ImportPanel from './ImportPanel'
 import { useAuth } from '../../contexts/AuthContext'
 import { can } from '../../lib/permissions'
 
@@ -137,6 +139,8 @@ export default function NewProductPanel() {
 
   return (
     <div className="flex flex-col gap-6">
+      {aceptaAltas !== false && <ImportPanel onImportado={() => setOk('Catálogo importado.')} />}
+
       {aceptaAltas === false && (
         <div className="panel p-4" style={{ borderColor: 'var(--warning)' }}>
           <p className="text-[13px] text-graphite leading-snug">
@@ -178,8 +182,14 @@ export default function NewProductPanel() {
           </Campo>
 
           <Campo id="np-ean" label="EAN" hint="Opcional — habilita el match por código">
-            <input id="np-ean" className={inputCls} style={inputStyle}
-              value={form.ean} onChange={set('ean')} placeholder="8806091234567" />
+            <div className="flex gap-2">
+              <input id="np-ean" className={inputCls} style={inputStyle}
+                value={form.ean} onChange={set('ean')} placeholder="8806091234567" />
+              <BarcodeScanner
+                label="Escanear"
+                onLeido={(codigo) => setForm((f) => ({ ...f, ean: codigo }))}
+              />
+            </div>
           </Campo>
 
           <Campo id="np-cost" label="Costo unitario (USD)">

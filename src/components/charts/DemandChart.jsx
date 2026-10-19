@@ -71,6 +71,10 @@ const monthLabel = (t) => {
 }
 
 export default function DemandChart({ observed, forecast, unitLabel = 'unidades' }) {
+  /* Menos de dos puntos no se dibuja: quien lo use tiene que mostrar
+     su propio estado vacío. Se devuelve null en vez de un lienzo roto. */
+  if (!observed?.length || observed.length + (forecast?.length ?? 0) < 2) return null
+
   const [hover, setHover] = useState(null)
   const clipId = useId()
   const fcClipId = useId()
@@ -91,7 +95,11 @@ export default function DemandChart({ observed, forecast, unitLabel = 'unidades'
     const max = Math.max(...all.map((d) => d.v))
     const niceMax = Math.ceil(max / 20) * 20
 
-    const sx = (i) => PAD.left + (i * (W - PAD.left - PAD.right)) / (all.length - 1)
+    /* Con un solo punto el denominador es cero y toda la geometría
+       sale NaN, que el navegador rechaza atributo por atributo. Una
+       serie de un punto tampoco es una línea: se centra y listo. */
+    const tramos = Math.max(1, all.length - 1)
+    const sx = (i) => PAD.left + (i * (W - PAD.left - PAD.right)) / tramos
     const sy = (v) => PAD.top + (1 - v / niceMax) * (H - PAD.top - PAD.bottom)
 
     const pts = all.map((d, i) => ({ ...d, x: sx(i), y: sy(d.v), i }))
