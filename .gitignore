@@ -21,3 +21,6 @@ yarn-error.log*
 /playwright-report/
 /blob-report/
 /.playwright/
+
+# La copia del inventario real: cada quien publica la suya.
+/public/inventario.json

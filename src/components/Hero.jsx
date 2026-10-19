@@ -1,4 +1,5 @@
 import { useRef, useLayoutEffect } from 'react'
+import { APP_URL } from '../lib/app'
 import CtaButton from './CtaButton'
 import StockPanel from './StockPanel'
 import { useSectionLink } from '../hooks/useSectionLink'
@@ -142,7 +143,7 @@ export default function Hero() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center hero-cta">
-              <CtaButton label="Probar 14 días" />
+              <CtaButton label="Abrir ChatBot Stock" href={APP_URL} />
               <a
                 href="#features"
                 onClick={(e) => goToSection(e, 'features')}
@@ -154,7 +155,8 @@ export default function Hero() {
             </div>
 
             <p className="t-small mt-6 text-muted hero-note">
-              Sin tarjeta. Se conecta a tu ERP o planilla en el día.
+              Se abre en una pestaña nueva. Necesita usuario y PIN del ChatBot,
+              que no son los de esta cuenta.
             </p>
           </div>
 

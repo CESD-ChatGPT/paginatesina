@@ -22,7 +22,11 @@ const money = (n) =>
 // La rampa se recorre de oscuro a claro siguiendo el orden por magnitud
 const RAMP = ['var(--seq-5)', 'var(--seq-4)', 'var(--seq-3)', 'var(--seq-2)', 'var(--seq-1)']
 
-export default function CategoryBars({ data, currency = 'USD' }) {
+/* `unidad` reemplaza al símbolo de moneda cuando el reparto no es de
+   dinero. Sin esto, un inventario sin costos mostraba "USD 160" sobre
+   160 unidades: el número correcto con la etiqueta equivocada, que es
+   peor que no mostrarlo. */
+export default function CategoryBars({ data, currency = 'USD', unidad = null }) {
   const [hover, setHover] = useState(null)
   const max = Math.max(...data.map((d) => d.value))
   const total = data.reduce((s, d) => s + d.value, 0)
@@ -44,7 +48,7 @@ export default function CategoryBars({ data, currency = 'USD' }) {
             <div className="flex items-baseline justify-between gap-3 mb-1.5">
               <span className="text-[13px] font-medium truncate">{d.category}</span>
               <span className="t-figure text-[13px] shrink-0">
-                {currency} {money(d.value)}
+                {unidad ? `${money(d.value)} ${unidad}` : `${currency} ${money(d.value)}`}
                 <span
                   className="t-mono text-[11px] ml-2"
                   style={{ color: isHover ? 'var(--graphite)' : 'var(--muted)' }}

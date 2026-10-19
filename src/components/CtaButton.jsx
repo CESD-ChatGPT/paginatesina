@@ -4,11 +4,17 @@ import { ArrowRight } from 'lucide-react'
    la izquierda al hover y la caja de ícono adosada.
    Adaptado al sistema: esquinas rectas, acento único y variante para
    la banda invertida. */
-export default function CtaButton({ label = 'Comenzar', variant = 'default', onClick }) {
+/* Con `href` se renderiza como enlace y no como botón: lleva a la app
+   real, así que tiene que comportarse como un enlace —abrir en pestaña
+   nueva, copiar dirección, ver el destino al pasar el mouse—. Un
+   <button> con onClick no da nada de eso. */
+export default function CtaButton({ label = 'Comenzar', variant = 'default', onClick, href }) {
   return (
     <>
       <style>{`
         .cta-btn {
+          text-decoration: none;
+          cursor: pointer;
           position: relative;
           display: inline-flex;
           align-items: stretch;
@@ -100,18 +106,35 @@ export default function CtaButton({ label = 'Comenzar', variant = 'default', onC
         }
       `}</style>
 
-      <button
-        className={`cta-btn${variant === 'inverse' ? ' cta-btn--inverse' : ''}`}
-        onClick={onClick}
-      >
-        <span className="cta-btn__fill" aria-hidden="true" />
-        <span className="cta-btn__body">
-          <span className="cta-btn__icon" aria-hidden="true">
-            <ArrowRight strokeWidth={2} />
+      {href ? (
+        <a
+          className={`cta-btn${variant === 'inverse' ? ' cta-btn--inverse' : ''}`}
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span className="cta-btn__fill" aria-hidden="true" />
+          <span className="cta-btn__body">
+            <span className="cta-btn__icon" aria-hidden="true">
+              <ArrowRight strokeWidth={2} />
+            </span>
+            <span className="cta-btn__label">{label}</span>
           </span>
-          <span className="cta-btn__label">{label}</span>
-        </span>
-      </button>
+        </a>
+      ) : (
+        <button
+          className={`cta-btn${variant === 'inverse' ? ' cta-btn--inverse' : ''}`}
+          onClick={onClick}
+        >
+          <span className="cta-btn__fill" aria-hidden="true" />
+          <span className="cta-btn__body">
+            <span className="cta-btn__icon" aria-hidden="true">
+              <ArrowRight strokeWidth={2} />
+            </span>
+            <span className="cta-btn__label">{label}</span>
+          </span>
+        </button>
+      )}
     </>
   )
 }

@@ -130,6 +130,28 @@ export default function Dashboard() {
 
         {/* Aviso honesto sobre qué fuente está atendiendo. Cuando el
             inventario es real no aparece nada: no hay nada que aclarar. */}
+        {/* Inventario real del ChatBot: se aclara qué alcanza a cubrir,
+            porque no es lo mismo que el panel completo. */}
+        {fuente.modo === 'vento' && (
+          <div
+            className="flex gap-2.5 items-start p-3 mb-8 border"
+            style={{ borderColor: 'var(--rule-strong)', borderRadius: '2px' }}
+          >
+            <AlertTriangle
+              className="w-4 h-4 shrink-0 mt-0.5"
+              style={{ color: 'var(--accent)' }}
+              aria-hidden="true"
+            />
+            <p className="text-[13px] text-graphite leading-snug">
+              <span className="font-medium text-ink">Inventario real del ChatBot Stock.</span>{' '}
+              Stock, faltantes, ubicaciones y proveedores salen de tus datos. El
+              capital inmovilizado y el pronóstico de demanda quedan vacíos porque
+              el ChatBot no guarda costo unitario ni historial de ventas — se
+              muestran como «—» en vez de rellenarse con números inventados.
+            </p>
+          </div>
+        )}
+
         {fuente.modo === 'demo' && (
           <div
             className="flex gap-2.5 items-start p-3 mb-8 border"

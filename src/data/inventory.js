@@ -25,6 +25,7 @@ import { WAREHOUSES } from './warehouses'
 import { recordEvent } from './audit'
 import { isSupabaseConfigured } from '../lib/supabase'
 import { supabaseAdapter, EsquemaFaltanteError } from './supabaseAdapter'
+import { ventoAdapter, cargarInventarioVento } from './ventoAdapter'
 
 const delay = (ms) => new Promise((r) => setTimeout(r, ms))
 
@@ -224,6 +225,13 @@ let sourcePromise = null
 let estadoFuente = { modo: isSupabaseConfigured ? 'resolviendo' : 'demo', motivo: null }
 
 async function resolveDataSource() {
+  /* Primero la copia del inventario real: si está publicada, es el dato
+     del depósito de verdad y le gana a cualquier otra cosa. */
+  if (await cargarInventarioVento()) {
+    estadoFuente = { modo: 'vento', motivo: null }
+    return ventoAdapter
+  }
+
   if (!isSupabaseConfigured) {
     estadoFuente = { modo: 'demo', motivo: 'sin-supabase' }
     return mockAdapter
@@ -311,31 +319,49 @@ export const inventoryService = {
 
   async getKpis() {
     const rows = await source.getStockRows()
-    const capital = rows.reduce((sum, r) => sum + r.stock * r.unitCost, 0)
+    /* El inventario real del ChatBot no trae costo unitario, así que el
+       capital no se puede calcular. Se devuelve null —no cero— para que
+       la pantalla diga "no hay dato" en vez de afirmar que el depósito
+       vale USD 0. Un cero acá se suma, se promedia y se muestra como si
+       fuera una medición. */
+    const hayCostos = rows.length > 0 && rows.every((r) => Number.isFinite(r.unitCost))
+    const capital = hayCostos
+      ? rows.reduce((sum, r) => sum + r.stock * r.unitCost, 0)
+      : null
     const belowReorder = rows.filter((r) => stockState(r) === 'low').length
     const atRisk = rows.filter((r) => stockState(r) === 'watch').length
     const overstock = rows.filter((r) => r.stock > r.reorder * OVERSTOCK_RATIO).length
-    const noMovement = rows.filter((r) => r.daysSinceLastSale > NO_MOVEMENT_DAYS)
+    const hayVentas = rows.some((r) => Number.isFinite(r.daysSinceLastSale))
+    const noMovement = hayVentas
+      ? rows.filter((r) => r.daysSinceLastSale > NO_MOVEMENT_DAYS)
+      : []
     return {
       skuCount: rows.length,
       capital,
+      hayCostos,
       belowReorder,
       atRisk,
       overstock,
+      hayVentas,
       noMovementCount: noMovement.length,
-      noMovementValue: noMovement.reduce((s, r) => s + r.stock * r.unitCost, 0),
+      noMovementValue: hayCostos
+        ? noMovement.reduce((s, r) => s + r.stock * r.unitCost, 0)
+        : null,
     }
   },
 
   async getCategoryBreakdown() {
     const rows = await source.getStockRows()
+    /* Sin costo no hay reparto de capital; se reparte el stock en
+       unidades, que es un dato real, y la pantalla cambia la etiqueta. */
+    const hayCostos = rows.length > 0 && rows.every((r) => Number.isFinite(r.unitCost))
     const byCat = new Map()
     for (const r of rows) {
-      const value = r.stock * r.unitCost
+      const value = hayCostos ? r.stock * r.unitCost : r.stock
       byCat.set(r.category, (byCat.get(r.category) ?? 0) + value)
     }
     return [...byCat.entries()]
-      .map(([category, value]) => ({ category, value }))
+      .map(([category, value]) => ({ category, value, enUnidades: !hayCostos }))
       .sort((a, b) => b.value - a.value)
   },
 }

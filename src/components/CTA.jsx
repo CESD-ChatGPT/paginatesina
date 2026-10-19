@@ -1,4 +1,5 @@
 import { useRef, useLayoutEffect } from 'react'
+import { APP_URL } from '../lib/app'
 import CtaButton from './CtaButton'
 import { useSectionLink } from '../hooks/useSectionLink'
 import { gsap, ScrollTrigger, prefersReducedMotion } from '../lib/motion'
@@ -98,14 +99,15 @@ export default function CTA() {
               className="text-[15px] leading-relaxed mb-6 max-w-[34ch]"
               style={{ color: 'var(--inverse-graphite)' }}
             >
-              Probá con tu propio catálogo durante 14 días. Si el pronóstico no te sirve,
-              no pagás nada.
+              El ChatBot Stock ya está funcionando sobre el inventario real del
+              depósito: consultás stock, ubicación y faltantes escribiendo o
+              dictando, y cargás productos desde el mismo panel.
             </p>
 
             {/* Una sola acción primaria. La secundaria baja a enlace de
                 texto para que no compitan al quedar apiladas. */}
             <div className="flex flex-col sm:flex-row lg:flex-col sm:items-center lg:items-start gap-x-6 gap-y-4">
-              <CtaButton label="Probar 14 días" variant="inverse" />
+              <CtaButton label="Abrir ChatBot Stock" variant="inverse" href={APP_URL} />
               <a
                 href="#contact"
                 onClick={(e) => goToSection(e, 'contact')}

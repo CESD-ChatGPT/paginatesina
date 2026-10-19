@@ -35,7 +35,12 @@ const KPI_DEFS = {
   skuCount: { label: 'SKU activos', render: (d) => ({ value: d.skuCount, note: 'en depósito central' }) },
   capital: {
     label: 'Capital inmovilizado',
-    render: (d) => ({ prefix: 'USD', value: `${(d.capital / 1000).toFixed(1)}k`, note: 'stock × costo unitario' }),
+    /* Sin costo unitario esto no se puede calcular. Se dice, en vez de
+       mostrar USD 0.0k, que se leería como un depósito sin valor. */
+    render: (d) =>
+      d.hayCostos
+        ? { prefix: 'USD', value: `${(d.capital / 1000).toFixed(1)}k`, note: 'stock × costo unitario' }
+        : { value: '—', note: 'falta el costo unitario' },
   },
   belowReorder: {
     label: 'Bajo punto de reposición',
@@ -63,9 +68,11 @@ const KPI_DEFS = {
   },
   noMovement: {
     label: 'Sin movimiento',
-    render: (d) => ({
-      prefix: d.noMovementCount > 0 ? 'USD' : undefined,
-      value: d.noMovementCount > 0 ? `${(d.noMovementValue / 1000).toFixed(1)}k` : 0,
+    render: (d) => (!d.hayVentas
+      ? { value: '—', note: 'falta el historial de ventas' }
+      : {
+      prefix: d.noMovementCount > 0 && d.hayCostos ? 'USD' : undefined,
+      value: d.noMovementCount > 0 && d.hayCostos ? `${(d.noMovementValue / 1000).toFixed(1)}k` : d.noMovementCount,
       note: `${d.noMovementCount} SKU · 60+ días`,
       tone: d.noMovementCount > 0 ? 'var(--warning)' : undefined,
     }),
@@ -161,6 +168,9 @@ export default function OverviewPanel() {
   const rows = useAsync(() => inventoryService.getStockRows(), [])
   const demand = useAsync(() => inventoryService.getDemandSeries(), [])
   const categories = useAsync(() => inventoryService.getCategoryBreakdown(), [])
+  /* Lo marca la propia capa de datos: sin costos el reparto es de
+     unidades, y entonces cambian el título, la bajada y el sufijo. */
+  const enUnidades = categories.status === 'success' && Boolean(categories.data[0]?.enUnidades)
 
   const [kpiPrefs, setKpiPrefs] = useState(() => loadKpiPrefs(KPI_IDS))
   function handlePrefsChange(next) {
@@ -362,9 +372,15 @@ export default function OverviewPanel() {
         </section>
 
         {/* Categorías */}
-        <section className="col-span-12 lg:col-span-5 panel p-5" aria-label="Capital por categoría">
-          <h2 className="t-h3 mb-1">Capital por categoría</h2>
-          <p className="t-small mb-4">Dónde está inmovilizado el dinero.</p>
+        <section className="col-span-12 lg:col-span-5 panel p-5" aria-label="Reparto por categoría">
+          <h2 className="t-h3 mb-1">
+            {enUnidades ? 'Stock por proveedor' : 'Capital por categoría'}
+          </h2>
+          <p className="t-small mb-4">
+            {enUnidades
+              ? 'Cuántas unidades hay de cada uno. Sin costo unitario no se puede repartir el capital.'
+              : 'Dónde está inmovilizado el dinero.'}
+          </p>
 
           {categories.status === 'loading' && <LoadingBlock label="Cargando categorías" rows={4} />}
           {categories.status === 'error' && <ErrorBlock error={categories.error} />}
@@ -372,7 +388,7 @@ export default function OverviewPanel() {
             (categories.data.length === 0 ? (
               <EmptyBlock title="Sin categorías cargadas" />
             ) : (
-              <CategoryBars data={categories.data} />
+              <CategoryBars data={categories.data} unidad={enUnidades ? 'u.' : null} />
             ))}
         </section>
       </div>

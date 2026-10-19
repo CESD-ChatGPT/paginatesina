@@ -135,32 +135,68 @@ del lado de Supabase, porque no hay tablas de negocio que proteger.
 
 ### 3. Fuente de datos — inventario propio
 
-`src/data/inventory.js` expone `inventoryService` y elige entre dos
-fuentes según lo que encuentre:
+`src/data/inventory.js` expone `inventoryService` y elige entre tres
+fuentes, en este orden:
 
 | Fuente | Cuándo | Qué sirve |
 |---|---|---|
-| `supabaseAdapter` | Supabase configurado **y** esquema corrido | El inventario del usuario, aislado por RLS |
-| `mockAdapter` | Sin Supabase, sin sesión o sin esquema | El depósito de ejemplo, rotulado como tal |
+| `ventoAdapter` | Hay `public/inventario.json` | El inventario real del ChatBot Stock |
+| `supabaseAdapter` | Supabase configurado **y** esquema corrido | Inventario propio, aislado por RLS |
+| `mockAdapter` | Ninguna de las dos | El depósito de ejemplo, rotulado como tal |
 
-La elección es asincrónica porque depende de si las tablas existen, y
-eso solo se sabe preguntando. Se resuelve una vez por sesión.
+## El software de prueba
 
-**Para activar el inventario real — un solo paso:**
+El producto que la gente prueba desde la landing es el **ChatBot Stock**,
+que corre en Vento sobre el inventario real de la red `cesd`:
 
-1. Panel de Supabase → **SQL Editor** → **New query**.
-2. Pegá todo el contenido de [`supabase/schema.sql`](supabase/schema.sql) y **Run**.
-3. Recargá la app.
+<https://cloud.vento.build/networks/cesd/chatbot-stock.html>
 
-Es idempotente: se puede volver a correr sin romper nada.
+La dirección vive en un solo lugar, `src/lib/app.js`. Pide usuario y PIN
+propios, que no son los de la cuenta de SOLVUS: son dos sistemas
+distintos y la landing lo aclara.
 
-A partir de ahí cada cuenta arranca **vacía** y carga su propio
-inventario desde la pestaña **Cargar**. No se siembran productos de
-ejemplo a propósito: un depósito con datos inventados es peor que uno
-vacío, porque parece que el sistema sabe algo que no sabe.
+## Publicar el inventario real
 
-Mientras el esquema no esté corrido, el panel no se cae — muestra el
-depósito de ejemplo y dice en pantalla qué falta.
+El ChatBot lee su API con la cookie de sesión de su propio dominio.
+SOLVUS vive en otro origen, así que el navegador exigiría que Vento
+respondiera con `Access-Control-Allow-Origin` apuntando acá y
+`Access-Control-Allow-Credentials: true`. Eso lo decide el servidor de
+Vento y hoy no lo hace: pedirle a la API desde esta app da error de
+CORS siempre, con sesión abierta o sin ella.
+
+La salida es publicar una copia:
+
+1. Abrí el ChatBot Stock y entrá con tu usuario.
+2. **F12 → Console**, pegá todo `scripts/exportar-inventario.js` y Enter.
+3. Se descarga `inventario.json`.
+4. Copialo a `public/inventario.json`.
+5. `npm run build` y publicá.
+
+Desde ahí el panel muestra tu depósito. El archivo está en `.gitignore`
+a propósito: cada quien publica el suyo. El formato está en
+`public/inventario.ejemplo.json`.
+
+### Qué cubre y qué no el inventario del ChatBot
+
+Su esquema es `sku · producto · cantidad · stock_minimo · unidad ·
+ubicacion · proveedor · notas`. **No tiene costo unitario ni historial
+de ventas.** Con eso:
+
+| Función | Con datos del ChatBot |
+|---|---|
+| Stock, faltantes, sobrestock | ✅ completo |
+| Ubicaciones y proveedores | ✅ completo |
+| Alertas y órdenes sugeridas | ✅ completo |
+| Capital inmovilizado · valorización | ❌ falta el costo unitario |
+| Pronóstico de demanda | ❌ falta el historial de ventas |
+
+Lo que no se puede calcular se muestra como «—» con el motivo, y no se
+rellena con ceros ni con estimaciones. Un costo falso contamina el
+capital, la valorización y las recomendaciones de compra a la vez.
+
+Para tener esas dos funciones hace falta agregar `costo_unitario` al
+inventario del ChatBot y registrar las salidas — o usar el camino de
+Supabase, que sí modela ambas cosas.
 
 #### Sobre el rol y la seguridad
 
