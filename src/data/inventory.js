@@ -26,6 +26,8 @@ import { recordEvent } from './audit'
 import { isSupabaseConfigured } from '../lib/supabase'
 import { supabaseAdapter, EsquemaFaltanteError } from './supabaseAdapter'
 import { ventoAdapter, cargarInventarioVento } from './ventoAdapter'
+import { firebaseAdapter, SinSesionError } from './firebaseAdapter'
+import { isFirebaseConfigured } from '../lib/firebase'
 
 const delay = (ms) => new Promise((r) => setTimeout(r, ms))
 
@@ -222,7 +224,7 @@ const mockAdapter = {
    de dejar el panel roto. */
 
 let sourcePromise = null
-let estadoFuente = { modo: isSupabaseConfigured ? 'resolviendo' : 'demo', motivo: null }
+let estadoFuente = { modo: isFirebaseConfigured || isSupabaseConfigured ? 'resolviendo' : 'demo', motivo: null }
 
 async function resolveDataSource() {
   /* Primero la copia del inventario real: si está publicada, es el dato
@@ -230,6 +232,23 @@ async function resolveDataSource() {
   if (await cargarInventarioVento()) {
     estadoFuente = { modo: 'vento', motivo: null }
     return ventoAdapter
+  }
+
+  /* Firebase es la base del producto: si hay sesión, manda. */
+  if (isFirebaseConfigured) {
+    try {
+      await firebaseAdapter.getStockRows()
+      estadoFuente = { modo: 'firebase', motivo: null }
+      return firebaseAdapter
+    } catch (e) {
+      /* Sin sesión es el caso normal en la landing pública: se usa
+         la demo y no se reporta como falla. */
+      estadoFuente = {
+        modo: 'demo',
+        motivo: e instanceof SinSesionError ? 'sin-sesion' : 'firebase-error',
+      }
+      return mockAdapter
+    }
   }
 
   if (!isSupabaseConfigured) {
@@ -261,7 +280,7 @@ function getSource() {
    volver a resolver en vez de servir la decisión del usuario anterior. */
 export function resetDataSource() {
   sourcePromise = null
-  estadoFuente = { modo: isSupabaseConfigured ? 'resolviendo' : 'demo', motivo: null }
+  estadoFuente = { modo: isFirebaseConfigured || isSupabaseConfigured ? 'resolviendo' : 'demo', motivo: null }
 }
 
 export function getDataSourceState() {
@@ -315,6 +334,38 @@ export const inventoryService = {
   },
   async aceptaAltas() {
     return Boolean((await getSource()).createProduct)
+  },
+
+  /* Movimientos: el registro de entradas y salidas. Sin esto el
+     sistema sabe cuánto hay pero no qué pasó. */
+  registrarMovimiento: async (datos) => {
+    const s = await getSource()
+    if (!s.registrarMovimiento) {
+      throw new Error('Esta fuente de datos no registra movimientos.')
+    }
+    return s.registrarMovimiento(datos)
+  },
+  getMovimientos: async (limite) => {
+    const s = await getSource()
+    return s.getMovimientos ? s.getMovimientos(limite) : []
+  },
+  async registraMovimientos() {
+    return Boolean((await getSource()).registrarMovimiento)
+  },
+
+  /* Depósitos y proveedores vienen de la fuente cuando sabe darlos;
+     si no, de las constantes del depósito de ejemplo. */
+  getWarehouses: async () => {
+    const s = await getSource()
+    return s.getWarehouses ? s.getWarehouses() : WAREHOUSES
+  },
+  getSuppliers: async () => {
+    const s = await getSource()
+    return s.getSuppliers ? s.getSuppliers() : SUPPLIERS
+  },
+  getAuditEvents: async (limite) => {
+    const s = await getSource()
+    return s.getAuditEvents ? s.getAuditEvents(limite) : null
   },
 
   async getKpis() {

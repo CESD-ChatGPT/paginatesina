@@ -1,0 +1,66 @@
+rules_version = '2';
+
+/* ═══════════════════════════════════════════════════════════════
+   REGLAS DE SEGURIDAD — el equivalente de Row Level Security
+
+   Esto es lo único que protege los datos. La configuración de
+   Firebase (apiKey, projectId) viaja en el bundle y es pública por
+   diseño, igual que la anon key de Supabase: cualquiera puede
+   abrir una conexión al proyecto. Lo que decide qué puede leer y
+   escribir es este archivo, evaluado en el servidor.
+
+   Modelo: todo cuelga de `usuarios/{uid}`, así que el aislamiento
+   es estructural — un documento de otra cuenta ni siquiera está en
+   una ruta a la que se pueda apuntar.
+   ═══════════════════════════════════════════════════════════════ */
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /* Sin eñe: el lenguaje de reglas solo acepta identificadores
+       ASCII. Con `esDueño` el archivo no compila y Firestore
+       responde 400 a TODO — se ve como si la base no existiera. */
+    function esDuenio(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
+
+    /* El perfil lo lee y edita su dueño, con una excepción: el rol.
+       Es la misma lección que en Postgres — si el usuario puede
+       escribir su propio rol, el rol no sirve para nada. Se cambia
+       desde la consola de Firebase o con el SDK de admin, que nunca
+       llega al navegador. */
+    match /usuarios/{uid} {
+      allow read: if esDuenio(uid);
+
+      allow create: if esDuenio(uid)
+                    && request.resource.data.rol == 'operador';
+
+      allow update: if esDuenio(uid)
+                    && request.resource.data.rol == resource.data.rol;
+
+      allow delete: if false;
+
+      /* Inventario y todo lo que cuelga de él: del dueño y de nadie
+         más. Se enumeran las colecciones en vez de usar un comodín
+         para que agregar una nueva sea una decisión consciente. */
+      match /{coleccion}/{documento=**} {
+        allow read, write: if esDuenio(uid)
+          && coleccion in [
+            'productos',
+            'depositos',
+            'proveedores',
+            'stock',
+            'movimientos',
+            'conteos',
+            'auditoria'
+          ];
+      }
+    }
+
+    /* Todo lo que no esté nombrado arriba queda cerrado. Sin esto,
+       una colección nueva nacería pública. */
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

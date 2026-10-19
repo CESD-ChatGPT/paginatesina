@@ -24,3 +24,9 @@ yarn-error.log*
 
 # La copia del inventario real: cada quien publica la suya.
 /public/inventario.json
+
+# Firebase
+/.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log

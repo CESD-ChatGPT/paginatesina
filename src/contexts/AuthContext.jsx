@@ -3,6 +3,8 @@ import { can as canForRole } from '../lib/permissions'
 import { getSupabase, isSupabaseConfigured, hasStoredSession } from '../lib/supabase'
 import { setAuditUser } from '../data/audit'
 import { resetDataSource } from '../data/inventory'
+import { isFirebaseConfigured, hasStoredSession as hasFirebaseSession } from '../lib/firebase'
+import { firebaseAuthProvider } from './firebaseAuthProvider'
 
 /* ═══════════════════════════════════════════════════════════════
    AUTENTICACIÓN
@@ -285,7 +287,14 @@ const supabaseAuthProvider = {
   },
 }
 
-const provider = isSupabaseConfigured ? supabaseAuthProvider : mockAuthProvider
+/* Orden de preferencia: Firebase, Supabase, mock. Firebase primero
+   porque su plan gratuito no pausa el proyecto — el de Supabase se
+   duerme a los 7 días y hay que despausarlo a mano. */
+const provider = isFirebaseConfigured
+  ? firebaseAuthProvider
+  : isSupabaseConfigured
+    ? supabaseAuthProvider
+    : mockAuthProvider
 
 const AuthContext = createContext(null)
 
@@ -339,8 +348,9 @@ export function AuthProvider({ children }) {
 
   const hasSession = Boolean(user)
   useEffect(() => {
-    if (!isSupabaseConfigured) return
-    if (!hasSession && !hasStoredSession()) return
+    if (!isFirebaseConfigured && !isSupabaseConfigured) return
+    const guardada = isFirebaseConfigured ? hasFirebaseSession() : hasStoredSession()
+    if (!hasSession && !guardada) return
 
     let alive = true
     const unsubscribe = provider.onChange((next) => {
@@ -451,8 +461,8 @@ export function AuthProvider({ children }) {
         updatePassword,
         setRole,
         can,
-        canRegister: isSupabaseConfigured,
-        isMockAuth: !isSupabaseConfigured,
+        canRegister: isFirebaseConfigured || isSupabaseConfigured,
+        isMockAuth: !isFirebaseConfigured && !isSupabaseConfigured,
       }}
     >
       {children}
