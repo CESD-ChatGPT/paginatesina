@@ -128,10 +128,10 @@ export default function Hero() {
             <p className="t-label mb-5 hero-label">Control de inventario con IA</p>
 
             <h1 className="t-display mb-6">
-              <span className="block overflow-hidden">
+              <span className="block overflow-hidden pb-[0.18em] -mb-[0.18em]">
                 <span className="block hero-line">Dejá de comprar</span>
               </span>
-              <span className="block overflow-hidden">
+              <span className="block overflow-hidden pb-[0.18em] -mb-[0.18em]">
                 <span className="block hero-line">stock a ciegas.</span>
               </span>
             </h1>
