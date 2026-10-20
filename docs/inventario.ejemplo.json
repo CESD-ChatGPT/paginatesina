@@ -1,0 +1,6 @@
+[
+  {"sku":"1","producto":"Monitor 24\" IPS","cantidad":18,"stock_minimo":45,"unidad":"Unidad","ubicacion":"A4","proveedor":"TecnoDistribuidora SA","notas":""},
+  {"sku":"2","producto":"Cable HDMI 2.1 2m","cantidad":0,"stock_minimo":20,"unidad":"Unidad","ubicacion":"B1","proveedor":"Componentes del Sur","notas":"reponer"},
+  {"sku":"3","producto":"Teclado mecánico TKL","cantidad":142,"stock_minimo":60,"unidad":"Unidad","ubicacion":"C2","proveedor":"TecnoDistribuidora SA","notas":""},
+  {"sku":"4","producto":"SSD NVMe 1TB","cantidad":54,"stock_minimo":50,"unidad":"Unidad","ubicacion":"A1","proveedor":"Import Andina","notas":""}
+]
