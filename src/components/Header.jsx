@@ -99,7 +99,10 @@ export default function Header() {
           align-items: center;
           gap: 8px;
           min-height: 44px;
-          padding-left: 4px;
+          padding: 0 14px;
+          border-radius: 999px;
+          background: color-mix(in srgb, var(--surface) 94%, transparent);
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
           color: var(--ink);
           text-decoration: none;
           flex-shrink: 0;
