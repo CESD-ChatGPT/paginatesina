@@ -3,6 +3,7 @@ import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Header from './components/Header'
 import Hero from './components/Hero'
 import ProductSection from './components/ProductSection'
+import Terminos from './pages/Terminos'
 import VideoSection from './components/VideoSection'
 import AutomationStory from './components/AutomationStory'
 import Features from './components/Features'
@@ -53,6 +54,7 @@ function AppRoutes() {
     <Suspense fallback={<RouteFallback />}>
       <Routes>
         <Route path="/" element={<Landing />} />
+        <Route path="/terminos" element={<Terminos />} />
         {!SOLO_LANDING && <Route path="/panel" element={<Dashboard />} />}
         {/* Enlaces viejos al login: van directo al panel, que ya no pide sesión. */}
         {!SOLO_LANDING && <Route path="/login" element={<Navigate to="/panel" replace />} />}

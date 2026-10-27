@@ -21,7 +21,7 @@ export default function VideoSection() {
         <div className="grid grid-cols-12 gap-y-12 gap-x-8 items-start">
           <div className="col-span-12 lg:col-span-6">
             <p className="t-body text-[16px] max-w-[46ch] mb-10">
-              Un video vertical de 41 segundos que recorre el problema de buscar a mano,
+              Un video vertical de menos de un minuto que recorre el problema de buscar a mano,
               la solución con luz y balanza, y cómo pedir una demo.
             </p>
 
@@ -48,7 +48,6 @@ export default function VideoSection() {
               aria-label="Video de Stockus, de SOLVUS: cómo funciona en el depósito"
               className="block w-full max-w-[340px] rounded-[3px] border border-rule"
             />
-            <p className="t-mono text-[11px] text-muted mt-3">Video · 41 s · vertical</p>
           </div>
         </div>
       </div>
