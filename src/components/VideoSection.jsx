@@ -3,7 +3,7 @@
 const ESCENAS = [
   { n: '01', titulo: 'Buscar a mano', texto: 'El costo de no saber dónde está cada producto.' },
   { n: '02', titulo: 'La luz guía', texto: 'El operario va directo al estante, sin revisar cajas.' },
-  { n: '03', titulo: 'La balanza registra', texto: 'Cada salida queda anotada sin escribir nada.' },
+  { n: '03', titulo: 'Todo a la vista', texto: 'Cada producto y cada depósito, en un solo panel.' },
   { n: '04', titulo: 'Precio y demo', texto: 'Instalación incluida, pagos en cuotas y contacto por WhatsApp.' },
 ]
 
@@ -22,7 +22,7 @@ export default function VideoSection() {
           <div className="col-span-12 lg:col-span-6">
             <p className="t-body text-[16px] max-w-[46ch] mb-10">
               Un video vertical de menos de un minuto que recorre el problema de buscar a mano,
-              la solución con luz y balanza, y cómo pedir una demo.
+              la solución con luz y panel de stock, y cómo pedir una demo.
             </p>
 
             <ol className="flex flex-col">
