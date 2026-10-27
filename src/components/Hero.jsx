@@ -20,22 +20,22 @@ import { gsap, ScrollTrigger, prefersReducedMotion } from '../lib/motion'
 
 const FIGURES = [
   {
-    to: -32,
-    label: 'Capital inmovilizado',
-    note: 'promedio a 6 meses',
-    format: (v) => `${v <= -0.5 ? '−' : ''}${Math.abs(Math.round(v))}%`,
+    to: 3,
+    label: 'Empresas entrevistadas',
+    note: 'con errores de stock',
+    format: (v) => `${Math.round(v)} de 3`,
   },
   {
-    to: 94,
-    label: 'Precisión de pronóstico',
-    note: 'sobre 1,2M de SKU',
-    format: (v) => `${Math.round(v)}%`,
+    to: 41,
+    label: 'Video de la campaña',
+    note: 'cómo funciona en el depósito',
+    format: (v) => `${Math.round(v)} s`,
   },
   {
-    to: 11,
-    label: 'Ahorro semanal por equipo',
-    note: 'gestión manual evitada',
-    format: (v) => `${Math.round(v)} h`,
+    to: 3,
+    label: 'Pasos para empezar',
+    note: 'de la consulta a la instalación',
+    format: (v) => `${Math.round(v)}`,
   },
 ]
 

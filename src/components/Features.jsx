@@ -19,7 +19,7 @@ const SUPPORTING = [
   {
     icon: Boxes,
     title: 'Stock en tiempo real',
-    description: 'Un solo número de verdad por SKU, sincronizado con tu ERP y tus ventas.',
+    description: 'Un solo número por SKU y por depósito, siempre al día con los movimientos.',
   },
   {
     icon: Bell,

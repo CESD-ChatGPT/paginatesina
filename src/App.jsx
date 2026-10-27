@@ -4,6 +4,8 @@ import Header from './components/Header'
 import Hero from './components/Hero'
 import ProductSection from './components/ProductSection'
 import Terminos from './pages/Terminos'
+import Faq from './components/Faq'
+import WhatsAppFloat from './components/WhatsAppFloat'
 import VideoSection from './components/VideoSection'
 import AutomationStory from './components/AutomationStory'
 import Features from './components/Features'
@@ -33,11 +35,13 @@ function Landing() {
         <Hero />
         <ProductSection />
         <VideoSection />
+        <Faq />
         <AutomationStory />
         <Features />
         <CTA />
       </main>
       <Footer />
+      <WhatsAppFloat />
     </>
   )
 }

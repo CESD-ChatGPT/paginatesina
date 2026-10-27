@@ -12,7 +12,7 @@ import { gsap, ScrollTrigger, prefersReducedMotion } from '../lib/motion'
    sistemas de reveal distintos conviviendo. */
 
 const STEPS = [
-  { n: '01', title: 'Conectás tu fuente', detail: 'ERP, e-commerce o una planilla. Sin migración.' },
+  { n: '01', title: 'Contanos tu depósito', detail: 'Una planilla o tu inventario actual, tal como está hoy.' },
   { n: '02', title: 'El modelo lee tu histórico', detail: 'Primeras proyecciones en 48 h.' },
   { n: '03', title: 'Aprobás la primera orden', detail: 'Vos decidís; la IA solo sugiere.' },
 ]
