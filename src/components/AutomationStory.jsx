@@ -90,7 +90,7 @@ export default function AutomationStory() {
             <div ref={lineRef} className="h-px w-full" style={{ background: 'var(--accent)' }} />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-x-6 gap-y-10">
+          <div className="relative z-[1] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-x-6 gap-y-10">
             {STAGES.map((s, i) => {
               const Icon = s.icon
               return (
