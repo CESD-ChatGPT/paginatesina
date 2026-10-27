@@ -216,6 +216,17 @@ export default function Header() {
           .menu a { transition: background 0.18s ease, color 0.18s ease; }
           .menu a:hover, .menu a:active { transform: none; }
         }
+        .navbar__slogan {
+          margin-left: 10px;
+          padding-left: 10px;
+          border-left: 1px solid var(--rule-strong);
+          font-size: 12px;
+          white-space: nowrap;
+          color: var(--muted);
+        }
+        @media (max-width: 640px) {
+          .navbar__slogan { display: none; }
+        }
       `}</style>
 
       <header>
@@ -223,6 +234,7 @@ export default function Header() {
           <Link to="/" className="navbar__brand" aria-label="SOLVUS — inicio">
             <Isotipo size={22} />
             <Logotipo className="navbar__brand-word" />
+            <span className="navbar__slogan">Tu inventario, bajo control.</span>
           </Link>
 
           <div className="menu">

@@ -2,6 +2,8 @@ import { Suspense, lazy } from 'react'
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Header from './components/Header'
 import Hero from './components/Hero'
+import ProductSection from './components/ProductSection'
+import VideoSection from './components/VideoSection'
 import AutomationStory from './components/AutomationStory'
 import Features from './components/Features'
 import CTA from './components/CTA'
@@ -28,6 +30,8 @@ function Landing() {
       <Header />
       <main>
         <Hero />
+        <ProductSection />
+        <VideoSection />
         <AutomationStory />
         <Features />
         <CTA />
