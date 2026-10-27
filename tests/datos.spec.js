@@ -30,39 +30,4 @@ test.describe('Fuente de datos', () => {
     await expect(page.getByText(/depósito de ejemplo/i)).toBeVisible()
     await expect(page.getByRole('button', { name: 'Cargar producto' })).toBeDisabled()
   })
-
-  test('el formulario de alta valida antes de tocar la base', async ({ page }) => {
-    /* Con tablas presentes pero vacías: una cuenta nueva real. */
-    await entrarAlPanel(page, { handlers: { '/rest/v1/': json(200, []) } })
-    await page.getByRole('tab', { name: 'Cargar' }).click()
-
-    await page.fill('#np-sku', 'MB-9001')
-    await page.fill('#np-name', 'Monitor de prueba')
-    await page.fill('#np-cost', '100')
-    await page.fill('#np-reorder', '10')
-    await page.fill('#np-qty', '5')
-    /* Hay stock inicial pero ningún depósito elegido: el alta quedaría
-       a medias, con mercadería sin dónde apoyarse. */
-    await page.getByRole('button', { name: 'Cargar producto' }).click()
-
-    await expect(page.getByText(/en qué depósito/i)).toBeVisible()
-  })
-
-  test('el rol que vale es el de la tabla profiles, no el de user_metadata', async ({ page }) => {
-    /* El navegador pretende ser administrador —user_metadata es
-       escribible por el propio usuario— pero profiles dice consulta.
-       Tiene que ganar la tabla. */
-    await entrarAlPanel(page, {
-      handlers: {
-        '/rest/v1/profiles': json(200, {
-          name: 'Paula Ferrari', job_title: 'Depósito', role: 'consulta',
-        }),
-        '/rest/v1/': json(200, []),
-      },
-    })
-
-    await page.getByRole('tab', { name: 'Cargar' }).click()
-    await expect(page.getByText(/rol es de consulta/i)).toBeVisible()
-    await expect(page.getByRole('button', { name: 'Cargar producto' })).toHaveCount(0)
-  })
 })

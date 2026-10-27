@@ -1,5 +1,5 @@
 import { Suspense, lazy } from 'react'
-import { HashRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Header from './components/Header'
 import Hero from './components/Hero'
 import AutomationStory from './components/AutomationStory'
@@ -9,13 +9,10 @@ import CTA from './components/CTA'
 import Footer from './components/Footer'
 import LoadingScreen from './components/LoadingScreen'
 import { ThemeProvider } from './contexts/ThemeContext'
-import { AuthProvider, useAuth } from './contexts/AuthContext'
+import { AuthProvider } from './contexts/AuthContext'
 
-/* Login y Dashboard se cargan bajo demanda: son las únicas dos pantallas
-   que usan Framer Motion, y un visitante anónimo que solo ve la landing
-   no debería pagar ese peso. Sin esto, el bundle único subía de 352 KB
-   a 484 KB (verificado con el build) solo por el import estático. */
-const Login = lazy(() => import('./pages/Login'))
+/* El panel se carga bajo demanda: usa Framer Motion, y un visitante que
+   solo ve la landing no debería pagar ese peso. */
 const Dashboard = lazy(() => import('./pages/Dashboard'))
 
 /* HashRouter y no BrowserRouter: el sitio se sirve en GitHub Pages, que
@@ -39,64 +36,21 @@ function Landing() {
   )
 }
 
-function RequireAuth({ children }) {
-  const { user, initializing } = useAuth()
-  const location = useLocation()
-
-  /* Con auth real, recuperar la sesión es asincrónico: en el primer
-     render todavía no se sabe si hay usuario. Redirigir acá patearía al
-     login a alguien que sí tiene sesión abierta cada vez que recarga. */
-  if (initializing) return <RouteFallback />
-
-  if (!user) {
-    return <Navigate to="/login" replace state={{ from: location.pathname }} />
-  }
-  return children
-}
-
 /* Fallback mínimo mientras baja el chunk de Login/Dashboard — en una
    conexión normal no llega a verse; en una lenta, es más honesto que una
    pantalla en blanco. */
-/* El enlace de recuperación llega CON sesión —el token del correo la
-   abre— así que el rebote normal de /login al panel se la llevaría
-   puesta y nunca llegaría a elegir contraseña nueva. La vieja seguiría
-   siendo la única que conoce. Es la única excepción al rebote. */
-function enRecuperacion() {
-  const q = window.location.hash.split('?')[1]
-  return Boolean(q && new URLSearchParams(q).get('recovery'))
-}
-
 function RouteFallback() {
   return <div className="min-h-screen" style={{ background: 'var(--paper)' }} />
 }
 
 function AppRoutes() {
-  const { user, initializing } = useAuth()
-
   return (
     <Suspense fallback={<RouteFallback />}>
       <Routes>
         <Route path="/" element={<Landing />} />
-        <Route
-          path="/login"
-          element={
-            initializing ? (
-              <RouteFallback />
-            ) : user && !enRecuperacion() ? (
-              <Navigate to="/panel" replace />
-            ) : (
-              <Login />
-            )
-          }
-        />
-        <Route
-          path="/panel"
-          element={
-            <RequireAuth>
-              <Dashboard />
-            </RequireAuth>
-          }
-        />
+        <Route path="/panel" element={<Dashboard />} />
+        {/* Enlaces viejos al login: van directo al panel, que ya no pide sesión. */}
+        <Route path="/login" element={<Navigate to="/panel" replace />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Suspense>

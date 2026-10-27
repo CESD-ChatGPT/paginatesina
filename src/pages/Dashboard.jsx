@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { MotionConfig } from 'framer-motion'
-import { LogOut, AlertTriangle } from 'lucide-react'
+import { AlertTriangle } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { getDataSourceState, inventoryService } from '../data/inventory'
 import { Isologotipo } from '../components/brand/Logo'
@@ -40,15 +39,9 @@ const TABS = [
 ]
 
 export default function Dashboard() {
-  const { user, signOut } = useAuth()
-  const navigate = useNavigate()
+  const { user } = useAuth()
   const [tab, setTab] = useState('resumen')
   const [focusSku, setFocusSku] = useState(null)
-
-  async function handleSignOut() {
-    await signOut()
-    navigate('/', { replace: true })
-  }
 
   // La búsqueda global no sabe de tabs de React: solo describe qué
   // encontró (producto, proveedor, depósito, sección, evento). Acá se
@@ -104,18 +97,6 @@ export default function Dashboard() {
               <p className="text-[13px] font-medium leading-tight">{user?.name}</p>
               <p className="t-mono text-[11px] text-muted">{user?.warehouse}</p>
             </div>
-            <button
-              onClick={handleSignOut}
-              /* Abajo de xs el texto se oculta con display:none, que también
-                 lo saca del árbol de accesibilidad: sin este aria-label el
-                 botón quedaba sin nombre para un lector de pantalla justo
-                 en el tamaño donde es solo un ícono. */
-              aria-label="Salir"
-              className="inline-flex shrink-0 items-center gap-2 min-h-[44px] px-2 md:px-3 text-[13px] font-medium text-graphite hover:text-[var(--accent)] transition-colors"
-            >
-              <LogOut className="w-4 h-4" aria-hidden="true" />
-              <span className="hidden xs:inline">Salir</span>
-            </button>
           </div>
         </div>
         <Tabs tabs={TABS} active={tab} onChange={setTab} />

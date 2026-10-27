@@ -77,10 +77,7 @@ export function json(status, body) {
 
 export async function entrarAlPanel(page, { handlers } = {}) {
   await interceptarSupabase(page, handlers)
-  await page.goto('#/login')
-  await page.fill('#email', USUARIO_DEMO.email)
-  await page.fill('#password', USUARIO_DEMO.password)
-  await page.click('button[type=submit]')
+  await page.goto('#/panel')
   await expect(page.getByRole('tab', { name: 'Resumen' })).toBeVisible()
 }
 

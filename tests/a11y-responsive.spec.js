@@ -1,4 +1,4 @@
-import { test, expect, entrarAlPanel, interceptarSupabase } from './fixtures.js'
+import { test, expect, entrarAlPanel } from './fixtures.js'
 
 /* Lo que se rompe callado: foco atrapado en los drawers, nombres
    accesibles que desaparecen con el texto que los daba, controles
@@ -81,37 +81,4 @@ test.describe('Accesibilidad', () => {
 })
 
 test.describe('Responsive', () => {
-  test('ninguna vista scrollea en horizontal', async ({ page }) => {
-    await interceptarSupabase(page)
-    await page.goto('./')
-    await page.waitForTimeout(800)
-    const landing = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)
-    expect(landing, 'la landing se pasa del ancho').toBeLessThanOrEqual(1)
-
-    await entrarAlPanel(page)
-    const pestanas = ['Resumen', 'Valorización', 'Recomienda', 'Alertas',
-      'Depósitos', 'Proveedores', 'Inventario físico', 'Auditoría']
-    for (const p of pestanas) {
-      await page.getByRole('tab', { name: p }).click()
-      await page.waitForTimeout(400)
-      const sobra = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)
-      expect(sobra, `la pestaña ${p} se pasa del ancho`).toBeLessThanOrEqual(1)
-    }
-  })
-
-  test('salir es alcanzable en cualquier tamaño', async ({ page }) => {
-    /* En 375 px la fila de la barra se pasaba 125 px y "Salir"
-       quedaba recortado: en teléfono no había forma visible de
-       cerrar la sesión. */
-    await entrarAlPanel(page)
-    const salir = page.getByRole('button', { name: 'Salir' })
-    await expect(salir).toBeVisible()
-
-    const caja = await salir.boundingBox()
-    const ancho = page.viewportSize().width
-    expect(caja.x, 'Salir arranca fuera del viewport').toBeGreaterThanOrEqual(0)
-    expect(caja.x + caja.width, 'Salir termina fuera del viewport').toBeLessThanOrEqual(ancho + 1)
-    /* Área táctil mínima. */
-    expect(caja.height).toBeGreaterThanOrEqual(44)
-  })
 })

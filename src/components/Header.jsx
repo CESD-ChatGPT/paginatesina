@@ -1,7 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import { ThemeToggleButton } from './ThemeToggle'
 import { Isotipo, Logotipo } from './brand/Logo'
-import { useAuth } from '../contexts/AuthContext'
 import { useSectionLink } from '../hooks/useSectionLink'
 
 /* ─────────────────────────────────────────────────────────────
@@ -63,7 +62,6 @@ const IconPanel = () => (
 )
 
 export default function Header() {
-  const { user } = useAuth()
   const { pathname } = useLocation()
   const goToSection = useSectionLink()
 
@@ -72,9 +70,7 @@ export default function Header() {
     { to: '/', label: 'Inicio', Icon: IconInicio, active: pathname === '/' },
     { section: 'features', label: 'Producto', Icon: IconProducto },
     { section: 'contact', label: 'Arranque', Icon: IconArranque },
-    user
-      ? { to: '/panel', label: 'Panel', Icon: IconPanel, active: pathname === '/panel' }
-      : { to: '/login', label: 'Ingresar', Icon: IconPanel, active: pathname === '/login' },
+    { to: '/panel', label: 'Panel', Icon: IconPanel, active: pathname === '/panel' },
   ]
 
   return (
