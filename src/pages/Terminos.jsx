@@ -11,7 +11,7 @@ const SECCIONES = [
   },
   {
     titulo: '2. Qué es Stockus',
-    texto: 'Stockus es un sistema de control de inventario que combina una aplicación web con hardware instalado en el depósito del cliente: un servidor local, una tira de luces LED que guía al producto y una balanza que registra los movimientos de stock.',
+    texto: 'Stockus es un sistema de control de inventario que combina una aplicación web con hardware instalado en el depósito del cliente: un servidor local, y una tira de luces LED que guía al producto.',
   },
   {
     titulo: '3. Compra, precio y pago',

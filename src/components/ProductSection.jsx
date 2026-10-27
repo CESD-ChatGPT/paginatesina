@@ -7,8 +7,8 @@ const DIFERENCIALES = [
     texto: 'Una tira LED ilumina la ubicación del producto. El operario no busca: va directo al estante.',
   },
   {
-    titulo: 'Pesaje automático',
-    texto: 'Una celda de carga registra cada entrada y salida. El stock se actualiza sin anotar nada.',
+    titulo: 'Panel de stock',
+    texto: 'Stock por depósito y por ubicación, en un solo panel. Sin planillas ni cuadernos.',
   },
   {
     titulo: 'Sin internet',
