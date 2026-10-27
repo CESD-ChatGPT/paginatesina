@@ -70,7 +70,9 @@ export default function Header() {
     { to: '/', label: 'Inicio', Icon: IconInicio, active: pathname === '/' },
     { section: 'features', label: 'Producto', Icon: IconProducto },
     { section: 'contact', label: 'Arranque', Icon: IconArranque },
-    { to: '/panel', label: 'Panel', Icon: IconPanel, active: pathname === '/panel' },
+    ...(import.meta.env.VITE_LANDING_ONLY === 'true'
+      ? []
+      : [{ to: '/panel', label: 'Panel', Icon: IconPanel, active: pathname === '/panel' }]),
   ]
 
   return (

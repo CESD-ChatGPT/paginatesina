@@ -13,7 +13,10 @@ import { AuthProvider } from './contexts/AuthContext'
 
 /* El panel se carga bajo demanda: usa Framer Motion, y un visitante que
    solo ve la landing no debería pagar ese peso. */
-const Dashboard = lazy(() => import('./pages/Dashboard'))
+/* Build solo landing (VITE_LANDING_ONLY=true): el panel no entra en el
+   bundle ni en las rutas. Ver README, sección de publicación. */
+export const SOLO_LANDING = import.meta.env.VITE_LANDING_ONLY === 'true'
+const Dashboard = SOLO_LANDING ? null : lazy(() => import('./pages/Dashboard'))
 
 /* HashRouter y no BrowserRouter: el sitio se sirve en GitHub Pages, que
    no permite configurar un fallback a index.html. Con rutas de historial
@@ -48,9 +51,9 @@ function AppRoutes() {
     <Suspense fallback={<RouteFallback />}>
       <Routes>
         <Route path="/" element={<Landing />} />
-        <Route path="/panel" element={<Dashboard />} />
+        {!SOLO_LANDING && <Route path="/panel" element={<Dashboard />} />}
         {/* Enlaces viejos al login: van directo al panel, que ya no pide sesión. */}
-        <Route path="/login" element={<Navigate to="/panel" replace />} />
+        {!SOLO_LANDING && <Route path="/login" element={<Navigate to="/panel" replace />} />}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Suspense>
