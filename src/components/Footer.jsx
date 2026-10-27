@@ -57,7 +57,7 @@ export default function Footer() {
       <div className="rule-top">
         <div className="shell py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="t-mono text-[11px] text-muted order-2 sm:order-1">
-            © {year} SOLVUS
+            © {year} Stockus, producto de SOLVUS · Tu inventario, bajo control.
           </p>
           <div className="flex items-center gap-1 order-1 sm:order-2">
             {SOCIAL.map(({ icon: Icon, label }) => (

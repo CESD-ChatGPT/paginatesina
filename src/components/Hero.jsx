@@ -1,5 +1,5 @@
 import { useRef, useLayoutEffect } from 'react'
-import { APP_URL } from '../lib/app'
+import { APP_URL, WHATSAPP_DEMO } from '../lib/app'
 import CtaButton from './CtaButton'
 import StockPanel from './StockPanel'
 import { useSectionLink } from '../hooks/useSectionLink'
@@ -125,25 +125,34 @@ export default function Hero() {
         <div className="grid grid-cols-12 gap-y-12 gap-x-8 items-start">
           {/* Bloque tipográfico */}
           <div className="col-span-12 lg:col-span-6">
-            <p className="t-label mb-5 hero-label">Control de inventario con IA</p>
+            <p className="t-label mb-5 hero-label">Stockus · de SOLVUS</p>
 
             <h1 className="t-display mb-6">
               <span className="block overflow-hidden pb-[0.18em] -mb-[0.18em]">
-                <span className="block hero-line">Dejá de comprar</span>
+                <span className="block hero-line">Tu inventario,</span>
               </span>
               <span className="block overflow-hidden pb-[0.18em] -mb-[0.18em]">
-                <span className="block hero-line">stock a ciegas.</span>
+                <span className="block hero-line">bajo control.</span>
               </span>
             </h1>
 
             <p className="t-body mb-8 hero-body">
-              SOLVUS lee el histórico de tu depósito, proyecta la demanda real de cada
+              Stockus lee el histórico de tu depósito, proyecta la demanda real de cada
               SKU y te dice qué reponer, cuánto y cuándo — antes de que se quiebre o de
               que te sobre.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center hero-cta">
               <CtaButton label="Abrir ChatBot Stock" href={APP_URL} />
+              <a
+                href={WHATSAPP_DEMO}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center px-5 py-3 text-[15px] font-medium border border-rule-strong hover:border-ink hover:bg-[var(--surface)] transition-colors"
+                style={{ borderRadius: '2px' }}
+              >
+                Pedí tu demo
+              </a>
               <a
                 href="#features"
                 onClick={(e) => goToSection(e, 'features')}

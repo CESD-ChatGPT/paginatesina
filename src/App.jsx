@@ -4,7 +4,6 @@ import Header from './components/Header'
 import Hero from './components/Hero'
 import AutomationStory from './components/AutomationStory'
 import Features from './components/Features'
-import LiveDemo from './components/LiveDemo'
 import CTA from './components/CTA'
 import Footer from './components/Footer'
 import LoadingScreen from './components/LoadingScreen'
@@ -31,7 +30,6 @@ function Landing() {
         <Hero />
         <AutomationStory />
         <Features />
-        <LiveDemo />
         <CTA />
       </main>
       <Footer />
