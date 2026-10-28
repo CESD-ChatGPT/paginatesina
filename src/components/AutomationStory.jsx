@@ -94,7 +94,11 @@ export default function AutomationStory() {
             {STAGES.map((s, i) => {
               const Icon = s.icon
               return (
-                <div key={s.title} ref={(el) => (stageRefs.current[i] = el)}>
+                <div
+                  key={s.title}
+                  ref={(el) => (stageRefs.current[i] = el)}
+                  className="flex flex-col items-center text-center lg:items-start lg:text-left"
+                >
                   <div
                     className="w-11 h-11 flex items-center justify-center mb-4 border"
                     style={{ borderColor: 'var(--rule-strong)', borderRadius: '2px', background: 'var(--surface)' }}

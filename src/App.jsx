@@ -1,5 +1,5 @@
-import { Suspense, lazy } from 'react'
-import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { Suspense, lazy, useLayoutEffect } from 'react'
+import { HashRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import Header from './components/Header'
 import Hero from './components/Hero'
 import ProductSection from './components/ProductSection'
@@ -68,11 +68,22 @@ function AppRoutes() {
   )
 }
 
+/* Al cambiar de página se arranca arriba. Sin esto, al volver de los términos
+   el navegador conserva el scroll del pie y la página se abre desde abajo. */
+function AlInicioAlCambiarDePagina() {
+  const { pathname } = useLocation()
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' })
+  }, [pathname])
+  return null
+}
+
 export default function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
         <HashRouter>
+          <AlInicioAlCambiarDePagina />
           <div className="min-h-screen">
             <AppRoutes />
           </div>

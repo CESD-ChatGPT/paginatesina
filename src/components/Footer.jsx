@@ -85,10 +85,10 @@ export default function Footer() {
             href="#top"
             onClick={(e) => {
               e.preventDefault()
-              window.scrollTo({
-                top: 0,
-                behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
-              })
+              const instantaneo =
+                window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+                window.matchMedia('(max-width: 1023px)').matches
+              window.scrollTo({ top: 0, behavior: instantaneo ? 'instant' : 'smooth' })
             }}
             className="order-1 sm:order-2 inline-flex items-center min-h-[44px] px-2 t-mono text-[12px] text-muted hover:text-[var(--accent)] transition-colors"
           >
