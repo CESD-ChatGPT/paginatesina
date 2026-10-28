@@ -40,7 +40,7 @@ export function ThemeToggleButton() {
       /* El after invisible lleva el área táctil a 44 px sin agrandar
          el botón ni empujar a los vecinos. */
       className="relative inline-flex items-center justify-center shrink-0 min-h-[36px] min-w-[36px] border transition-colors hover:text-[var(--accent)] after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:w-full after:h-11"
-      style={{ borderColor: 'var(--rule-strong)', borderRadius: '2px' }}
+      style={{ borderColor: 'var(--rule-strong)', borderRadius: '2px', background: 'var(--surface)', color: 'var(--ink)' }}
     >
       <Icon className="w-4 h-4" aria-hidden="true" />
     </button>
