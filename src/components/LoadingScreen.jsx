@@ -5,23 +5,20 @@ import BarsLoader from './BarsLoader'
    La animación vive ahora en <BarsLoader/> (componente reutilizable);
    acá solo queda el ciclo de vida de la pantalla.
 
-   Dura ~0,7 s y solo aparece una vez por sesión: la versión original
-   bloqueaba el contenido 2,5 s en una página que carga en menos de 1.
-   Con prefers-reduced-motion no se muestra en absoluto. */
+   Dura ~0,7 s y aparece en cada visita. Con prefers-reduced-motion no
+   se muestra en absoluto. */
 
 const VISIBLE_MS = 700
 
 export default function LoadingScreen() {
   const [state, setState] = useState(() => {
     if (typeof window === 'undefined') return 'done'
-    if (sessionStorage.getItem('seen-intro')) return 'done'
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return 'done'
     return 'visible'
   })
 
   useEffect(() => {
     if (state !== 'visible') return
-    sessionStorage.setItem('seen-intro', '1')
     const timer = setTimeout(() => setState('done'), VISIBLE_MS)
     return () => clearTimeout(timer)
   }, [state])
