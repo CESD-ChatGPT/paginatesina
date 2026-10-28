@@ -1,14 +1,27 @@
-/* Video de campaña de Stockus (58 s, vertical). Se sirve desde public/video. */
+import { useRef } from 'react'
+
+/* Video de campaña de Stockus (58 s, vertical). Se sirve desde public/video.
+   Cada escena tiene el segundo en el que empieza: al tocarla, el video salta ahí. */
 
 const ESCENAS = [
-  { n: '01', titulo: 'Buscar a mano', texto: 'El costo de no saber dónde está cada producto.' },
-  { n: '02', titulo: 'La luz guía', texto: 'El operario va directo al estante, sin revisar cajas.' },
-  { n: '03', titulo: 'Todo a la vista', texto: 'Cada producto y cada depósito, en un solo panel.' },
-  { n: '04', titulo: 'Precio y demo', texto: 'Instalación incluida, pagos en cuotas y contacto por WhatsApp.' },
+  { n: '01', t: 4, titulo: 'Buscar a mano', texto: 'El costo de no saber dónde está cada producto.' },
+  { n: '02', t: 18, titulo: 'La luz guía', texto: 'El operario va directo al estante, sin revisar cajas.' },
+  { n: '03', t: 28, titulo: 'Todo a la vista', texto: 'Cada producto y cada depósito, en un solo panel.' },
+  { n: '04', t: 47, titulo: 'Precio y demo', texto: 'Instalación incluida, pagos en cuotas y contacto por WhatsApp.' },
 ]
+
+const fmt = (t) => `0:${String(t).padStart(2, '0')}`
 
 export default function VideoSection() {
   const src = `${import.meta.env.BASE_URL}video/stockus-campana.mp4`
+  const videoRef = useRef(null)
+
+  function irA(t) {
+    const v = videoRef.current
+    if (!v) return
+    v.currentTime = t
+    v.play().catch(() => {})
+  }
 
   return (
     <section className="section-pad rule-bottom" id="video">
@@ -26,13 +39,20 @@ export default function VideoSection() {
             </p>
 
             <ol className="flex flex-col">
-              {ESCENAS.map(({ n, titulo, texto }) => (
-                <li key={n} className="grid grid-cols-[48px_1fr] gap-x-4 py-5 border-t border-rule last:border-b">
-                  <span className="t-mono text-[13px] text-muted pt-1">{n}</span>
-                  <div>
-                    <h3 className="t-h3 mb-1">{titulo}</h3>
-                    <p className="t-body text-[15px]">{texto}</p>
-                  </div>
+              {ESCENAS.map(({ n, t, titulo, texto }) => (
+                <li key={n} className="border-t border-rule last:border-b">
+                  <button
+                    type="button"
+                    onClick={() => irA(t)}
+                    className="w-full grid grid-cols-[48px_1fr_auto] gap-x-4 py-5 text-left hover:text-[var(--accent)] transition-colors"
+                  >
+                    <span className="t-mono text-[13px] text-muted pt-1">{n}</span>
+                    <div>
+                      <h3 className="t-h3 mb-1">{titulo}</h3>
+                      <p className="t-body text-[15px]">{texto}</p>
+                    </div>
+                    <span className="t-mono text-[12px] text-muted pt-1">▶ {fmt(t)}</span>
+                  </button>
                 </li>
               ))}
             </ol>
@@ -40,6 +60,7 @@ export default function VideoSection() {
 
           <div className="col-span-12 lg:col-span-5 lg:col-start-8 flex flex-col items-center lg:items-end">
             <video
+              ref={videoRef}
               src={src}
               controls
               playsInline
