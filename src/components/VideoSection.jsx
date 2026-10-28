@@ -19,8 +19,13 @@ export default function VideoSection() {
   function irA(t) {
     const v = videoRef.current
     if (!v) return
-    v.currentTime = t
-    v.play().catch(() => {})
+    const saltar = () => {
+      v.currentTime = t
+      v.play().catch(() => {})
+    }
+    // Antes de tener la duración, el navegador descarta el salto: esperamos los metadatos.
+    if (v.readyState >= 1) saltar()
+    else v.addEventListener('loadedmetadata', saltar, { once: true })
   }
 
   return (
