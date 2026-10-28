@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 
 /* Video de campaña de Stockus (58 s, vertical). Se sirve desde public/video.
    Cada escena tiene el segundo en el que empieza: al tocarla, el video salta ahí. */
@@ -15,6 +15,14 @@ const fmt = (t) => `0:${String(t).padStart(2, '0')}`
 export default function VideoSection() {
   const src = `${import.meta.env.BASE_URL}video/stockus-campana.mp4`
   const videoRef = useRef(null)
+  const [escena, setEscena] = useState(-1)
+
+  // Marca la escena que se está viendo, según el tiempo actual del video.
+  function alCambiarTiempo(e) {
+    const t = e.currentTarget.currentTime
+    const idx = ESCENAS.reduce((acc, esc, i) => (t >= esc.t ? i : acc), -1)
+    if (idx !== escena) setEscena(idx)
+  }
 
   function irA(t) {
     const v = videoRef.current
@@ -44,12 +52,15 @@ export default function VideoSection() {
             </p>
 
             <ol className="flex flex-col">
-              {ESCENAS.map(({ n, t, titulo, texto }) => (
+              {ESCENAS.map(({ n, t, titulo, texto }, i) => (
                 <li key={n} className="border-t border-rule last:border-b">
                   <button
                     type="button"
                     onClick={() => irA(t)}
-                    className="w-full grid grid-cols-[48px_1fr_auto] gap-x-4 py-5 text-left hover:text-[var(--accent)] transition-colors"
+                    aria-current={i === escena ? 'step' : undefined}
+                    className={`w-full grid grid-cols-[48px_1fr_auto] gap-x-4 py-5 text-left transition-colors hover:text-[var(--accent)] ${
+                      i === escena ? 'text-[var(--accent)]' : ''
+                    }`}
                   >
                     <span className="t-mono text-[13px] text-muted pt-1">{n}</span>
                     <div>
@@ -70,6 +81,7 @@ export default function VideoSection() {
               controls
               playsInline
               poster={`${import.meta.env.BASE_URL}video/stockus-campana.jpg`}
+              onTimeUpdate={alCambiarTiempo}
               preload="metadata"
               aria-label="Video de Stockus, de SOLVUS: cómo funciona en el depósito"
               className="block w-full max-w-[340px] rounded-[3px] border border-rule"

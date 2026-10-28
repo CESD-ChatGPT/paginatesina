@@ -1,55 +1,77 @@
-import { Github, Linkedin, Twitter } from 'lucide-react'
 import { Isologotipo } from './brand/Logo'
+import { WHATSAPP_DEMO } from '../lib/app'
+import { useSectionLink } from '../hooks/useSectionLink'
 
-const COLUMNS = [
-  { title: 'Producto', items: ['Pronóstico', 'Reposición', 'Multidepósito', 'Integraciones'] },
-  { title: 'Recursos', items: ['Documentación', 'API', 'Estado del servicio', 'Changelog'] },
-  { title: 'Empresa', items: ['Nosotros', 'Clientes', 'Trabajá con nosotros', 'Contacto'] },
-  { title: 'Legal', items: ['Términos', 'Privacidad', 'Seguridad', 'Cookies'] },
-]
-
-const SOCIAL = [
-  { icon: Twitter, label: 'Twitter' },
-  { icon: Linkedin, label: 'LinkedIn' },
-  { icon: Github, label: 'GitHub' },
+/* Solo enlaces que llevan a algo real: secciones de la landing, la demo por
+   WhatsApp y los términos. Las columnas de demo (API, Changelog, Estado…)
+   se quitaron porque no existen todavía. */
+const RECORRER = [
+  { label: 'Producto', section: 'stockus' },
+  { label: 'Video de campaña', section: 'video' },
+  { label: 'Preguntas frecuentes', section: 'faq' },
 ]
 
 export default function Footer() {
   const year = new Date().getFullYear()
+  const goToSection = useSectionLink()
 
   return (
     <footer className="rule-top">
       <div className="shell py-14 md:py-20">
         <div className="grid grid-cols-2 md:grid-cols-12 gap-x-8 gap-y-10">
           {/* Marca */}
-          <div className="col-span-2 md:col-span-4">
+          <div className="col-span-2 md:col-span-6">
             <span className="inline-flex text-ink mb-3">
               <Isologotipo size={24} />
             </span>
-            <p className="t-small max-w-[30ch]">
+            <p className="t-small max-w-[34ch]">
               Control de inventario con pronóstico de demanda para operaciones que no
               pueden permitirse un quiebre de stock.
             </p>
           </div>
 
-          {/* Columnas de enlaces */}
-          {COLUMNS.map((col) => (
-            <div key={col.title} className="md:col-span-2">
-              <h3 className="t-label mb-2">{col.title}</h3>
-              <ul>
-                {col.items.map((item) => (
-                  <li key={item}>
-                    <a
-                      href="#"
-                      className="inline-flex items-center min-h-[44px] py-1 text-[13px] text-graphite hover:text-[var(--accent)] transition-colors"
-                    >
-                      {item}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          {/* Recorrer la landing */}
+          <div className="md:col-span-3">
+            <h3 className="t-label mb-2">Recorrer</h3>
+            <ul>
+              {RECORRER.map(({ label, section }) => (
+                <li key={section}>
+                  <a
+                    href={`#${section}`}
+                    onClick={(e) => goToSection(e, section)}
+                    className="inline-flex items-center min-h-[44px] py-1 text-[13px] text-graphite hover:text-[var(--accent)] transition-colors"
+                  >
+                    {label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contacto */}
+          <div className="md:col-span-3">
+            <h3 className="t-label mb-2">Contacto</h3>
+            <ul>
+              <li>
+                <a
+                  href={WHATSAPP_DEMO}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center min-h-[44px] py-1 text-[13px] text-graphite hover:text-[var(--accent)] transition-colors"
+                >
+                  Pedí tu demo por WhatsApp
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#/terminos"
+                  className="inline-flex items-center min-h-[44px] py-1 text-[13px] text-graphite hover:text-[var(--accent)] transition-colors"
+                >
+                  Términos y condiciones
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
 
@@ -57,21 +79,21 @@ export default function Footer() {
       <div className="rule-top">
         <div className="shell py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="t-mono text-[11px] text-muted order-2 sm:order-1">
-            © {year} Stockus, producto de SOLVUS · Tu inventario, bajo control.{' '}
-            <a href="#/terminos" className="underline underline-offset-4 hover:text-[var(--accent)]">Términos y condiciones</a>
+            © {year} Stockus, producto de SOLVUS · Tu inventario, bajo control.
           </p>
-          <div className="flex items-center gap-1 order-1 sm:order-2">
-            {SOCIAL.map(({ icon: Icon, label }) => (
-              <a
-                key={label}
-                href="#"
-                aria-label={label}
-                className="grid place-items-center w-11 h-11 text-muted hover:text-[var(--accent)] transition-colors"
-              >
-                <Icon className="w-[18px] h-[18px]" strokeWidth={1.75} aria-hidden="true" />
-              </a>
-            ))}
-          </div>
+          <a
+            href="#top"
+            onClick={(e) => {
+              e.preventDefault()
+              window.scrollTo({
+                top: 0,
+                behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+              })
+            }}
+            className="order-1 sm:order-2 inline-flex items-center min-h-[44px] px-2 t-mono text-[12px] text-muted hover:text-[var(--accent)] transition-colors"
+          >
+            Volver arriba ↑
+          </a>
         </div>
       </div>
     </footer>

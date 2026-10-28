@@ -172,6 +172,7 @@ export default function Hero() {
           {/* Panel de producto */}
           <div className="col-span-12 lg:col-span-6 lg:pl-4 hero-panel">
             <StockPanel />
+            <p className="t-mono text-[11px] text-muted mt-3">Datos de ejemplo, no de un depósito real.</p>
           </div>
         </div>
       </div>

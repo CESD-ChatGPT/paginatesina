@@ -23,6 +23,14 @@ const PREGUNTAS = [
     a: 'No. Instalamos el equipo y capacitamos a quien va a usarlo en el día a día del depósito.',
   },
   {
+    q: '¿Cómo pido una demo?',
+    a: 'Tocá "Pedí tu demo": se abre WhatsApp con un mensaje listo para enviar. Te respondemos para coordinar día y horario.',
+  },
+  {
+    q: '¿Puedo ver el panel antes de contratar?',
+    a: 'Sí. En la demo te mostramos el panel con datos de ejemplo, antes de que decidas nada.',
+  },
+  {
     q: '¿Qué pasa con mis datos?',
     a: 'Los datos de contacto que nos dejes se usan solo para coordinar la demo. Ver los términos y condiciones en el pie de página.',
   },
