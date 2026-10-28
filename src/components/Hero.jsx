@@ -26,7 +26,7 @@ const FIGURES = [
     format: (v) => `${Math.round(v)} de 3`,
   },
   {
-    to: 41,
+    to: 58,
     label: 'Video de la campaña',
     note: 'cómo funciona en el depósito',
     format: (v) => `${Math.round(v)} s`,

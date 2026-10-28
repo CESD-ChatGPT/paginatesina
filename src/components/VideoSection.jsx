@@ -1,4 +1,4 @@
-/* Video de campaña de Stockus (41 s, vertical). Se sirve desde public/video. */
+/* Video de campaña de Stockus (58 s, vertical). Se sirve desde public/video. */
 
 const ESCENAS = [
   { n: '01', titulo: 'Buscar a mano', texto: 'El costo de no saber dónde está cada producto.' },
