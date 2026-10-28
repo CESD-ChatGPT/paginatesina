@@ -52,7 +52,7 @@ export default function Terminos() {
     <main className="shell pt-32 pb-24 max-w-[760px]">
       <Link to="/" className="t-mono text-[12px] text-muted hover:text-[var(--accent)]">← Volver a la landing</Link>
       <h1 className="t-h2 mt-8 mb-3">Términos y condiciones</h1>
-      <p className="t-mono text-[11px] text-muted mb-10">Última actualización: [fecha] · Borrador pendiente de revisión legal</p>
+      <p className="t-mono text-[11px] text-muted mb-10">Última actualización: 28 de octubre de 2026 · Borrador pendiente de revisión legal</p>
 
       <div className="flex flex-col gap-8">
         {SECCIONES.map(({ titulo, texto }) => (

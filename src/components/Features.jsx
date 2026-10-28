@@ -1,12 +1,12 @@
 import { useRef, useLayoutEffect } from 'react'
-import { Boxes, Bell, Workflow, Building2, ShieldCheck } from 'lucide-react'
+import { Boxes, Bell, Workflow, Building2 } from 'lucide-react'
 import DemandChart from './charts/DemandChart'
 import { getDemandPreview } from '../data/inventory'
 import { gsap, ScrollTrigger, prefersReducedMotion } from '../lib/motion'
 
 /* Jerarquía real en lugar de seis cards iguales:
    una capacidad principal (la que define el producto) con evidencia visual,
-   y cinco de soporte como renglones compactos separados por hairlines.
+   y cuatro de soporte como renglones compactos separados por hairlines.
 
    MOTION: esta sección vivía sin ningún movimiento — todo el contenido
    aparecía ya puesto apenas cargaba la página, sin relación con el scroll.
@@ -35,11 +35,6 @@ const SUPPORTING = [
     icon: Building2,
     title: 'Multidepósito',
     description: 'Compara rotación entre sucursales y sugiere transferencias antes de comprar.',
-  },
-  {
-    icon: ShieldCheck,
-    title: 'Datos aislados',
-    description: 'Cifrado en tránsito y en reposo. Tu histórico nunca entrena modelos de terceros.',
   },
 ]
 

@@ -23,6 +23,10 @@ const PREGUNTAS = [
     a: 'No. Instalamos el equipo y capacitamos a quien va a usarlo en el día a día del depósito.',
   },
   {
+    q: '¿Sirve para más de un depósito?',
+    a: 'Sí. El panel compara el stock entre depósitos y sugiere transferencias antes de comprar.',
+  },
+  {
     q: '¿Cómo pido una demo?',
     a: 'Tocá "Pedí tu demo": se abre WhatsApp con un mensaje listo para enviar. Te respondemos para coordinar día y horario.',
   },

@@ -20,7 +20,17 @@ export default function LoadingScreen() {
   useEffect(() => {
     if (state !== 'visible') return
     const timer = setTimeout(() => setState('done'), VISIBLE_MS)
-    return () => clearTimeout(timer)
+    const saltar = (e) => {
+      if (e.type === 'keydown' && e.key !== 'Escape') return
+      setState('done')
+    }
+    window.addEventListener('keydown', saltar)
+    window.addEventListener('pointerdown', saltar)
+    return () => {
+      clearTimeout(timer)
+      window.removeEventListener('keydown', saltar)
+      window.removeEventListener('pointerdown', saltar)
+    }
   }, [state])
 
   if (state === 'done') return null
