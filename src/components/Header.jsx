@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { ThemeToggleButton } from './ThemeToggle'
 import { Isotipo, Logotipo } from './brand/Logo'
@@ -64,12 +65,40 @@ const IconPanel = () => (
 export default function Header() {
   const { pathname } = useLocation()
   const goToSection = useSectionLink()
+  const [seccion, setSeccion] = useState('inicio')
+
+  // Marca en la barra la sección que se está leyendo en la landing
+  useEffect(() => {
+    if (pathname !== '/') return
+    const secciones = ['features', 'contact']
+    function actualizar() {
+      const umbral = window.innerHeight * 0.4
+      let activa = 'inicio'
+      for (const id of secciones) {
+        const el = document.getElementById(id)
+        if (el && el.getBoundingClientRect().top <= umbral) activa = id
+      }
+      setSeccion(activa)
+    }
+    actualizar()
+    window.addEventListener('scroll', actualizar, { passive: true })
+    return () => window.removeEventListener('scroll', actualizar)
+  }, [pathname])
+
+  // En la landing, "Inicio" sube al principio; desde otra página navega a la landing
+  function alInicio(e) {
+    if (pathname !== '/') return
+    e.preventDefault()
+    setSeccion('inicio')
+    const reducir = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    window.scrollTo({ top: 0, behavior: reducir ? 'auto' : 'smooth' })
+  }
 
   // Destinos reales del proyecto, no los del componente original
   const NAV_ITEMS = [
-    { to: '/', label: 'Inicio', Icon: IconInicio, active: pathname === '/' },
-    { section: 'features', label: 'Producto', Icon: IconProducto },
-    { section: 'contact', label: 'Arranque', Icon: IconArranque },
+    { to: '/', label: 'Inicio', Icon: IconInicio, active: pathname === '/' && seccion === 'inicio' },
+    { section: 'features', label: 'Producto', Icon: IconProducto, active: pathname === '/' && seccion === 'features' },
+    { section: 'contact', label: 'Arranque', Icon: IconArranque, active: pathname === '/' && seccion === 'contact' },
     ...(import.meta.env.VITE_LANDING_ONLY === 'true'
       ? []
       : [{ to: '/panel', label: 'Panel', Icon: IconPanel, active: pathname === '/panel' }]),
@@ -246,7 +275,12 @@ export default function Header() {
                 <a
                   key={section}
                   href={`#${section}`}
-                  onClick={(e) => goToSection(e, section)}
+                  onClick={(e) => {
+                    setSeccion(section)
+                    goToSection(e, section)
+                  }}
+                  className={active ? 'active' : undefined}
+                  aria-current={active ? 'true' : undefined}
                   aria-label={label}
                 >
                   <Icon />
@@ -256,6 +290,7 @@ export default function Header() {
                 <Link
                   key={to}
                   to={to}
+                  onClick={to === '/' ? alInicio : undefined}
                   className={active ? 'active' : undefined}
                   aria-current={active ? 'page' : undefined}
                   aria-label={label}
