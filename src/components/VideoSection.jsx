@@ -1,7 +1,13 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
-/* Video de campaña de Stockus (58 s, vertical). Se sirve desde public/video.
-   Cada escena tiene el segundo en el que empieza: al tocarla, el video salta ahí. */
+/* Video de campaña de Stockus (58 s, vertical). Cada escena tiene el segundo
+   en el que empieza: al tocarla, el video salta ahí.
+
+   El archivo se carga con Media Source Extensions: se baja entero en una sola
+   petición y el navegador lo arma en memoria. Así se puede saltar a cualquier
+   punto aunque el servidor no acepte pedidos por rangos (lo que hace que un
+   <video> normal no pueda buscar). Se carga cuando la sección está por entrar
+   en pantalla, para no pesar en la carga inicial. */
 
 const ESCENAS = [
   { n: '01', t: 4, titulo: 'Buscar a mano', texto: 'El costo de no saber dónde está cada producto.' },
@@ -10,12 +16,78 @@ const ESCENAS = [
   { n: '04', t: 47, titulo: 'Precio y demo', texto: 'Instalación incluida, pagos en cuotas y contacto por WhatsApp.' },
 ]
 
+const CODEC = 'video/mp4; codecs="avc1.4D401F, mp4a.40.2"'
+
 const fmt = (t) => `0:${String(t).padStart(2, '0')}`
 
 export default function VideoSection() {
-  const src = `${import.meta.env.BASE_URL}video/stockus-campana.mp4`
+  const base = import.meta.env.BASE_URL
   const videoRef = useRef(null)
+  const cargarRef = useRef(null)
   const [escena, setEscena] = useState(-1)
+
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+
+    const url = `${base}video/stockus-campana-frag.mp4`
+    let objectUrl = null
+    let cargado = false
+    let cancelado = false
+
+    function cargar() {
+      if (cargado) return
+      cargado = true
+
+      if (!('MediaSource' in window) || !MediaSource.isTypeSupported(CODEC)) {
+        // Navegador sin MSE: se reproduce directo. Saltar puede no funcionar.
+        video.src = url
+        return
+      }
+
+      const ms = new MediaSource()
+      objectUrl = URL.createObjectURL(ms)
+      video.src = objectUrl
+
+      ms.addEventListener(
+        'sourceopen',
+        async () => {
+          try {
+            const respuesta = await fetch(url)
+            const datos = await respuesta.arrayBuffer()
+            if (cancelado) return
+            const sb = ms.addSourceBuffer(CODEC)
+            sb.addEventListener('updateend', () => {
+              if (ms.readyState === 'open') ms.endOfStream()
+            }, { once: true })
+            sb.appendBuffer(datos)
+          } catch {
+            video.src = url
+          }
+        },
+        { once: true },
+      )
+    }
+
+    cargarRef.current = cargar
+
+    const observador = new IntersectionObserver(
+      ([entrada]) => {
+        if (entrada.isIntersecting) {
+          observador.disconnect()
+          cargar()
+        }
+      },
+      { rootMargin: '300px' },
+    )
+    observador.observe(video)
+
+    return () => {
+      cancelado = true
+      observador.disconnect()
+      if (objectUrl) URL.revokeObjectURL(objectUrl)
+    }
+  }, [base])
 
   // Marca la escena que se está viendo, según el tiempo actual del video.
   function alCambiarTiempo(e) {
@@ -27,6 +99,7 @@ export default function VideoSection() {
   function irA(t) {
     const v = videoRef.current
     if (!v) return
+    cargarRef.current?.()
     const saltar = () => {
       v.currentTime = t
       v.play().catch(() => {})
@@ -77,12 +150,10 @@ export default function VideoSection() {
           <div className="col-span-12 lg:col-span-5 lg:col-start-8 flex flex-col items-center lg:items-end">
             <video
               ref={videoRef}
-              src={src}
               controls
               playsInline
-              poster={`${import.meta.env.BASE_URL}video/stockus-campana.jpg`}
+              poster={`${base}video/stockus-campana.jpg`}
               onTimeUpdate={alCambiarTiempo}
-              preload="metadata"
               aria-label="Video de Stockus, de SOLVUS: cómo funciona en el depósito"
               className="block w-full max-w-[340px] rounded-[3px] border border-rule"
             />
