@@ -141,11 +141,19 @@ const SECCIONES = [
 
 const TODAS = SECCIONES.flatMap((s) => s.preguntas)
 
+/* Si en la pregunta de experiencia responde "No", las preguntas siguientes
+   de esa sección no aplican. Forms hace lo mismo con saltos de página. */
+const EXPERIENCIA = '2125080448'
+const SI_NO_HAY_EXPERIENCIA = ['1665973924', '915429923', '941291545', '668228193']
+
 export default function Encuesta() {
   const [respuestas, setRespuestas] = useState({})
   const [faltan, setFaltan] = useState(false)
   const [enviando, setEnviando] = useState(false)
   const [enviada, setEnviada] = useState(false)
+
+  const ocultas = respuestas[EXPERIENCIA] === 'No' ? SI_NO_HAY_EXPERIENCIA : []
+  const visibles = TODAS.filter((p) => !ocultas.includes(p.entry))
 
   function elegir(entry, valor) {
     setRespuestas((r) => ({ ...r, [entry]: valor }))
@@ -153,7 +161,7 @@ export default function Encuesta() {
 
   async function enviar(e) {
     e.preventDefault()
-    const pendientes = TODAS.filter((p) => !respuestas[p.entry])
+    const pendientes = visibles.filter((p) => !respuestas[p.entry])
     if (pendientes.length > 0) {
       setFaltan(true)
       document.getElementById(`pregunta-${pendientes[0].entry}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
@@ -162,7 +170,7 @@ export default function Encuesta() {
     setFaltan(false)
     setEnviando(true)
     const cuerpo = new URLSearchParams()
-    TODAS.forEach((p) => cuerpo.append(`entry.${p.entry}`, respuestas[p.entry]))
+    visibles.forEach((p) => cuerpo.append(`entry.${p.entry}`, respuestas[p.entry]))
     try {
       // no-cors: Google no devuelve cabeceras, así que no podemos leer la respuesta.
       await fetch(ENDPOINT, { method: 'POST', mode: 'no-cors', body: cuerpo })
@@ -208,7 +216,7 @@ export default function Encuesta() {
           <section key={seccion.titulo}>
             <h2 className="t-label mb-6 pb-3 border-b border-rule">{seccion.titulo}</h2>
             <div className="flex flex-col gap-10">
-              {seccion.preguntas.map((p) => (
+              {seccion.preguntas.filter((p) => !ocultas.includes(p.entry)).map((p) => (
                 <fieldset
                   key={p.entry}
                   id={`pregunta-${p.entry}`}
