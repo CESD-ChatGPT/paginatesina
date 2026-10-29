@@ -1,55 +1,31 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
-/* Cómo funciona el ChatBot Stock: capítulos del video real de Vento.
-   Cada capítulo se carga con Media Source Extensions, igual que el video de
-   campaña: una sola descarga y saltos a cualquier punto aunque el servidor no
-   acepte pedidos por rangos. Se carga cuando el capítulo está por entrar en
-   pantalla. */
+/* Cómo funciona el ChatBot Stock: un solo video con los cinco capítulos del
+   ChatBot real de Vento. El video se carga con Media Source Extensions: una
+   descarga y saltos a cualquier punto aunque el servidor no acepte pedidos por
+   rangos. Se carga cuando la sección está por entrar en pantalla. */
 
 const CAPITULOS = [
-  {
-    n: '01',
-    titulo: 'Ingresar al ChatBot',
-    texto: 'Crear la cuenta y entrar con usuario y PIN.',
-    src: 'videos/capitulo-1.mp4',
-  },
-  {
-    n: '02',
-    titulo: 'Sumar stock con confirmación',
-    texto: 'Escribís la orden y el ChatBot pide confirmar antes de cambiar el inventario.',
-    src: 'videos/capitulo-2.mp4',
-  },
-  {
-    n: '03',
-    titulo: 'Restar stock por SKU',
-    texto: 'Elegís el producto por su código y restás la cantidad.',
-    src: 'videos/capitulo-3.mp4',
-  },
-  {
-    n: '04',
-    titulo: 'Dashboard y alertas',
-    texto: 'Stock por ubicación, productos para reponer y alertas de mínimo.',
-    src: 'videos/capitulo-4.mp4',
-  },
-  {
-    n: '05',
-    titulo: 'Movimientos y cierre de sesión',
-    texto: 'Historial de entradas y salidas, y salir del sistema.',
-    src: 'videos/capitulo-5.mp4',
-  },
+  { t: 4, titulo: 'Ingresar al ChatBot', texto: 'Crear la cuenta y entrar con usuario y PIN.' },
+  { t: 34, titulo: 'Sumar stock con confirmación', texto: 'Escribís la orden y el ChatBot pide confirmar antes de cambiar el inventario.' },
+  { t: 57, titulo: 'Restar stock por SKU', texto: 'Elegís el producto por su código y restás la cantidad.' },
+  { t: 83, titulo: 'Dashboard y alertas', texto: 'Stock por ubicación, productos para reponer y alertas de mínimo.' },
+  { t: 108, titulo: 'Movimientos y cierre de sesión', texto: 'Historial de entradas y salidas, y salir del sistema.' },
 ]
 
 const CODEC = 'video/mp4; codecs="avc1.4D401F, mp4a.40.2"'
 
-function Capitulo({ capitulo }) {
+const fmt = (t) => `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`
+
+export default function ComoFunciona() {
   const videoRef = useRef(null)
+  const [capitulo, setCapitulo] = useState(-1)
 
   useEffect(() => {
     const video = videoRef.current
     if (!video) return
 
-    const base = import.meta.env.BASE_URL
-    const url = `${base}${capitulo.src}`
+    const url = `${import.meta.env.BASE_URL}videos/como-funciona.mp4`
     let objectUrl = null
     let cargado = false
     let cancelado = false
@@ -107,21 +83,25 @@ function Capitulo({ capitulo }) {
       observador.disconnect()
       if (objectUrl) URL.revokeObjectURL(objectUrl)
     }
-  }, [capitulo.src])
+  }, [])
 
-  return (
-    <video
-      ref={videoRef}
-      controls
-      playsInline
-      preload="metadata"
-      aria-label={`Capítulo ${capitulo.n}: ${capitulo.titulo}`}
-      className="block w-full rounded-[3px] border border-rule bg-black"
-    />
-  )
-}
+  function irA(t) {
+    const v = videoRef.current
+    if (!v) return
+    const saltar = () => {
+      v.currentTime = t
+      v.play().catch(() => {})
+    }
+    if (v.readyState >= 1) saltar()
+    else v.addEventListener('loadedmetadata', saltar, { once: true })
+  }
 
-export default function ComoFunciona() {
+  function alCambiarTiempo(e) {
+    const t = e.currentTarget.currentTime
+    const idx = CAPITULOS.reduce((acc, c, i) => (t >= c.t ? i : acc), -1)
+    if (idx !== capitulo) setCapitulo(idx)
+  }
+
   return (
     <section className="section-pad rule-bottom" id="como-funciona">
       <div className="shell">
@@ -130,23 +110,48 @@ export default function ComoFunciona() {
           <h2 className="t-h2 max-w-[24ch]">Cómo funciona el ChatBot Stock</h2>
         </div>
 
-        <p className="t-body text-[16px] max-w-[60ch] mb-12">
-          Un recorrido real por el ChatBot, en cinco capítulos. Podés verlos en orden o
-          elegir el que te interese.
-        </p>
+        <div className="grid grid-cols-12 gap-y-12 gap-x-8 items-start">
+          <div className="col-span-12 lg:col-span-6">
+            <p className="t-body text-[16px] max-w-[46ch] mb-10">
+              Un recorrido real por el ChatBot en menos de dos minutos y medio. Elegí un
+              capítulo o mirá todo seguido.
+            </p>
 
-        <ol className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-14">
-          {CAPITULOS.map((c) => (
-            <li key={c.n} className="flex flex-col gap-4">
-              <Capitulo capitulo={c} />
-              <div>
-                <p className="t-mono text-[12px] text-muted mb-1">Capítulo {c.n}</p>
-                <h3 className="t-h3 mb-1">{c.titulo}</h3>
-                <p className="t-body text-[15px]">{c.texto}</p>
-              </div>
-            </li>
-          ))}
-        </ol>
+            <ol className="flex flex-col">
+              {CAPITULOS.map((c, i) => (
+                <li key={c.t} className="border-t border-rule last:border-b">
+                  <button
+                    type="button"
+                    onClick={() => irA(c.t)}
+                    aria-current={i === capitulo ? 'step' : undefined}
+                    className={`w-full grid grid-cols-[48px_1fr_auto] gap-x-4 py-5 text-left transition-colors hover:text-[var(--accent)] ${
+                      i === capitulo ? 'text-[var(--accent)]' : ''
+                    }`}
+                  >
+                    <span className="t-mono text-[13px] text-muted pt-1">{String(i + 1).padStart(2, '0')}</span>
+                    <div>
+                      <h3 className="t-h3 mb-1">{c.titulo}</h3>
+                      <p className="t-body text-[15px]">{c.texto}</p>
+                    </div>
+                    <span className="t-mono text-[12px] text-muted pt-1">▶ {fmt(c.t)}</span>
+                  </button>
+                </li>
+              ))}
+            </ol>
+          </div>
+
+          <div className="col-span-12 lg:col-span-5 lg:col-start-8 flex flex-col items-center lg:items-end">
+            <video
+              ref={videoRef}
+              controls
+              playsInline
+              preload="metadata"
+              onTimeUpdate={alCambiarTiempo}
+              aria-label="Video: cómo funciona el ChatBot Stock"
+              className="block w-full rounded-[3px] border border-rule bg-black"
+            />
+          </div>
+        </div>
       </div>
     </section>
   )
