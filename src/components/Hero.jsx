@@ -1,5 +1,5 @@
 import { useRef, useLayoutEffect } from 'react'
-import { APP_URL, WHATSAPP_DEMO } from '../lib/app'
+import { APP_URL, DEMO_URL, WHATSAPP_DEMO } from '../lib/app'
 import CtaButton from './CtaButton'
 import StockPanel from './StockPanel'
 import { useSectionLink } from '../hooks/useSectionLink'
@@ -143,7 +143,7 @@ export default function Hero() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center hero-cta">
-              <CtaButton label="Abrir ChatBot Stock" href={APP_URL} />
+              <CtaButton label="Ver la demo del ChatBot" href={DEMO_URL} />
               <a
                 href={WHATSAPP_DEMO}
                 target="_blank"
@@ -164,8 +164,8 @@ export default function Hero() {
             </div>
 
             <p className="t-small mt-6 text-muted hero-note">
-              Se abre en una pestaña nueva. Necesita usuario y PIN del ChatBot,
-              que no son los de esta cuenta.
+              La demo usa datos ficticios y se abre en una pestaña nueva. Si ya sos
+              cliente, entrá al <a href={APP_URL} target="_blank" rel="noopener noreferrer" className="underline underline-offset-4 hover:text-[var(--accent)]">ChatBot real</a> con tu usuario y PIN.
             </p>
           </div>
 

@@ -90,12 +90,9 @@ test.describe('App de prueba', () => {
     await interceptarSupabase(page)
     await page.goto('./')
 
-    const boton = page.getByRole('link', { name: /Abrir ChatBot Stock/ }).first()
+    const boton = page.getByRole('link', { name: /Ver la demo del ChatBot/ }).first()
     await expect(boton).toBeVisible()
-    await expect(boton).toHaveAttribute(
-      'href',
-      'https://cloud.vento.build/networks/cesd/chatbot-stock.html'
-    )
+    await expect(boton).toHaveAttribute('href', 'https://solvus-demo.pages.dev/')
     /* Se abre afuera: la landing no es la app. */
     await expect(boton).toHaveAttribute('target', '_blank')
     await expect(boton).toHaveAttribute('rel', /noopener/)

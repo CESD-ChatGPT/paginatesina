@@ -12,6 +12,10 @@
 
 export const APP_URL = 'https://cloud.vento.build/networks/cesd/chatbot-stock.html'
 
+/* Demo pública del ChatBot: servicio separado, sin login y con datos ficticios.
+   Se publica con `npm run build:demo`. */
+export const DEMO_URL = 'https://solvus-demo.pages.dev/'
+
 export const APP_NOMBRE = 'ChatBot Stock'
 
 /* Contacto para pedir una demo. */
