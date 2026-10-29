@@ -8,6 +8,7 @@ import Encuesta from './pages/Encuesta'
 import Faq from './components/Faq'
 import WhatsAppFloat from './components/WhatsAppFloat'
 import VideoSection from './components/VideoSection'
+import ComoFunciona from './components/ComoFunciona'
 import AutomationStory from './components/AutomationStory'
 import Features from './components/Features'
 import CTA from './components/CTA'
@@ -36,6 +37,7 @@ function Landing() {
         <Hero />
         <ProductSection />
         <VideoSection />
+        <ComoFunciona />
         <Faq />
         <AutomationStory />
         <Features />

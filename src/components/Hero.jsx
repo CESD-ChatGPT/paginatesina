@@ -143,7 +143,7 @@ export default function Hero() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center hero-cta">
-              <CtaButton label="Cómo funciona el ChatBot" href="#video" />
+              <CtaButton label="Cómo funciona el ChatBot" href="#como-funciona" />
               <a
                 href={WHATSAPP_DEMO}
                 target="_blank"
