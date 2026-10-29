@@ -5,7 +5,6 @@ import Hero from './components/Hero'
 import ProductSection from './components/ProductSection'
 import Terminos from './pages/Terminos'
 import Encuesta from './pages/Encuesta'
-import DemoVento from './pages/DemoVento'
 import Faq from './components/Faq'
 import WhatsAppFloat from './components/WhatsAppFloat'
 import VideoSection from './components/VideoSection'
@@ -82,8 +81,6 @@ function AlInicioAlCambiarDePagina() {
 }
 
 export default function App() {
-  // Build de demo (VITE_DEMO=true): solo la demo del ChatBot, sin landing ni login
-  if (import.meta.env.VITE_DEMO === 'true') return <DemoVento />
   return (
     <ThemeProvider>
       <AuthProvider>

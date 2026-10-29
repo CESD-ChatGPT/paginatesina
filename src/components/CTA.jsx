@@ -1,5 +1,5 @@
 import { useRef, useLayoutEffect } from 'react'
-import { DEMO_URL, WHATSAPP_DEMO } from '../lib/app'
+import { APP_URL, WHATSAPP_DEMO } from '../lib/app'
 import CtaButton from './CtaButton'
 import { useSectionLink } from '../hooks/useSectionLink'
 import { gsap, ScrollTrigger, prefersReducedMotion } from '../lib/motion'
@@ -107,7 +107,7 @@ export default function CTA() {
             {/* Una sola acción primaria. La secundaria baja a enlace de
                 texto para que no compitan al quedar apiladas. */}
             <div className="flex flex-col sm:flex-row lg:flex-col sm:items-center lg:items-start gap-x-6 gap-y-4">
-              <CtaButton label="Ver la demo del ChatBot" variant="inverse" href={DEMO_URL} />
+              <CtaButton label="Abrir ChatBot Stock" variant="inverse" href={APP_URL} />
               <CtaButton label="Pedí tu demo" variant="inverse" href={WHATSAPP_DEMO} />
               <a
                 href="#contact"

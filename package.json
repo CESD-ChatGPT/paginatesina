@@ -8,7 +8,6 @@
     "dev": "vite",
     "build": "vite build",
     "build:cloudflare": "vite build --mode landing --base=/ --outDir dist-cloudflare --emptyOutDir",
-    "build:demo": "vite build --mode demo --base=/ --outDir dist-demo --emptyOutDir && node -e \"const fs=require('fs');fs.rmSync('dist-demo/video',{recursive:true,force:true});fs.rmSync('dist-demo/inventario.ejemplo.json',{force:true})\"",
     "preview": "vite preview",
     "lint": "eslint .",
     "test": "playwright test",
