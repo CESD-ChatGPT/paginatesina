@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from 'react'
 
 const CAPITULOS = [
   { t: 3, titulo: 'Ingresar al ChatBot', texto: 'Crear la cuenta y entrar con usuario y PIN.' },
-  { t: 17, titulo: 'Restar stock por SKU', texto: 'Elegís el producto por su código, restás la cantidad y el ChatBot confirma el cambio.' },
+  { t: 17, titulo: 'Añadir y restar stock por SKU', texto: 'Elegís el producto por su código, sumás o restás la cantidad y el ChatBot confirma el cambio.' },
   { t: 34, titulo: 'Dashboard y alertas', texto: 'Stock por ubicación, productos para reponer y alertas de mínimo.' },
   { t: 51, titulo: 'Movimientos y cierre de sesión', texto: 'Historial de entradas y salidas, y salir del sistema.' },
 ]
