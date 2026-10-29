@@ -6,11 +6,10 @@ import { useEffect, useRef, useState } from 'react'
    rangos. Se carga cuando la sección está por entrar en pantalla. */
 
 const CAPITULOS = [
-  { t: 4, titulo: 'Ingresar al ChatBot', texto: 'Crear la cuenta y entrar con usuario y PIN.' },
-  { t: 34, titulo: 'Sumar stock con confirmación', texto: 'Escribís la orden y el ChatBot pide confirmar antes de cambiar el inventario.' },
-  { t: 57, titulo: 'Restar stock por SKU', texto: 'Elegís el producto por su código y restás la cantidad.' },
-  { t: 83, titulo: 'Dashboard y alertas', texto: 'Stock por ubicación, productos para reponer y alertas de mínimo.' },
-  { t: 108, titulo: 'Movimientos y cierre de sesión', texto: 'Historial de entradas y salidas, y salir del sistema.' },
+  { t: 3, titulo: 'Ingresar al ChatBot', texto: 'Crear la cuenta y entrar con usuario y PIN.' },
+  { t: 17, titulo: 'Restar stock por SKU', texto: 'Elegís el producto por su código, restás la cantidad y el ChatBot confirma el cambio.' },
+  { t: 34, titulo: 'Dashboard y alertas', texto: 'Stock por ubicación, productos para reponer y alertas de mínimo.' },
+  { t: 51, titulo: 'Movimientos y cierre de sesión', texto: 'Historial de entradas y salidas, y salir del sistema.' },
 ]
 
 const CODEC = 'video/mp4; codecs="avc1.4D401F, mp4a.40.2"'
@@ -113,7 +112,7 @@ export default function ComoFunciona() {
         <div className="grid grid-cols-12 gap-y-12 gap-x-8 items-start">
           <div className="col-span-12 lg:col-span-6">
             <p className="t-body text-[16px] max-w-[46ch] mb-10">
-              Un recorrido real por el ChatBot en menos de dos minutos y medio. Elegí un
+              Un recorrido real por el ChatBot en poco más de un minuto, con la velocidad ajustada para verlo bien. Elegí un
               capítulo o mirá todo seguido.
             </p>
 

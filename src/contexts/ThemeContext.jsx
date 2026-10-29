@@ -1,4 +1,5 @@
 import { createContext, useState, useEffect } from 'react'
+import { flushSync } from 'react-dom'
 
 export const ThemeContext = createContext()
 
@@ -23,16 +24,29 @@ export function ThemeProvider({ children }) {
     document.documentElement.setAttribute('data-theme', theme)
   }, [theme])
 
-  const toggleTheme = () => {
-    setTheme(prev => {
-      const next = prev === 'dark' ? 'light' : 'dark'
+  /* El cambio de tema se extiende desde el botón como una onda circular
+     (View Transitions API). Sin soporte, o con movimiento reducido, cambia
+     de golpe. */
+  const toggleTheme = (e) => {
+    const next = theme === 'dark' ? 'light' : 'dark'
+    const aplicar = () => {
+      flushSync(() => setTheme(next))
       try {
         localStorage.setItem('theme', next)
       } catch {
         // sin persistencia, pero el tema igual cambia en esta sesión
       }
-      return next
-    })
+    }
+    const reducir = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (!document.startViewTransition || reducir) {
+      aplicar()
+      return
+    }
+    const x = e?.clientX ?? window.innerWidth / 2
+    const y = e?.clientY ?? window.innerHeight / 2
+    document.documentElement.style.setProperty('--vt-x', `${x}px`)
+    document.documentElement.style.setProperty('--vt-y', `${y}px`)
+    document.startViewTransition(aplicar)
   }
 
   return (

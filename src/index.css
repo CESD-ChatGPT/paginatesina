@@ -290,3 +290,23 @@ button {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--muted);
 }
+
+/* Onda del cambio de tema: el tema nuevo se expande desde el botón */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-new(root) {
+  animation: tema-onda 650ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+@keyframes tema-onda {
+  from {
+    clip-path: circle(0px at var(--vt-x, 50%) var(--vt-y, 50%));
+  }
+  to {
+    clip-path: circle(150vmax at var(--vt-x, 50%) var(--vt-y, 50%));
+  }
+}
