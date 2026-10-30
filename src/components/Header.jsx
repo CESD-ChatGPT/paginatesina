@@ -62,6 +62,13 @@ const IconPanel = () => (
   </svg>
 )
 
+/* Hoja con líneas: representa el formulario de la encuesta */
+const IconFormulario = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path fillRule="evenodd" clipRule="evenodd" d="M5.625 1.5A3.375 3.375 0 0 0 2.25 4.875v14.25A3.375 3.375 0 0 0 5.625 22.5h12.75a3.375 3.375 0 0 0 3.375-3.375V8.25L14.25 1.5H5.625Zm7.5 1.875v4.5a1.125 1.125 0 0 0 1.125 1.125h4.5L13.125 3.375ZM7.5 12a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 7.5 12Zm0 4.5a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5a.75.75 0 0 1-.75-.75Z" />
+  </svg>
+)
+
 export default function Header() {
   const { pathname } = useLocation()
   const goToSection = useSectionLink()
@@ -70,7 +77,7 @@ export default function Header() {
   // Marca en la barra la sección que se está leyendo en la landing
   useEffect(() => {
     if (pathname !== '/') return
-    const secciones = ['features', 'contact']
+    const secciones = ['features', 'formulario', 'contact']
     function actualizar() {
       const umbral = window.innerHeight * 0.4
       let activa = 'inicio'
@@ -98,6 +105,7 @@ export default function Header() {
   const NAV_ITEMS = [
     { to: '/', label: 'Inicio', Icon: IconInicio, active: pathname === '/' && seccion === 'inicio' },
     { section: 'features', label: 'Producto', Icon: IconProducto, active: pathname === '/' && seccion === 'features' },
+    { section: 'formulario', label: 'Formulario', Icon: IconFormulario, active: pathname === '/' && seccion === 'formulario' },
     { section: 'contact', label: 'Arranque', Icon: IconArranque, active: pathname === '/' && seccion === 'contact' },
     ...(import.meta.env.VITE_LANDING_ONLY === 'true'
       ? []
