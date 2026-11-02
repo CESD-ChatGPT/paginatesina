@@ -1,4 +1,4 @@
-import { Isologotipo } from './brand/Logo'
+import LogoAnimado from './brand/LogoAnimado'
 import { WHATSAPP_DEMO } from '../lib/app'
 import { useSectionLink } from '../hooks/useSectionLink'
 
@@ -22,7 +22,7 @@ export default function Footer() {
           {/* Marca */}
           <div className="col-span-2 md:col-span-6">
             <span className="inline-flex text-ink mb-3">
-              <Isologotipo size={24} />
+              <LogoAnimado size={24} />
             </span>
             <p className="t-small max-w-[34ch]">
               Control de inventario con pronóstico de demanda para operaciones que no
