@@ -15,14 +15,11 @@ export const COLORES = {
   dark: { base: 'rgba(95, 212, 240, 0.17)', led: [95, 212, 240], brillo: 0.4 },
 }
 
-/* Para la banda invertida de "Puesta en marcha": LEDs en el teal de la marca (nada
-   celeste), según el color de la banda y no del tema. En modo claro la banda es
-   petróleo oscuro y los puntos son teal más intenso, para que se lean sin brillar
-   como los del hero; en modo oscuro la banda es blanca y valen los del hero claro. */
-export const COLORES_BANDA = {
-  light: { base: 'rgba(31, 108, 130, 0.6)', led: [38, 128, 154], brillo: 0.35 },
-  dark: COLORES.light,
-}
+/* Para la banda de "Puesta en marcha": siempre petróleo oscuro, sin importar el
+   modo. LEDs en el teal de la marca (nada celeste), más intensos que los del hero
+   claro para que se lean sobre el oscuro sin brillar. */
+const LEDS_BANDA = { base: 'rgba(31, 108, 130, 0.6)', led: [38, 128, 154], brillo: 0.35 }
+export const COLORES_BANDA = { light: LEDS_BANDA, dark: LEDS_BANDA }
 
 /* Aleatorio con semilla: al redimensionar, los mismos puntos brillan. */
 function semilla(n) {

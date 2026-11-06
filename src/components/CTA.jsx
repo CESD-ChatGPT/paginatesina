@@ -54,7 +54,18 @@ export default function CTA() {
     <section
       id="contact"
       className="section-pad relative overflow-hidden"
-      style={{ background: 'var(--inverse-bg)', color: 'var(--inverse-ink)' }}
+      style={{
+        // La banda es siempre petróleo oscuro: se fijan los valores del modo claro
+        // para que no cambien con el tema (colores de los textos, reglas y botones).
+        '--inverse-bg': '#0b2c40',
+        '--inverse-ink': '#ffffff',
+        '--inverse-graphite': '#93a7b1',
+        '--inverse-rule': '#1d4257',
+        '--accent': '#1f6c82',
+        '--accent-ink': '#ffffff',
+        background: 'var(--inverse-bg)',
+        color: 'var(--inverse-ink)',
+      }}
       ref={sectionRef}
     >
       <FondoLeds colores={COLORES_BANDA} mascara={false} />
