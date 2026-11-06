@@ -31,7 +31,7 @@ const SECCIONES = [
   },
   {
     titulo: '7. Datos personales',
-    texto: 'Los datos de contacto que se envían por el formulario o por WhatsApp se usan solo para responder la consulta y coordinar la demo. No se comparten con terceros, salvo obligación legal. El titular puede pedir acceso, rectificación o supresión de sus datos escribiendo al contacto indicado.',
+    texto: 'Los datos de contacto que se envían por WhatsApp se usan solo para responder la consulta y coordinar la demo. No se comparten con terceros, salvo obligación legal. El titular puede pedir acceso, rectificación o supresión de sus datos escribiendo al contacto indicado.',
   },
   {
     titulo: '8. Propiedad intelectual',

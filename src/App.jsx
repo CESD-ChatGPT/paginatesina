@@ -4,7 +4,6 @@ import Header from './components/Header'
 import Hero from './components/Hero'
 import ProductSection from './components/ProductSection'
 import Terminos from './pages/Terminos'
-import Encuesta from './pages/Encuesta'
 import Producto from './pages/Producto'
 import Faq from './components/Faq'
 import WhatsAppFloat from './components/WhatsAppFloat'
@@ -67,7 +66,6 @@ function AppRoutes() {
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/terminos" element={<Terminos />} />
-        <Route path="/encuesta" element={<Encuesta />} />
         <Route path="/producto" element={<Producto />} />
         {!SOLO_LANDING && <Route path="/panel" element={<Dashboard />} />}
         {/* Enlaces viejos al login: van directo al panel, que ya no pide sesión. */}
