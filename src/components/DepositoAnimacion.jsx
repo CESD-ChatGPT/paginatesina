@@ -64,6 +64,7 @@ export default function DepositoAnimacion() {
   const ultimo = useRef(null)
   const tRef = useRef(t)
   const empezo = useRef(reducir)
+  const pausaUsuario = useRef(false)
   const datos = useMemo(() => buildData(), [])
 
   tRef.current = t
@@ -78,20 +79,17 @@ export default function DepositoAnimacion() {
     if (ultimo.current == null) ultimo.current = ts
     const dt = Math.min(0.1, (ts - ultimo.current) / 1000)
     ultimo.current = ts
-    const nuevo = Math.min(TOTAL, tRef.current + dt)
+    // En loop: al terminar, vuelve al principio sin cortar.
+    let nuevo = tRef.current + dt
+    if (nuevo >= TOTAL) nuevo -= TOTAL
     tRef.current = nuevo
     setT(nuevo)
-    if (nuevo >= TOTAL) {
-      setReproduciendo(false)
-      raf.current = 0
-      return
-    }
     raf.current = requestAnimationFrame(bucle)
   }
 
   function reproducir(desdeCero) {
     parar()
-    if (desdeCero || tRef.current >= TOTAL) {
+    if (desdeCero) {
       tRef.current = 0
       setT(0)
     }
@@ -113,6 +111,9 @@ export default function DepositoAnimacion() {
           if (!empezo.current) {
             empezo.current = true
             reproducir(true)
+          } else if (!pausaUsuario.current && !raf.current) {
+            // Volvió a la vista: sigue donde estaba, salvo que la hayan pausado a mano.
+            reproducir(false)
           }
         } else {
           pausar()
@@ -132,16 +133,22 @@ export default function DepositoAnimacion() {
     parar()
     tRef.current = tiempoDeEstado(i)
     setT(tRef.current)
-    if (i < 4) {
-      setReproduciendo(true)
-      raf.current = requestAnimationFrame(bucle)
+    pausaUsuario.current = false
+    setReproduciendo(true)
+    raf.current = requestAnimationFrame(bucle)
+  }
+
+  function alternar() {
+    if (reproduciendo) {
+      pausaUsuario.current = true
+      pausar()
     } else {
-      setReproduciendo(false)
+      pausaUsuario.current = false
+      reproducir(false)
     }
   }
 
   const p = posicion(t)
-  const hecho = t >= TOTAL
   const cuenta = p < 1.4 ? 0 : p < 3.5 ? Math.round(20 * win(p, 1.5, 2.0)) : p < 3.8 ? 20 : 19
   const opacidad = (i) => clamp(1 - Math.abs(p - i) * 2.3)
   const chatOp = [
@@ -219,13 +226,8 @@ export default function DepositoAnimacion() {
                   </span>
                 </button>
               ))}
-              <button
-                type="button"
-                onClick={() => (reproduciendo ? pausar() : reproducir(hecho))}
-                className="t-mono text-[12px] min-h-[44px] px-2"
-                style={{ color: 'var(--accent)' }}
-              >
-                {reproduciendo ? 'Pausa' : hecho ? 'Ver de nuevo' : 'Reproducir'}
+              <button type="button" onClick={alternar} className="btn-neo" aria-pressed={reproduciendo}>
+                <span>{reproduciendo ? 'Pausa' : 'Reproducir'}</span>
               </button>
             </div>
           </div>

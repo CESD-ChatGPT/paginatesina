@@ -1,6 +1,7 @@
-import { useLayoutEffect, useRef } from 'react'
+import { useCallback, useLayoutEffect, useRef } from 'react'
 import { Database, Activity, AlertCircle, Lightbulb, Zap } from 'lucide-react'
 import { gsap, ScrollTrigger, prefersReducedMotion } from '../lib/motion'
+import FondoLedsRecorrido from './FondoLedsRecorrido'
 
 /* Storytelling del ciclo que define al producto: no son 5 cards sueltas,
    es una secuencia — cada etapa alimenta a la siguiente. En vez de una
@@ -23,6 +24,10 @@ export default function AutomationStory() {
   const sectionRef = useRef(null)
   const lineRef = useRef(null)
   const stageRefs = useRef([])
+  const mover = useRef(null)
+  const registrar = useCallback((fn) => {
+    mover.current = fn
+  }, [])
 
   useLayoutEffect(() => {
     const section = sectionRef.current
@@ -46,6 +51,13 @@ export default function AutomationStory() {
           onEnter: (batch) =>
             gsap.to(batch, { autoAlpha: 1, y: 0, duration: 0.5, stagger: 0.08, ease: 'power2.out' }),
         })
+        // Sin pin: la luz avanza con el paso de la sección por la pantalla.
+        ScrollTrigger.create({
+          trigger: section,
+          start: 'top 75%',
+          end: 'bottom 35%',
+          onUpdate: (self) => mover.current?.(self.progress),
+        })
       }, section)
       return () => ctx.revert()
     }
@@ -62,6 +74,7 @@ export default function AutomationStory() {
           scrub: 0.6,
           pin: true,
           invalidateOnRefresh: true,
+          onUpdate: (self) => mover.current?.(self.progress),
         },
       })
 
@@ -75,8 +88,9 @@ export default function AutomationStory() {
   }, [])
 
   return (
-    <section className="section-pad rule-bottom overflow-hidden" ref={sectionRef}>
-      <div className="shell">
+    <section className="section-pad rule-bottom overflow-hidden relative" ref={sectionRef}>
+      <FondoLedsRecorrido registrar={registrar} />
+      <div className="shell relative">
         <div className="flex items-baseline gap-4 mb-12 md:mb-16">
           <h2 className="t-h2 max-w-[24ch]">Así automatiza SOLVUS el control de stock</h2>
         </div>

@@ -9,8 +9,8 @@ import { prefersReducedMotion } from '../lib/motion'
    cuadro solo se redibujan los que brillan. Se pausa fuera de pantalla y,
    con reducción de movimiento, queda quieto. */
 
-const PASO = 28
-const COLORES = {
+export const PASO = 28
+export const COLORES = {
   light: { base: 'rgba(31, 108, 130, 0.18)', led: [31, 108, 130], brillo: 0.28 },
   dark: { base: 'rgba(95, 212, 240, 0.17)', led: [95, 212, 240], brillo: 0.4 },
 }
