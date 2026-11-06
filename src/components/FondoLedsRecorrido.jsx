@@ -13,7 +13,7 @@ import { PASO, COLORES } from './FondoLeds'
    dibujar apenas lo alcanza. Con reducción de movimiento queda dibujado con
    todos los LED encendidos suave, sin recorrido. */
 
-const SIGMA = 62
+const SIGMA = 52
 
 export default function FondoLedsRecorrido({ registrar }) {
   const ref = useRef(null)
@@ -50,6 +50,7 @@ export default function FondoLedsRecorrido({ registrar }) {
       const f = fijo.getContext('2d')
       f.scale(dpr, dpr)
       f.fillStyle = col.base
+      f.globalAlpha = 0.55 // más tenue que en el hero: acá se lee texto encima
       for (let x = PASO / 2; x < ancho + PASO; x += PASO) {
         for (let y = PASO / 2; y < alto + PASO; y += PASO) {
           f.beginPath()
@@ -70,14 +71,15 @@ export default function FondoLedsRecorrido({ registrar }) {
       const medio = alto / 2
       for (let x = PASO / 2; x < ancho + PASO; x += PASO) {
         const d = x - cabeza
-        const pasado = d <= 0 ? 0.4 : 0
+        const pasado = d <= 0 ? 0.3 : 0
         const cerca = Math.exp(-(d * d) / (2 * SIGMA * SIGMA))
         for (let y = PASO / 2; y < alto + PASO; y += PASO) {
-          // Más brillo en la franja central, donde están los pasos.
-          const banda = 0.45 + 0.55 * Math.exp(-Math.pow((y - medio) / (alto * 0.38), 2))
+          // Menos brillo en la franja central, donde están los pasos y su texto:
+          // la luz se ve arriba y abajo, y no compite con la lectura.
+          const banda = 0.22 + 0.78 * (1 - Math.exp(-Math.pow((y - medio) / (alto * 0.27), 2)))
           const i = Math.max(pasado, cerca) * banda
           if (i < 0.04) continue
-          if (i > 0.45) {
+          if (i > 0.5) {
             const halo = ctx.createRadialGradient(x, y, 0, x, y, 14)
             halo.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${col.brillo * i})`)
             halo.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`)
@@ -86,9 +88,9 @@ export default function FondoLedsRecorrido({ registrar }) {
             ctx.arc(x, y, 14, 0, Math.PI * 2)
             ctx.fill()
           }
-          ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${0.25 + 0.75 * i})`
+          ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${0.2 + 0.6 * i})`
           ctx.beginPath()
-          ctx.arc(x, y, 1.8 + 1.2 * i, 0, Math.PI * 2)
+          ctx.arc(x, y, 1.6 + 1.1 * i, 0, Math.PI * 2)
           ctx.fill()
         }
       }
