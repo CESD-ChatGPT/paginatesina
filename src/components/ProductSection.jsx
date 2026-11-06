@@ -1,6 +1,8 @@
 /* Sección de producto: Stockus, de SOLVUS. Solo describe lo que el
    sistema hace hoy; sin cifras de resultados que no estén comprobadas. */
 
+import CajasEstante from './CajasEstante'
+
 const DIFERENCIALES = [
   {
     titulo: 'Guía con luz',
@@ -33,14 +35,7 @@ export default function ProductSection() {
           en el depósito para que encontrar y registrar productos sea más rápido y confiable.
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-10">
-          {DIFERENCIALES.map(({ titulo, texto }) => (
-            <div key={titulo} className="diferencial border-t border-rule pt-5">
-              <h3 className="t-h3 mb-2">{titulo}</h3>
-              <p className="t-body text-[15px] max-w-[40ch]">{texto}</p>
-            </div>
-          ))}
-        </div>
+        <CajasEstante cajas={DIFERENCIALES} />
       </div>
     </section>
   )
