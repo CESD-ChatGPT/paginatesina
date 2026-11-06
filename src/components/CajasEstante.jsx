@@ -6,9 +6,11 @@ import { prefersReducedMotion } from '../lib/motion'
 
    Física (matter-js, cargada recién cuando la sección está por entrar en
    pantalla): gravedad, fricción y choques entre cajas, así que no se pisan.
-   El recinto tiene piso, techo y paredes a la medida de la sección, y el
-   puntero no puede arrastrar una caja fuera de él. El contenido sigue siendo
-   HTML: cada caja es un elemento que se mueve con transform.
+   El mundo es la sección completa (<section> que contiene este componente):
+   tiene piso, techo y paredes a su medida, así que las cajas se pueden llevar
+   por todo su espacio, incluso sobre el título, pero no salen de ella. El
+   contenido sigue siendo HTML: cada caja es un elemento que se mueve con
+   transform. El contenedor de los estantes no tiene marco: solo reserva lugar.
 
    Hay cuatro estantes (dos arriba y dos abajo) con una caja en cada uno. Las
    cajas no giran. En táctil solo se agarra de la manija (arriba a la derecha), para no trabar el
@@ -17,6 +19,7 @@ import { prefersReducedMotion } from '../lib/motion'
 
 const SEPARACION = 12
 const GROSOR = 14
+const TABLA = 0x0002
 
 /* Calcula dónde va cada caja y el tamaño del recinto: cuatro estantes en dos
    filas, uno arriba a la izquierda, uno arriba a la derecha y los dos de
@@ -51,6 +54,21 @@ function disponer(ancho, cajas) {
   return { ancho, alto: y - 56 + GROSOR + 20, cajaW, alturas, estantes, lugares }
 }
 
+/* Pasa el plano (coordenadas dentro del contenedor de estantes) a coordenadas
+   de la sección entera, que es donde vive la física. */
+function aMundo(p, ox, oy, ancho, alto) {
+  return {
+    ancho,
+    alto,
+    ox,
+    oy,
+    cajaW: p.cajaW,
+    alturas: p.alturas,
+    estantes: p.estantes.map((e) => ({ ...e, y: e.y + oy, desde: e.desde + ox, hasta: e.hasta + ox })),
+    lugares: p.lugares.map((l) => ({ x: l.x + ox, y: l.y + oy })),
+  }
+}
+
 export default function CajasEstante({ cajas }) {
   const recinto = useRef(null)
   const elementos = useRef([])
@@ -59,13 +77,14 @@ export default function CajasEstante({ cajas }) {
 
   useEffect(() => {
     const cont = recinto.current
+    const sec = cont ? cont.closest('section') : null
     const els = elementos.current.filter(Boolean)
-    if (!cont || els.length !== cajas.length) return
+    if (!cont || !sec || els.length !== cajas.length) return
 
     const reducir = prefersReducedMotion()
     let cancelado = false
     let mundo = null
-    let anchoActual = 0
+    let medida = ''
     let visible = true
     let iniciado = false
 
@@ -102,27 +121,32 @@ export default function CajasEstante({ cajas }) {
     async function armar() {
       const ancho = Math.round(cont.getBoundingClientRect().width)
       if (ancho < 200) return
-      anchoActual = ancho
       const plano = disponer(ancho, els)
       colocarEstantes(plano)
+      // Con la altura del contenedor ya puesta, se mide la sección: es el mundo.
+      const rs = sec.getBoundingClientRect()
+      const rc = cont.getBoundingClientRect()
+      medida = Math.round(rs.width) + 'x' + Math.round(rs.height)
       if (reducir) {
         posarFijas(plano)
         return
       }
+      const mundoPlano = aMundo(plano, rc.left - rs.left, rc.top - rs.top, rs.width, rs.height)
       if (!mundo) {
         const Matter = (await import('matter-js')).default
         if (cancelado) return
-        mundo = crearMundo(Matter, cont, els)
+        mundo = crearMundo(Matter, sec, els)
         mundo.visible = visible
         mundoRef.current = mundo
         setConFisica(true)
       }
-      mundo.cargar(plano)
+      mundo.cargar(mundoPlano)
     }
 
+    // Si la sección cambia de tamaño (ventana, tipografías), se rearma el mundo.
     const alCambiar = new ResizeObserver(() => {
-      const ancho = Math.round(cont.getBoundingClientRect().width)
-      if (ancho !== anchoActual) armar()
+      const r = sec.getBoundingClientRect()
+      if (Math.round(r.width) + 'x' + Math.round(r.height) !== medida) armar()
     })
 
     // La física se carga cuando la sección está por entrar en pantalla.
@@ -133,12 +157,12 @@ export default function CajasEstante({ cajas }) {
         if (e.isIntersecting && !iniciado) {
           iniciado = true
           armar()
-          alCambiar.observe(cont)
+          alCambiar.observe(sec)
         }
       },
       { rootMargin: '300px' },
     )
-    alVer.observe(cont)
+    alVer.observe(sec)
 
     return () => {
       cancelado = true
@@ -152,7 +176,7 @@ export default function CajasEstante({ cajas }) {
   return (
     <div>
       <div className="flex items-center justify-between gap-4 flex-wrap mb-4">
-        <p className="t-mono text-[11px] text-muted">Arrastrá las cajas. No salen del estante ni se pisan.</p>
+        <p className="t-mono text-[11px] text-muted">Arrastrá las cajas por toda la sección. No salen de ella ni se pisan.</p>
         {conFisica && (
           <button type="button" onClick={() => mundoRef.current?.reordenar()} className="btn-neo">
             <span>Ordenar cajas</span>
@@ -161,8 +185,8 @@ export default function CajasEstante({ cajas }) {
       </div>
       <div
         ref={recinto}
-        className="relative w-full overflow-hidden select-none"
-        style={{ border: '1px solid var(--rule)', borderRadius: 3, background: 'var(--surface-sunken)', minHeight: 320 }}
+        className="relative w-full"
+        style={{ minHeight: 320 }}
       >
         {cajas.map(({ titulo, texto }, i) => (
           <article
@@ -177,6 +201,8 @@ export default function CajasEstante({ cajas }) {
               padding: '22px 14px 14px',
               cursor: 'grab',
               touchAction: 'pan-y',
+              userSelect: 'none',
+              zIndex: 1,
               willChange: 'transform',
               boxShadow: '0 1px 0 var(--rule)',
               boxSizing: 'border-box',
@@ -204,9 +230,9 @@ export default function CajasEstante({ cajas }) {
   )
 }
 
-/* Mundo físico: un cuerpo por caja, estantes fijos y un recinto cerrado.
+/* Mundo físico: un cuerpo por caja, estantes fijos y la sección como recinto cerrado.
    Devuelve cargar(plano) para armar o rearmar la escena, y destruir(). */
-function crearMundo(Matter, cont, els) {
+function crearMundo(Matter, zona, els) {
   const { Engine, Bodies, Body, Composite, Constraint, Sleeping } = Matter
   const engine = Engine.create({ enableSleeping: true })
   engine.gravity.y = 1.1
@@ -215,6 +241,7 @@ function crearMundo(Matter, cont, els) {
 
   let cuerpos = []
   let fijos = []
+  let tablas = []
   let plano = null
   let raf = 0
   let ultimo = 0
@@ -224,7 +251,7 @@ function crearMundo(Matter, cont, els) {
   function sincronizar() {
     cuerpos.forEach((c, i) => {
       const { x, y } = c.position
-      els[i].style.transform = `translate(${x - plano.cajaW / 2}px, ${y - plano.alturas[i] / 2}px)`
+      els[i].style.transform = `translate(${x - plano.cajaW / 2 - plano.ox}px, ${y - plano.alturas[i] / 2 - plano.oy}px)`
     })
   }
 
@@ -338,10 +365,16 @@ function crearMundo(Matter, cont, els) {
       Bodies.rectangle(ancho / 2, -grosor / 2, ancho + grosor * 2, grosor, { isStatic: true }),
       Bodies.rectangle(-grosor / 2, alto / 2, grosor, alto * 3, { isStatic: true, friction: 0.2 }),
       Bodies.rectangle(ancho + grosor / 2, alto / 2, grosor, alto * 3, { isStatic: true, friction: 0.2 }),
-      ...plano.estantes.map((e) =>
-        Bodies.rectangle((e.desde + e.hasta) / 2, e.y + GROSOR / 2, e.hasta - e.desde, GROSOR, { isStatic: true, friction: 0.9 }),
-      ),
     ]
+    // Las tablas tienen su propia categoría: una caja en la mano las atraviesa.
+    tablas = plano.estantes.map((e) =>
+      Bodies.rectangle((e.desde + e.hasta) / 2, e.y + GROSOR / 2, e.hasta - e.desde, GROSOR, {
+        isStatic: true,
+        friction: 0.9,
+        collisionFilter: { category: TABLA },
+      }),
+    )
+    fijos.push(...tablas)
     trabada = []
     cuerpos = els.map((_, i) => {
       const l = plano.lugares[i]
@@ -366,12 +399,24 @@ function crearMundo(Matter, cont, els) {
   /* Agarrar: un resorte entre el puntero y el punto de la caja donde se tocó. */
   function soltar() {
     if (!arrastre) return
+    const c = arrastre.resorte.bodyB
     Composite.remove(engine.world, arrastre.resorte)
     arrastre = null
+    // Vuelve a chocar con las tablas. Si la soltaron encima de una, queda apoyada
+    // sobre ella (o debajo, según de qué lado esté su centro) en vez de trabarse.
+    c.collisionFilter.mask = 0xffffffff
+    tablas.forEach((t) => {
+      const ox = Math.min(c.bounds.max.x, t.bounds.max.x) - Math.max(c.bounds.min.x, t.bounds.min.x)
+      const oy = Math.min(c.bounds.max.y, t.bounds.max.y) - Math.max(c.bounds.min.y, t.bounds.min.y)
+      if (ox <= 0 || oy <= 0) return
+      const dy = c.position.y < t.position.y ? t.bounds.min.y - c.bounds.max.y : t.bounds.max.y - c.bounds.min.y
+      Body.translate(c, { x: 0, y: dy })
+      Body.setVelocity(c, { x: 0, y: 0 })
+    })
   }
 
   function posicionEnRecinto(e) {
-    const r = cont.getBoundingClientRect()
+    const r = zona.getBoundingClientRect()
     return {
       x: Math.min(plano.ancho - 4, Math.max(4, e.clientX - r.left)),
       y: Math.min(plano.alto - 4, Math.max(4, e.clientY - r.top)),
@@ -404,6 +449,7 @@ function crearMundo(Matter, cont, els) {
         length: 0,
       })
       Composite.add(engine.world, resorte)
+      cuerpo.collisionFilter.mask = 0xffffffff & ~TABLA
       arrastre = { resorte, id: e.pointerId, el }
       el.style.cursor = 'grabbing'
       el.style.zIndex = '2'
@@ -422,7 +468,7 @@ function crearMundo(Matter, cont, els) {
         // ya estaba liberado
       }
       el.style.cursor = 'grab'
-      el.style.zIndex = ''
+      el.style.zIndex = '1'
       soltar()
       despertar()
     }

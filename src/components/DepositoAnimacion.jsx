@@ -21,8 +21,8 @@ const PASOS = [
 ]
 
 /* Segundos que dura cada estado fijo y cada transición por unidad de TW. */
-const PAUSA = 1.5
-const POR_TRAMO = 1.6
+const PAUSA = 2.6
+const POR_TRAMO = 2.8
 
 function tramos() {
   const out = []
@@ -211,7 +211,8 @@ export default function DepositoAnimacion() {
               </div>
             </div>
 
-            <div className="flex items-center gap-2.5 flex-wrap">
+            <div className="flex items-center gap-x-14 gap-y-8 flex-wrap mt-2">
+              <div className="flex items-center gap-2.5">
               {PASOS.map((s, i) => (
                 <button
                   key={s.etiqueta}
@@ -226,6 +227,7 @@ export default function DepositoAnimacion() {
                   </span>
                 </button>
               ))}
+              </div>
               <button type="button" onClick={alternar} className="btn-brillo" aria-pressed={reproduciendo}>
                 <span className="btn-brillo-exterior">
                   <span className="btn-brillo-interior">

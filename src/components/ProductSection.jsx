@@ -24,7 +24,7 @@ const DIFERENCIALES = [
 
 export default function ProductSection() {
   return (
-    <section className="section-pad rule-bottom" id="stockus">
+    <section className="section-pad rule-bottom relative overflow-hidden" id="stockus">
       <div className="shell">
         <div className="flex items-baseline gap-4 mb-12 md:mb-16">
           <h2 className="t-h2 titulo-reveal max-w-[24ch]">Stockus, de SOLVUS</h2>
