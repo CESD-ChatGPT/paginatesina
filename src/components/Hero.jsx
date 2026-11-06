@@ -2,6 +2,7 @@ import { useRef, useLayoutEffect } from 'react'
 import { APP_URL, WHATSAPP_DEMO } from '../lib/app'
 import CtaButton from './CtaButton'
 import HeroDeposito from './HeroDeposito'
+import FondoLeds from './FondoLeds'
 import { useSectionLink } from '../hooks/useSectionLink'
 import { gsap, ScrollTrigger, prefersReducedMotion } from '../lib/motion'
 
@@ -131,7 +132,8 @@ export default function Hero() {
 
   return (
     <section className="rule-bottom relative" ref={rootRef}>
-      <div className="shell pt-28 pb-0 md:pt-36">
+      <FondoLeds />
+      <div className="shell relative pt-28 pb-0 md:pt-36">
         <div className="grid grid-cols-12 gap-y-12 gap-x-8 items-start">
           {/* Bloque tipográfico */}
           <div className="col-span-12 lg:col-span-6">
@@ -186,7 +188,7 @@ export default function Hero() {
       </div>
 
       {/* Banda de métricas: renglón de cierre, dividido por hairlines */}
-      <div className="shell mt-16 md:mt-24">
+      <div className="shell relative mt-16 md:mt-24">
         <div className="grid grid-cols-1 sm:grid-cols-3 rule-top">
           {FIGURES.map((f, i) => (
             <div

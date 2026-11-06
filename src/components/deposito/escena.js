@@ -10,8 +10,8 @@ import React from 'react'
      3  se pregunta por un producto y la tira LED marca dónde está
      4  resultado: cada producto, a un LED de distancia
 
-   Se dibuja siempre sobre un fondo claro, en los dos temas del sitio, por
-   eso la paleta es fija y no depende de los tokens de CSS. */
+   Tiene una paleta para el tema claro y otra para el oscuro (ver PALETAS);
+   quien la dibuja elige cuál con el parámetro `tema`. */
 
 const h = React.createElement
 
@@ -39,31 +39,42 @@ const slot = (r, l, row, col) => [2.1 + col * 0.58, RY[r] + 0.08 + row * 0.55, P
 const SANS = "'IBM Plex Sans', system-ui, sans-serif"
 const MONO = "'IBM Plex Mono', ui-monospace, monospace"
 
-const ALERTA = '#b8460e'
 const LED = '#5fd4f0'
 
-/* Neutros y acentos de la marca (grafito azulado y teal), de claro a oscuro. */
-const C = {
-  n100: '#f6f8f9',
-  n200: '#edf1f3',
-  n300: '#dde4e8',
-  n400: '#c2ced4',
-  n500: '#93a7b1',
-  n600: '#6c7f89',
-  n700: '#485a64',
-  n800: '#2c3d47',
-  n900: '#14232c',
-  a100: '#eaf2f5',
-  a200: '#cfe3ea',
-  a300: '#9cc4d2',
-  a400: '#6aa5ba',
-  a500: '#4a8ca3',
-  a600: '#2f7b94',
-  a700: '#1f6c82',
-  a800: '#154b5b',
-  a900: '#0b2c40',
+/* Paleta por tema. Los neutros van de claro (n100) a oscuro (n900) en el
+   tema claro, y al revés en el oscuro, para que los contrastes entre piso,
+   estantes y cajas se mantengan en los dos. */
+const PALETAS = {
+  claro: {
+    n100: '#f6f8f9', n200: '#edf1f3', n300: '#dde4e8', n400: '#c2ced4', n500: '#93a7b1',
+    n600: '#6c7f89', n700: '#485a64', n800: '#2c3d47', n900: '#14232c',
+    a100: '#eaf2f5', a200: '#cfe3ea', a300: '#9cc4d2', a400: '#6aa5ba', a500: '#4a8ca3',
+    a600: '#2f7b94', a700: '#1f6c82', a800: '#154b5b', a900: '#0b2c40',
+    alerta: '#b8460e',
+    etqFondo: '#14232c',
+    etqTexto: '#ffffff',
+    hubTexto: '#154b5b',
+    bannerFondo: '#154b5b',
+    leche: { t: '#ffffff', f: '#f6f8f9', s: '#edf1f3', line: '#93a7b1', lab: '#4a8ca3' },
+  },
+  oscuro: {
+    n100: '#0b1b26', n200: '#10293a', n300: '#17364a', n400: '#24495f', n500: '#3f6479',
+    n600: '#6c8ea1', n700: '#9fbccb', n800: '#cfe1ea', n900: '#eef6fa',
+    a100: '#0f3a4f', a200: '#b4d3dd', a300: '#7fb0c1', a400: '#5aa0b8', a500: '#4fb3ce',
+    a600: '#4fb3ce', a700: '#2f7b94', a800: '#1b5a73', a900: '#123f52',
+    alerta: '#e0793a',
+    etqFondo: '#1f5a73',
+    etqTexto: '#ffffff',
+    hubTexto: '#b4d3dd',
+    bannerFondo: '#1b5a73',
+    leche: { t: '#e8f6fa', f: '#cfe1ea', s: '#9fbccb', line: '#6c8ea1', lab: '#2f7b94' },
+  },
 }
-export const FONDO_ESCENA = '#f2f6f8'
+export const FONDOS = { claro: '#f2f6f8', oscuro: '#071a26' }
+
+/* La paleta activa se fija al empezar cada dibujo (el render es síncrono). */
+let C = PALETAS.claro
+let ALERTA = C.alerta
 
 /* Recorrido del operario entre estados, y duración relativa de cada transición. */
 const OPK = [
@@ -171,7 +182,7 @@ function banner(p) {
     h(
       'g',
       { transform: `translate(${cx} ${cy})` },
-      h('rect', { x: -250, y: -46, width: 500 * wipe, height: 92, fill: C.a800 }),
+      h('rect', { x: -250, y: -46, width: 500 * wipe, height: 92, fill: C.bannerFondo }),
       h('rect', { x: -250, y: -46, width: 10, height: 92 * bar, fill: LED }),
       ...word.map((ch, i) => {
         const e = win(p, 1.06 + i * 0.008, 1.12 + i * 0.008)
@@ -184,9 +195,9 @@ function banner(p) {
   )
 }
 
-let _suciedad = null
-function suciedad() {
-  if (_suciedad) return _suciedad
+const _suciedad = {}
+function suciedad(tema) {
+  if (_suciedad[tema]) return _suciedad[tema]
   const r = rng(5)
   const out = []
   const ST = '#9a8f80'
@@ -221,7 +232,7 @@ function suciedad() {
     const e = iso(x + 0.6, y + 0.15, 0)
     out.push(h('line', { key: 'c' + i, x1: c[0], y1: c[1], x2: e[0], y2: e[1], stroke: '#b3a58f', strokeWidth: 2.2, strokeLinecap: 'round' }))
   }
-  _suciedad = out
+  _suciedad[tema] = out
   return out
 }
 
@@ -243,7 +254,9 @@ const ICONOS = {
   copy: () => [h('rect', { key: 1, x: 9, y: 9, width: 13, height: 13, rx: 2 }), h('path', { key: 2, d: 'M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1' })],
 }
 
-export function dibujarEscena(p, D) {
+export function dibujarEscena(p, D, tema = 'claro') {
+  C = PALETAS[tema] || PALETAS.claro
+  ALERTA = C.alerta
   const seg = Math.min(3, Math.floor(p))
   const t = p - seg
   const items = []
@@ -255,7 +268,7 @@ export function dibujarEscena(p, D) {
     { t: C.n300, f: C.n400, s: C.n500, line: C.n700, lab: C.n800 },
     { t: C.n100, f: C.n200, s: C.n300, line: C.n500, lab: C.n600 },
     { t: C.n200, f: C.n400, s: C.n500, line: C.n700, lab: C.n100 },
-    { t: '#ffffff', f: C.n100, s: C.n200, line: C.n500, lab: C.a500 },
+    { ...C.leche },
   ]
   const mess = 1 - win(p, 1.08, 1.4)
   const HUB = [7, 0.2]
@@ -482,7 +495,7 @@ export function dibujarEscena(p, D) {
     h('polygon', { key: 'tint', points: P([[0, 0, 0], [14, 0, 0], [14, 11.5, 0], [0, 11.5, 0]]), fill: C.a100, opacity: win(p, 1.05, 1.4) }),
     ...grid,
     h('g', { key: 'al', opacity: al }, ...aisles),
-    h('g', { key: 'dirt', opacity: mess }, ...suciedad()),
+    h('g', { key: 'dirt', opacity: mess }, ...suciedad(tema)),
     cub(-0.15, 0, 0, 0.15, 11.5, 2.2, wallM, 'wx', 'fondo'),
     cub(0, -0.15, 0, 14, 0.15, 2.2, wallM, 'wy', 'fondo'),
   )
@@ -496,7 +509,7 @@ export function dibujarEscena(p, D) {
     cub(HUB[0] - 0.1, 0, 1.3, 1.0, 0.22, 0.7, { t: C.a700, f: C.a800, s: C.a900, line: C.a900 }, 'hb', 'leds', [
       h('line', { key: 'hl', x1: iso(HUB[0], 0.22, 1.45)[0], y1: iso(HUB[0], 0.22, 1.45)[1], x2: iso(HUB[0] + 0.8, 0.22, 1.45)[0], y2: iso(HUB[0] + 0.8, 0.22, 1.45)[1], stroke: LED, strokeWidth: 3, strokeLinecap: 'round' }),
     ]),
-    h('text', { x: hl[0] + 4, y: hl[1] - 24, textAnchor: 'middle', fill: C.a800, fontFamily: MONO, fontWeight: 600, fontSize: 15, letterSpacing: '0.04em' }, 'STOCKUS'),
+    h('text', { x: hl[0] + 4, y: hl[1] - 24, textAnchor: 'middle', fill: C.hubTexto, fontFamily: MONO, fontWeight: 600, fontSize: 15, letterSpacing: '0.04em' }, 'STOCKUS'),
   )
   const wave = wOn
     ? h(
@@ -548,9 +561,9 @@ export function dibujarEscena(p, D) {
       h(
         'g',
         { key: 'r' + L, 'data-layer': 'etiquetas' },
-        h('line', { x1: q[0], y1: q[1] + 18, x2: q[0], y2: q[1] + 34, stroke: C.n900, strokeWidth: 2 }),
-        h('rect', { x: q[0] - 38, y: q[1] - 18, width: 76, height: 36, fill: C.n900 }),
-        h('text', { x: q[0], y: q[1] + 6, textAnchor: 'middle', fill: '#ffffff', fontFamily: MONO, fontWeight: 600, fontSize: 18, letterSpacing: '0.04em' }, 'FILA ' + L),
+        h('line', { x1: q[0], y1: q[1] + 18, x2: q[0], y2: q[1] + 34, stroke: C.etqFondo, strokeWidth: 2 }),
+        h('rect', { x: q[0] - 38, y: q[1] - 18, width: 76, height: 36, fill: C.etqFondo }),
+        h('text', { x: q[0], y: q[1] + 6, textAnchor: 'middle', fill: C.etqTexto, fontFamily: MONO, fontWeight: 600, fontSize: 18, letterSpacing: '0.04em' }, 'FILA ' + L),
       ),
     )
   })

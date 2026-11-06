@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { buildData, dibujarEscena, clamp, win, TW, FONDO_ESCENA } from './deposito/escena'
+import { useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { buildData, dibujarEscena, clamp, win, TW, FONDOS } from './deposito/escena'
+import { ThemeContext } from '../contexts/ThemeContext'
 import { prefersReducedMotion } from '../lib/motion'
 
 /* Animación corta del efecto de Stockus en un depósito: del desorden a un
@@ -53,6 +54,8 @@ function tiempoDeEstado(i) {
 }
 
 export default function DepositoAnimacion() {
+  const { theme } = useContext(ThemeContext)
+  const tema = theme === 'dark' ? 'oscuro' : 'claro'
   const reducir = useMemo(() => prefersReducedMotion(), [])
   const [t, setT] = useState(reducir ? TOTAL : 0)
   const [reproduciendo, setReproduciendo] = useState(false)
@@ -230,9 +233,9 @@ export default function DepositoAnimacion() {
 
           <div className="col-span-12 lg:col-span-7">
             <div
-              style={{ background: FONDO_ESCENA, border: '1px solid var(--rule-strong)', borderRadius: 3, aspectRatio: '930 / 715', width: '100%', maxHeight: '78vh', overflow: 'hidden' }}
+              style={{ background: FONDOS[tema], border: '1px solid var(--rule-strong)', borderRadius: 3, aspectRatio: '930 / 715', width: '100%', maxHeight: '78vh', overflow: 'hidden' }}
             >
-              {dibujarEscena(p, datos)}
+              {dibujarEscena(p, datos, tema)}
             </div>
           </div>
         </div>

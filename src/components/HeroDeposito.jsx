@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useRef } from 'react'
-import { buildData, dibujarEscena, FONDO_ESCENA } from './deposito/escena'
+import { useContext, useEffect, useMemo, useRef } from 'react'
+import { buildData, dibujarEscena, FONDOS } from './deposito/escena'
+import { ThemeContext } from '../contexts/ThemeContext'
 import { gsap, prefersReducedMotion } from '../lib/motion'
 
 /* Ilustración del hero: el depósito ya ordenado, con la tira LED marcando
@@ -12,6 +13,8 @@ const ESTADO_LED = 3.0
 
 export default function HeroDeposito() {
   const marco = useRef(null)
+  const { theme } = useContext(ThemeContext)
+  const tema = theme === 'dark' ? 'oscuro' : 'claro'
   const datos = useMemo(() => buildData(), [])
 
   useEffect(() => {
@@ -47,9 +50,9 @@ export default function HeroDeposito() {
     <div className="hero-escena">
       <div
         ref={marco}
-        style={{ background: FONDO_ESCENA, border: '1px solid var(--rule-strong)', borderRadius: 3, aspectRatio: '930 / 715', width: '100%', overflow: 'hidden', willChange: 'transform' }}
+        style={{ background: FONDOS[tema], border: '1px solid var(--rule-strong)', borderRadius: 3, aspectRatio: '930 / 715', width: '100%', overflow: 'hidden', willChange: 'transform' }}
       >
-        {dibujarEscena(ESTADO_LED, datos)}
+        {dibujarEscena(ESTADO_LED, datos, tema)}
       </div>
       <p className="t-mono text-[11px] text-muted mt-3">Ilustración con datos de ejemplo.</p>
     </div>
