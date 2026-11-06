@@ -10,22 +10,23 @@ import { prefersReducedMotion } from '../lib/motion'
    puntero no puede arrastrar una caja fuera de él. El contenido sigue siendo
    HTML: cada caja es un elemento que se mueve con transform.
 
-   En pantallas angostas el estante se parte en dos niveles de dos cajas. En
-   táctil solo se agarra de la manija (arriba a la derecha), para no trabar el
+   Hay cuatro estantes (dos arriba y dos abajo) con una caja en cada uno. Las
+   cajas no giran. En táctil solo se agarra de la manija (arriba a la derecha), para no trabar el
    scroll de la página. Con reducción de movimiento las cajas quedan quietas
    en su lugar y no se pueden mover. */
 
 const SEPARACION = 12
 const GROSOR = 14
 
-/* Calcula dónde va cada caja y el tamaño del recinto. Mide la altura real de
-   cada caja con el ancho que le toca, porque el texto cambia de alto. */
+/* Calcula dónde va cada caja y el tamaño del recinto: cuatro estantes en dos
+   filas, uno arriba a la izquierda, uno arriba a la derecha y los dos de
+   abajo, con una caja en cada uno. Mide la altura real de cada caja con el
+   ancho que le toca, porque el texto cambia de alto. */
 function disponer(ancho, cajas) {
-  const angosto = ancho < 860
-  const filas = angosto ? [[0, 1], [2, 3]] : [[0, 1, 2, 3]]
-  const largoEstante = angosto ? ancho : ancho * 0.72
-  const porFila = filas[0].length
-  const cajaW = Math.floor((largoEstante - SEPARACION * (porFila + 1)) / porFila)
+  const mitad = ancho / 2
+  const ranura = 12 // separación entre los dos estantes de una fila
+  const largo = mitad - ranura / 2
+  const cajaW = Math.floor(Math.min(340, largo - SEPARACION * 2))
 
   cajas.forEach((el) => {
     el.style.width = cajaW + 'px'
@@ -34,21 +35,20 @@ function disponer(ancho, cajas) {
 
   const estantes = []
   const lugares = []
-  let y = 36
-  filas.forEach((fila) => {
+  let y = 40
+  ;[[0, 1], [2, 3]].forEach((fila) => {
     const alto = Math.max(...fila.map((i) => alturas[i]))
     const yEstante = y + alto
-    estantes.push({ y: yEstante, desde: 0, hasta: largoEstante })
     fila.forEach((i, k) => {
-      lugares[i] = {
-        x: SEPARACION + cajaW / 2 + k * (cajaW + SEPARACION),
-        y: yEstante - alturas[i] / 2,
-      }
+      const izquierda = k === 0
+      const desde = izquierda ? 0 : mitad + ranura / 2
+      const hasta = izquierda ? mitad - ranura / 2 : ancho
+      estantes.push({ y: yEstante, desde, hasta, lado: izquierda ? 'izq' : 'der' })
+      lugares[i] = { x: (desde + hasta) / 2, y: yEstante - alturas[i] / 2 }
     })
-    y = yEstante + GROSOR + (angosto ? 30 : 0)
+    y = yEstante + GROSOR + 56
   })
-  const alto = angosto ? y + 8 : y + Math.max(...alturas) + 36
-  return { ancho, alto, cajaW, alturas, estantes, lugares }
+  return { ancho, alto: y - 56 + GROSOR + 20, cajaW, alturas, estantes, lugares }
 }
 
 export default function CajasEstante({ cajas }) {
@@ -72,36 +72,23 @@ export default function CajasEstante({ cajas }) {
     function colocarEstantes(plano) {
       cont.style.height = plano.alto + 'px'
       cont.querySelectorAll('[data-estante]').forEach((n) => n.remove())
+      const pieza = (estilo) => {
+        const n = document.createElement('div')
+        n.setAttribute('data-estante', '')
+        n.setAttribute('aria-hidden', 'true')
+        Object.assign(n.style, { position: 'absolute', background: 'var(--graphite)', pointerEvents: 'none' }, estilo)
+        cont.prepend(n)
+      }
       plano.estantes.forEach((e) => {
-        const tabla = document.createElement('div')
-        tabla.setAttribute('data-estante', '')
-        tabla.setAttribute('aria-hidden', 'true')
-        Object.assign(tabla.style, {
-          position: 'absolute',
-          left: e.desde + 'px',
-          top: e.y + 'px',
-          width: e.hasta - e.desde + 'px',
-          height: GROSOR + 'px',
-          background: 'var(--graphite)',
-          borderRadius: '0 2px 2px 0',
-          pointerEvents: 'none',
-        })
-        cont.prepend(tabla)
-        // Ménsula bajo la tabla, para que se lea como estante y no como línea.
-        const mensula = document.createElement('div')
-        mensula.setAttribute('data-estante', '')
-        mensula.setAttribute('aria-hidden', 'true')
-        Object.assign(mensula.style, {
-          position: 'absolute',
-          left: '0px',
+        pieza({ left: e.desde + 'px', top: e.y + 'px', width: e.hasta - e.desde + 'px', height: GROSOR + 'px', borderRadius: '2px' })
+        // Ménsula del lado de la pared, para que se lea como estante y no como línea.
+        pieza({
+          left: e.lado === 'izq' ? '0px' : plano.ancho - 10 + 'px',
           top: e.y + GROSOR + 'px',
           width: '10px',
-          height: '28px',
-          background: 'var(--graphite)',
-          borderRadius: '0 0 2px 0',
-          pointerEvents: 'none',
+          height: '26px',
+          borderRadius: '0 0 2px 2px',
         })
-        cont.prepend(mensula)
       })
     }
 
@@ -237,7 +224,7 @@ function crearMundo(Matter, cont, els) {
   function sincronizar() {
     cuerpos.forEach((c, i) => {
       const { x, y } = c.position
-      els[i].style.transform = `translate(${x - plano.cajaW / 2}px, ${y - plano.alturas[i] / 2}px) rotate(${c.angle}rad)`
+      els[i].style.transform = `translate(${x - plano.cajaW / 2}px, ${y - plano.alturas[i] / 2}px)`
     })
   }
 
@@ -246,7 +233,6 @@ function crearMundo(Matter, cont, els) {
       const v = c.velocity
       const rapidez = Math.hypot(v.x, v.y)
       if (rapidez > 20) Body.setVelocity(c, { x: (v.x / rapidez) * 20, y: (v.y / rapidez) * 20 })
-      if (Math.abs(c.angularVelocity) > 0.25) Body.setAngularVelocity(c, Math.sign(c.angularVelocity) * 0.25)
     })
   }
 
@@ -268,6 +254,50 @@ function crearMundo(Matter, cont, els) {
     })
   }
 
+  /* Si se amontonan más cajas de las que entran en una columna, el choque
+     contra el techo puede dejarlas trabadas una sobre otra, sin salida. Si una
+     caja sigue pisando a otra por casi un segundo (y no la sostiene el puntero),
+     vuelve a un estante libre. Así nunca queda una pila imposible. */
+  let trabada = []
+  function resolverTrabadas() {
+    const sostenida = arrastre ? arrastre.resorte.bodyB : null
+    const pisa = (a, bounds) => {
+      const ox = Math.min(a.bounds.max.x, bounds.max.x) - Math.max(a.bounds.min.x, bounds.min.x)
+      const oy = Math.min(a.bounds.max.y, bounds.max.y) - Math.max(a.bounds.min.y, bounds.min.y)
+      return ox >= 8 && oy >= 8
+    }
+    let hay = false
+    cuerpos.forEach((c, i) => {
+      if (c === sostenida) {
+        trabada[i] = 0
+        return
+      }
+      const otras = cuerpos.filter((o, j) => j !== i)
+      // Solo la de arriba del par es la que se mueve.
+      const encima = otras.some((o) => o !== sostenida && pisa(c, o.bounds) && c.position.y <= o.position.y)
+      if (!encima) {
+        trabada[i] = 0
+        return
+      }
+      hay = true
+      trabada[i] = (trabada[i] || 0) + 1
+      if (trabada[i] < 45) return
+      trabada[i] = 0
+      const { cajaW, alturas } = plano
+      const libre = [i, ...plano.lugares.keys()].find((k) => {
+        const l = plano.lugares[k]
+        const caja = { min: { x: l.x - cajaW / 2, y: l.y - alturas[i] / 2 }, max: { x: l.x + cajaW / 2, y: l.y + alturas[i] / 2 } }
+        return !otras.some((o) => pisa({ bounds: caja }, o.bounds))
+      })
+      if (libre == null) return
+      const l = plano.lugares[libre]
+      Body.setPosition(c, { x: l.x, y: l.y - (libre === i ? 0 : (alturas[i] - alturas[libre]) / 2) })
+      Body.setVelocity(c, { x: 0, y: 0 })
+      Sleeping.set(c, false)
+    })
+    return hay
+  }
+
   function paso(ts) {
     raf = 0
     if (!mundo.visible) {
@@ -284,9 +314,10 @@ function crearMundo(Matter, cont, els) {
       contener()
       acumulado -= 1000 / 120
     }
+    const hayTrabadas = resolverTrabadas()
     sincronizar()
     const todosQuietos = cuerpos.every((c) => c.isSleeping)
-    if (arrastre || !todosQuietos) raf = requestAnimationFrame(paso)
+    if (arrastre || hayTrabadas || !todosQuietos) raf = requestAnimationFrame(paso)
     else ultimo = 0
   }
 
@@ -311,9 +342,10 @@ function crearMundo(Matter, cont, els) {
         Bodies.rectangle((e.desde + e.hasta) / 2, e.y + GROSOR / 2, e.hasta - e.desde, GROSOR, { isStatic: true, friction: 0.9 }),
       ),
     ]
+    trabada = []
     cuerpos = els.map((_, i) => {
       const l = plano.lugares[i]
-      return Bodies.rectangle(l.x, l.y, plano.cajaW, plano.alturas[i], {
+      const cuerpo = Bodies.rectangle(l.x, l.y, plano.cajaW, plano.alturas[i], {
         friction: 0.6,
         frictionStatic: 0.9,
         restitution: 0.08,
@@ -322,6 +354,9 @@ function crearMundo(Matter, cont, els) {
         sleepThreshold: 45,
         slop: 0.02,
       })
+      // Las cajas no giran: se deslizan y se apilan, pero no se dan vuelta.
+      Body.setInertia(cuerpo, Infinity)
+      return cuerpo
     })
     Composite.add(engine.world, [...fijos, ...cuerpos])
     sincronizar()

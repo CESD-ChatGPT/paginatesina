@@ -226,8 +226,12 @@ export default function DepositoAnimacion() {
                   </span>
                 </button>
               ))}
-              <button type="button" onClick={alternar} className="btn-neo" aria-pressed={reproduciendo}>
-                <span>{reproduciendo ? 'Pausa' : 'Reproducir'}</span>
+              <button type="button" onClick={alternar} className="btn-brillo" aria-pressed={reproduciendo}>
+                <span className="btn-brillo-exterior">
+                  <span className="btn-brillo-interior">
+                    <span className="btn-brillo-texto">{reproduciendo ? 'Pausa' : 'Reproducir'}</span>
+                  </span>
+                </span>
               </button>
             </div>
           </div>
