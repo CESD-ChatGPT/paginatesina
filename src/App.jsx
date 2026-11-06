@@ -9,6 +9,7 @@ import Producto from './pages/Producto'
 import Faq from './components/Faq'
 import WhatsAppFloat from './components/WhatsAppFloat'
 import VideoSection from './components/VideoSection'
+import DepositoAnimacion from './components/DepositoAnimacion'
 import ComoFunciona from './components/ComoFunciona'
 import Formulario from './components/Formulario'
 import AutomationStory from './components/AutomationStory'
@@ -38,6 +39,7 @@ function Landing() {
       <main>
         <Hero />
         <ProductSection />
+        <DepositoAnimacion />
         <VideoSection />
         <ComoFunciona />
         <Formulario />

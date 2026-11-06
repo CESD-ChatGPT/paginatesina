@@ -43,7 +43,7 @@ export default function Formulario() {
     <section className="section-pad rule-bottom" id="formulario">
       <div className="shell">
         <div className="flex items-baseline gap-4 mb-12 md:mb-16">
-          <span className="t-mono text-[13px] text-muted">04</span>
+          <span className="t-mono text-[13px] text-muted">05</span>
           <h2 className="t-h2 max-w-[24ch]">Formulario</h2>
         </div>
 

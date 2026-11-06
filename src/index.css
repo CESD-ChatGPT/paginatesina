@@ -310,3 +310,8 @@ button {
     clip-path: circle(150vmax at var(--vt-x, 50%) var(--vt-y, 50%));
   }
 }
+
+/* Pulso de la caja que marca la tira LED en la animación del depósito. */
+@keyframes deposito-pulso { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
+.deposito-pulso { animation: deposito-pulso 1.8s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .deposito-pulso { animation: none; } }

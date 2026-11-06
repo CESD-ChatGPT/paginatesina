@@ -105,7 +105,7 @@ export default function ComoFunciona() {
     <section className="section-pad rule-bottom" id="como-funciona">
       <div className="shell">
         <div className="flex items-baseline gap-4 mb-12 md:mb-16">
-          <span className="t-mono text-[13px] text-muted">03</span>
+          <span className="t-mono text-[13px] text-muted">04</span>
           <h2 className="t-h2 max-w-[24ch]">Cómo funciona el ChatBot Stock</h2>
         </div>
 
