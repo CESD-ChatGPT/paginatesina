@@ -343,8 +343,16 @@ button {
 /* Botón con relieve y brillo: Pausa / Reproducir, Ordenar cajas y los botones
    secundarios del hero. Las sombras son grises suaves, sin negro. Todas las
    medidas están en em: el tamaño se cambia con font-size. */
-:root { --brillo-sombra: 120, 132, 145; }
-:root[data-theme="dark"] { --brillo-sombra: 150, 162, 175; }
+:root {
+  --brillo-sombra: 150, 164, 178;
+  --brillo-desde: #ffffff;
+  --brillo-hasta: #f1f4f7;
+}
+:root[data-theme="dark"] {
+  --brillo-sombra: 150, 162, 175;
+  --brillo-desde: rgb(230, 230, 230);
+  --brillo-hasta: rgb(180, 180, 180);
+}
 .btn-brillo {
   all: unset;
   display: inline-block;
@@ -404,7 +412,7 @@ button {
   z-index: 1;
   border-radius: inherit;
   padding: 1em 1.5em;
-  background-image: linear-gradient(135deg, rgba(230, 230, 230, 1), rgba(180, 180, 180, 1));
+  background-image: linear-gradient(135deg, var(--brillo-desde), var(--brillo-hasta));
   transition:
     box-shadow 300ms ease,
     clip-path 250ms ease,
