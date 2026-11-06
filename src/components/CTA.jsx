@@ -1,6 +1,7 @@
 import { useRef, useLayoutEffect } from 'react'
 import { APP_URL, WHATSAPP_DEMO } from '../lib/app'
 import CtaButton from './CtaButton'
+import FondoLeds, { COLORES_BANDA } from './FondoLeds'
 import { useSectionLink } from '../hooks/useSectionLink'
 import { gsap, ScrollTrigger, prefersReducedMotion } from '../lib/motion'
 
@@ -52,15 +53,13 @@ export default function CTA() {
   return (
     <section
       id="contact"
-      className="section-pad"
+      className="section-pad relative overflow-hidden"
       style={{ background: 'var(--inverse-bg)', color: 'var(--inverse-ink)' }}
       ref={sectionRef}
     >
-      <div className="shell">
+      <FondoLeds colores={COLORES_BANDA} mascara={false} />
+      <div className="shell relative">
         <div className="flex items-baseline gap-4 mb-12 md:mb-16 reveal-el">
-          <span className="t-mono text-[13px]" style={{ color: 'var(--inverse-graphite)' }}>
-            03
-          </span>
           <h2 className="t-h2 max-w-[16ch]">Puesta en marcha en una semana</h2>
         </div>
 

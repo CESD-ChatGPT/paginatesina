@@ -15,6 +15,15 @@ export const COLORES = {
   dark: { base: 'rgba(95, 212, 240, 0.17)', led: [95, 212, 240], brillo: 0.4 },
 }
 
+/* Para la banda invertida de "Puesta en marcha": LEDs en el teal de la marca (nada
+   celeste), según el color de la banda y no del tema. En modo claro la banda es
+   petróleo oscuro y los puntos son teal más intenso, para que se lean sin brillar
+   como los del hero; en modo oscuro la banda es blanca y valen los del hero claro. */
+export const COLORES_BANDA = {
+  light: { base: 'rgba(31, 108, 130, 0.6)', led: [38, 128, 154], brillo: 0.35 },
+  dark: COLORES.light,
+}
+
 /* Aleatorio con semilla: al redimensionar, los mismos puntos brillan. */
 function semilla(n) {
   let s = n
@@ -24,7 +33,7 @@ function semilla(n) {
   }
 }
 
-export default function FondoLeds() {
+export default function FondoLeds({ colores = COLORES, mascara = true }) {
   const ref = useRef(null)
   const { theme } = useContext(ThemeContext)
 
@@ -33,7 +42,7 @@ export default function FondoLeds() {
     if (!canvas) return
     const ctx = canvas.getContext('2d')
     if (!ctx) return
-    const col = COLORES[theme] || COLORES.light
+    const col = colores[theme] || colores.light
     const quieto = prefersReducedMotion()
 
     let ancho = 0
@@ -135,14 +144,14 @@ export default function FondoLeds() {
       ro.disconnect()
       io.disconnect()
     }
-  }, [theme])
+  }, [theme, colores])
 
   return (
     <canvas
       ref={ref}
       aria-hidden="true"
       className="absolute inset-0 w-full h-full pointer-events-none"
-      style={{ WebkitMaskImage: 'linear-gradient(to bottom, #000 0%, #000 55%, transparent 100%)', maskImage: 'linear-gradient(to bottom, #000 0%, #000 55%, transparent 100%)' }}
+      style={mascara ? { WebkitMaskImage: 'linear-gradient(to bottom, #000 0%, #000 55%, transparent 100%)', maskImage: 'linear-gradient(to bottom, #000 0%, #000 55%, transparent 100%)' } : undefined}
     />
   )
 }
