@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { prefersReducedMotion } from '../lib/motion'
+import BotonBrillo from './BotonBrillo'
 
 /* Las cajas de "Stockus, de SOLVUS": cada diferencial es una caja apoyada
    en un estante. Con el mouse o el dedo se pueden agarrar, tirar y apilar.
@@ -178,9 +179,7 @@ export default function CajasEstante({ cajas }) {
       <div className="flex items-center justify-between gap-4 flex-wrap mb-4">
         <p className="t-mono text-[11px] text-muted">Arrastrá las cajas por toda la sección. No salen de ella ni se pisan.</p>
         {conFisica && (
-          <button type="button" onClick={() => mundoRef.current?.reordenar()} className="btn-neo">
-            <span>Ordenar cajas</span>
-          </button>
+          <BotonBrillo onClick={() => mundoRef.current?.reordenar()}>Ordenar cajas</BotonBrillo>
         )}
       </div>
       <div

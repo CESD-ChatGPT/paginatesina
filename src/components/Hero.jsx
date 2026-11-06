@@ -1,6 +1,7 @@
 import { useRef, useLayoutEffect } from 'react'
 import { APP_URL, WHATSAPP_DEMO } from '../lib/app'
 import CtaButton from './CtaButton'
+import BotonBrillo from './BotonBrillo'
 import HeroDeposito from './HeroDeposito'
 import FondoLeds from './FondoLeds'
 import { useSectionLink } from '../hooks/useSectionLink'
@@ -156,23 +157,12 @@ export default function Hero() {
 
             <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center hero-cta">
               <CtaButton label="Cómo funciona el ChatBot" onClick={(e) => goToSection(e, 'como-funciona')} />
-              <a
-                href={WHATSAPP_DEMO}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center px-5 py-3 text-[15px] font-medium border border-rule-strong hover:border-ink hover:bg-[var(--surface)] transition-colors"
-                style={{ borderRadius: '2px' }}
-              >
+              <BotonBrillo href={WHATSAPP_DEMO} target="_blank" rel="noopener noreferrer" className="btn-brillo--bloque">
                 Pedí tu demo
-              </a>
-              <a
-                href="#features"
-                onClick={(e) => goToSection(e, 'features')}
-                className="inline-flex items-center justify-center px-5 py-3 text-[15px] font-medium border border-rule-strong hover:border-ink hover:bg-[var(--surface)] transition-colors"
-                style={{ borderRadius: '2px' }}
-              >
+              </BotonBrillo>
+              <BotonBrillo href="#features" onClick={(e) => goToSection(e, 'features')} className="btn-brillo--bloque">
                 Ver cómo funciona
-              </a>
+              </BotonBrillo>
             </div>
 
             <p className="t-small mt-6 text-muted hero-note">

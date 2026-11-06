@@ -12,7 +12,6 @@ import VideoSection from './components/VideoSection'
 import DepositoAnimacion from './components/DepositoAnimacion'
 import EfectosLanding from './components/EfectosLanding'
 import ComoFunciona from './components/ComoFunciona'
-import Formulario from './components/Formulario'
 import AutomationStory from './components/AutomationStory'
 import Features from './components/Features'
 import CTA from './components/CTA'
@@ -46,7 +45,6 @@ function Landing() {
         <AutomationStory />
         <ComoFunciona />
         <Features />
-        <Formulario />
         <Faq />
         <CTA />
       </main>

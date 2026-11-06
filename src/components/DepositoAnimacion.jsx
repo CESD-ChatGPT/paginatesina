@@ -2,6 +2,7 @@ import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { buildData, dibujarEscena, clamp, win, TW, FONDOS } from './deposito/escena'
 import { ThemeContext } from '../contexts/ThemeContext'
 import { prefersReducedMotion } from '../lib/motion'
+import BotonBrillo from './BotonBrillo'
 
 /* Animación corta del efecto de Stockus en un depósito: del desorden a un
    depósito donde cada producto está a un LED de distancia. Arranca sola
@@ -228,13 +229,9 @@ export default function DepositoAnimacion() {
                 </button>
               ))}
               </div>
-              <button type="button" onClick={alternar} className="btn-brillo" aria-pressed={reproduciendo}>
-                <span className="btn-brillo-exterior">
-                  <span className="btn-brillo-interior">
-                    <span className="btn-brillo-texto">{reproduciendo ? 'Pausa' : 'Reproducir'}</span>
-                  </span>
-                </span>
-              </button>
+              <BotonBrillo onClick={alternar} aria-pressed={reproduciendo}>
+                {reproduciendo ? 'Pausa' : 'Reproducir'}
+              </BotonBrillo>
             </div>
           </div>
 
