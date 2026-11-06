@@ -163,7 +163,7 @@ export default function DepositoAnimacion() {
       <div className="shell">
         <div className="flex items-baseline gap-4 mb-6">
           <span className="t-mono text-[13px] text-muted">02</span>
-          <h2 className="t-h2 max-w-[22ch]">Así cambia un depósito</h2>
+          <h2 className="t-h2 titulo-reveal max-w-[22ch]">Así cambia un depósito</h2>
         </div>
         <p className="t-mono text-[11px] text-muted mb-10 md:mb-14">Ilustración con datos de ejemplo.</p>
 

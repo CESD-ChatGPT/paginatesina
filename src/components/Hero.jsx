@@ -1,7 +1,7 @@
 import { useRef, useLayoutEffect } from 'react'
 import { APP_URL, WHATSAPP_DEMO } from '../lib/app'
 import CtaButton from './CtaButton'
-import StockPanel from './StockPanel'
+import HeroDeposito from './HeroDeposito'
 import { useSectionLink } from '../hooks/useSectionLink'
 import { gsap, ScrollTrigger, prefersReducedMotion } from '../lib/motion'
 
@@ -72,6 +72,16 @@ export default function Hero() {
           .to(ctaItems, { autoAlpha: 1, y: 0, duration: 0.45, stagger: 0.08 }, '-=0.35')
           .to(note, { autoAlpha: 1, y: 0, duration: 0.4 }, '-=0.25')
           .to(panel, { autoAlpha: 1, x: 0, duration: 0.7, ease: 'power3.out' }, '-=0.55')
+
+        // La escena sube más despacio que la página: da profundidad al bajar.
+        const escena = root.querySelector('.hero-escena')
+        if (escena) {
+          gsap.to(escena, {
+            yPercent: -7,
+            ease: 'none',
+            scrollTrigger: { trigger: root, start: 'top top', end: 'bottom top', scrub: true },
+          })
+        }
       }
 
       // Banda de métricas: puede quedar fuera de pantalla en mobile, así
@@ -120,7 +130,7 @@ export default function Hero() {
   }, [])
 
   return (
-    <section className="rule-bottom" ref={rootRef}>
+    <section className="rule-bottom relative" ref={rootRef}>
       <div className="shell pt-28 pb-0 md:pt-36">
         <div className="grid grid-cols-12 gap-y-12 gap-x-8 items-start">
           {/* Bloque tipográfico */}
@@ -170,8 +180,7 @@ export default function Hero() {
 
           {/* Panel de producto */}
           <div className="col-span-12 lg:col-span-6 lg:pl-4 hero-panel">
-            <StockPanel />
-            <p className="t-mono text-[11px] text-muted mt-3">Datos de ejemplo, no de un depósito real.</p>
+            <HeroDeposito />
           </div>
         </div>
       </div>
@@ -198,6 +207,7 @@ export default function Hero() {
           ))}
         </div>
       </div>
+      <div className="led-barrido" aria-hidden="true" />
     </section>
   )
 }

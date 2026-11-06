@@ -46,7 +46,7 @@ export default function Faq() {
       <div className="shell">
         <div className="flex items-baseline gap-4 mb-12 md:mb-16">
           <span className="t-mono text-[13px] text-muted">06</span>
-          <h2 className="t-h2 max-w-[20ch]">Preguntas frecuentes</h2>
+          <h2 className="t-h2 titulo-reveal max-w-[20ch]">Preguntas frecuentes</h2>
         </div>
 
         <div className="max-w-[760px]">

@@ -26,7 +26,7 @@ export default function ProductSection() {
       <div className="shell">
         <div className="flex items-baseline gap-4 mb-12 md:mb-16">
           <span className="t-mono text-[13px] text-muted">01</span>
-          <h2 className="t-h2 max-w-[24ch]">Stockus, de SOLVUS</h2>
+          <h2 className="t-h2 titulo-reveal max-w-[24ch]">Stockus, de SOLVUS</h2>
         </div>
 
         <p className="t-body text-[15px] max-w-[52ch] mb-12">
@@ -36,7 +36,7 @@ export default function ProductSection() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-10">
           {DIFERENCIALES.map(({ titulo, texto }) => (
-            <div key={titulo} className="border-t border-rule pt-5">
+            <div key={titulo} className="diferencial border-t border-rule pt-5">
               <h3 className="t-h3 mb-2">{titulo}</h3>
               <p className="t-body text-[15px] max-w-[40ch]">{texto}</p>
             </div>
