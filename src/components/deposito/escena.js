@@ -55,6 +55,14 @@ const PALETAS = {
     etqTexto: '#ffffff',
     hubTexto: '#154b5b',
     bannerFondo: '#154b5b',
+    papel: '#ffffff',
+    burbuja: '#ffffff',
+    badgeFondo: '#ffffff',
+    badgeTexto: '#14232c',
+    anillo: '#ffffff',
+    mancha: '#9a8f80',
+    rayas: '#b3a58f',
+    manchaCaja: '#8f8473',
     leche: { t: '#ffffff', f: '#f6f8f9', s: '#edf1f3', line: '#93a7b1', lab: '#4a8ca3' },
   },
   oscuro: {
@@ -67,6 +75,14 @@ const PALETAS = {
     etqTexto: '#ffffff',
     hubTexto: '#b4d3dd',
     bannerFondo: '#1b5a73',
+    papel: '#cfe1ea',
+    burbuja: '#123247',
+    badgeFondo: '#0f2a3a',
+    badgeTexto: '#eef6fa',
+    anillo: '#071a26',
+    mancha: '#5b5446',
+    rayas: '#7a6f5c',
+    manchaCaja: '#6b6354',
     leche: { t: '#e8f6fa', f: '#cfe1ea', s: '#9fbccb', line: '#6c8ea1', lab: '#2f7b94' },
   },
 }
@@ -200,7 +216,7 @@ function suciedad(tema) {
   if (_suciedad[tema]) return _suciedad[tema]
   const r = rng(5)
   const out = []
-  const ST = '#9a8f80'
+  const ST = C.mancha
   ;[[3.4, 4.3, 0.9], [6.0, 7.4, 1.1], [9.5, 9.4, 1.3], [4.8, 10.5, 0.8], [11, 3.2, 1.2], [1.2, 7.8, 0.7], [7.6, 1.3, 0.8]].forEach(([x, y, s], i) => {
     const c = iso(x, y, 0)
     out.push(h('ellipse', { key: 's' + i, cx: c[0], cy: c[1], rx: s * U * 1.0, ry: s * U * 0.42, fill: ST, opacity: 0.28 }))
@@ -215,7 +231,7 @@ function suciedad(tema) {
       h('polygon', {
         key: 'p' + i,
         points: P([[x, y, 0], [x + Math.cos(a) * d, y + Math.sin(a) * d, 0], [x + Math.cos(a) * d - Math.sin(a) * d * 0.75, y + Math.sin(a) * d + Math.cos(a) * d * 0.75, 0], [x - Math.sin(a) * d * 0.75, y + Math.cos(a) * d * 0.75, 0]]),
-        fill: '#ffffff',
+        fill: C.papel,
         stroke: C.n500,
         strokeWidth: 0.6,
       }),
@@ -230,7 +246,7 @@ function suciedad(tema) {
     const y = 1 + r() * 9.5
     const c = iso(x, y, 0)
     const e = iso(x + 0.6, y + 0.15, 0)
-    out.push(h('line', { key: 'c' + i, x1: c[0], y1: c[1], x2: e[0], y2: e[1], stroke: '#b3a58f', strokeWidth: 2.2, strokeLinecap: 'round' }))
+    out.push(h('line', { key: 'c' + i, x1: c[0], y1: c[1], x2: e[0], y2: e[1], stroke: C.rayas, strokeWidth: 2.2, strokeLinecap: 'round' }))
   }
   _suciedad[tema] = out
   return out
@@ -354,7 +370,7 @@ export function dibujarEscena(p, D, tema = 'claro') {
       )
     }
     if (b.dirty && mess > 0) {
-      const ST = '#8f8473'
+      const ST = C.manchaCaja
       kids.push(
         h(
           'g',
@@ -447,7 +463,7 @@ export function dibujarEscena(p, D, tema = 'claro') {
         { key: 'nb', opacity: nb },
         h('polygon', { points: P([[11.75, 9.95, 0.8], [12.35, 9.95, 0.8], [12.35, 10.5, 0.8], [11.75, 10.5, 0.8]]), fill: C.n100, stroke: C.n600, strokeWidth: 0.8 }),
         ...nl,
-        h('polygon', { points: P([[12.5, 9.98, 0.8], [13.08, 9.98, 0.8], [13.08, 10.6, 0.8], [12.5, 10.6, 0.8]]), fill: '#ffffff', stroke: C.n500, strokeWidth: 0.8 }),
+        h('polygon', { points: P([[12.5, 9.98, 0.8], [13.08, 9.98, 0.8], [13.08, 10.6, 0.8], [12.5, 10.6, 0.8]]), fill: C.papel, stroke: C.n500, strokeWidth: 0.8 }),
         ...pl,
         ...zz,
       ),
@@ -578,11 +594,11 @@ export function dibujarEscena(p, D, tema = 'claro') {
       h(
         'g',
         { key: 'q', 'data-layer': 'iconos', opacity: qO },
-        h('circle', { cx: sx + 12, cy: sy - 70, r: 3.5, fill: '#ffffff', stroke: C.n700, strokeWidth: 1.5 }),
-        h('circle', { cx: sx + 26, cy: sy - 82, r: 6, fill: '#ffffff', stroke: C.n700, strokeWidth: 1.5 }),
-        h('circle', { cx: sx + 44, cy: sy - 96, r: 9, fill: '#ffffff', stroke: C.n700, strokeWidth: 1.5 }),
-        ...bubs.map(([dx, dy, r], i) => h('circle', { key: 'o' + i, cx: bx + dx, cy: by + dy, r, fill: '#ffffff', stroke: C.n700, strokeWidth: 3 })),
-        ...bubs.map(([dx, dy, r], i) => h('circle', { key: 'i' + i, cx: bx + dx, cy: by + dy, r: r - 1.5, fill: '#ffffff' })),
+        h('circle', { cx: sx + 12, cy: sy - 70, r: 3.5, fill: C.burbuja, stroke: C.n700, strokeWidth: 1.5 }),
+        h('circle', { cx: sx + 26, cy: sy - 82, r: 6, fill: C.burbuja, stroke: C.n700, strokeWidth: 1.5 }),
+        h('circle', { cx: sx + 44, cy: sy - 96, r: 9, fill: C.burbuja, stroke: C.n700, strokeWidth: 1.5 }),
+        ...bubs.map(([dx, dy, r], i) => h('circle', { key: 'o' + i, cx: bx + dx, cy: by + dy, r, fill: C.burbuja, stroke: C.n700, strokeWidth: 3 })),
+        ...bubs.map(([dx, dy, r], i) => h('circle', { key: 'i' + i, cx: bx + dx, cy: by + dy, r: r - 1.5, fill: C.burbuja })),
         ...qs.map(([dx, dy, s, rot], i) =>
           h('text', { key: 't' + i, x: bx + dx, y: by + dy + s * 0.35, textAnchor: 'middle', transform: `rotate(${rot} ${bx + dx} ${by + dy})`, fill: ALERTA, fontFamily: SANS, fontWeight: 700, fontSize: s }, '?'),
         ),
@@ -611,10 +627,10 @@ export function dibujarEscena(p, D, tema = 'claro') {
         h(
           'g',
           { transform: `translate(${cx} ${cy}) scale(${sc})` },
-          h('circle', { r: 24, fill: ALERTA, stroke: '#ffffff', strokeWidth: 2.5 }),
+          h('circle', { r: 24, fill: ALERTA, stroke: C.anillo, strokeWidth: 2.5 }),
           h('g', { transform: 'translate(-14.4 -14.4) scale(1.2)', fill: 'none', stroke: '#ffffff', strokeWidth: 1.8, strokeLinecap: 'round', strokeLinejoin: 'round' }, ...ICONOS[b.ic]()),
-          h('rect', { x: -tw / 2, y: 30, width: tw, height: 34, fill: '#ffffff', stroke: ALERTA, strokeWidth: 1.5 }),
-          h('text', { x: 0, y: 53, textAnchor: 'middle', fill: C.n900, fontFamily: SANS, fontWeight: 600, fontSize: 18 }, b.lab),
+          h('rect', { x: -tw / 2, y: 30, width: tw, height: 34, fill: C.badgeFondo, stroke: ALERTA, strokeWidth: 1.5 }),
+          h('text', { x: 0, y: 53, textAnchor: 'middle', fill: C.badgeTexto, fontFamily: SANS, fontWeight: 600, fontSize: 18 }, b.lab),
         ),
       ),
     )
