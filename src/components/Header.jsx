@@ -92,6 +92,27 @@ export default function Header() {
     return () => window.removeEventListener('scroll', actualizar)
   }, [pathname])
 
+  // Intensidad del difuminado: 0 arriba de todo, 1 a los 140 px de scroll
+  useEffect(() => {
+    const raiz = document.documentElement
+    let raf = 0
+    function actualizar() {
+      raf = 0
+      const v = Math.min(1, Math.max(0, window.scrollY / 140))
+      raiz.style.setProperty('--hd-op', v.toFixed(3))
+    }
+    function alScroll() {
+      if (!raf) raf = requestAnimationFrame(actualizar)
+    }
+    actualizar()
+    window.addEventListener('scroll', alScroll, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', alScroll)
+      if (raf) cancelAnimationFrame(raf)
+      raiz.style.removeProperty('--hd-op')
+    }
+  }, [])
+
   // En la landing, "Inicio" sube al principio; desde otra página navega a la landing
   function alInicio(e) {
     if (pathname !== '/') return
@@ -268,6 +289,15 @@ export default function Header() {
           .navbar__slogan { display: none; }
         }
       `}</style>
+
+      {/* Difuminado progresivo bajo la barra: al bajar, lo que pasa por detrás se
+          desenfoca y se aclara hacia el fondo de la página, así no se pisa con
+          el texto de la barra. Su intensidad sigue al scroll (--hd-op). */}
+      <div className="hd-difuminado" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+      </div>
 
       <header>
         <nav className="navbar" aria-label="Navegación principal">

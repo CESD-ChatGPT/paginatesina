@@ -516,3 +516,37 @@ button {
 @media (prefers-reduced-motion: reduce) {
   .btn-brillo-exterior, .btn-brillo-interior, .btn-brillo-texto { transition: none; }
 }
+
+/* Difuminado progresivo bajo la barra de navegación. Tres capas de desenfoque
+   (fuerte arriba, suave abajo) con máscaras que se superponen, más un velo del
+   color de fondo que se disuelve hacia abajo. Aparece con el scroll. */
+.hd-difuminado {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: calc(118px + env(safe-area-inset-top, 0px));
+  z-index: 40;
+  pointer-events: none;
+  opacity: var(--hd-op, 0);
+}
+.hd-difuminado span { position: absolute; inset: 0; }
+.hd-difuminado span:nth-child(1) {
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 28%, transparent 55%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 28%, transparent 55%);
+}
+.hd-difuminado span:nth-child(2) {
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 10%, #000 38%, #000 52%, transparent 78%);
+  mask-image: linear-gradient(to bottom, transparent 10%, #000 38%, #000 52%, transparent 78%);
+}
+.hd-difuminado span:nth-child(3) {
+  -webkit-backdrop-filter: blur(2.5px);
+  backdrop-filter: blur(2.5px);
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--paper) 90%, transparent) 0%, color-mix(in srgb, var(--paper) 62%, transparent) 45%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 60%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 60%, transparent 100%);
+}
