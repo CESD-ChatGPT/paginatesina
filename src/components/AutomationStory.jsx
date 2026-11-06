@@ -78,7 +78,6 @@ export default function AutomationStory() {
     <section className="section-pad rule-bottom overflow-hidden" ref={sectionRef}>
       <div className="shell">
         <div className="flex items-baseline gap-4 mb-12 md:mb-16">
-          <span className="t-mono text-[13px] text-muted">00</span>
           <h2 className="t-h2 max-w-[24ch]">Así automatiza SOLVUS el control de stock</h2>
         </div>
 

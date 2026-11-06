@@ -74,7 +74,6 @@ export default function Features() {
       <div className="shell">
         {/* Encabezado de sección: índice + título, alineado a la izquierda */}
         <div className="flex items-baseline gap-4 mb-12 md:mb-16 reveal-el">
-          <span className="t-mono text-[13px] text-muted">01</span>
           <h2 className="t-h2 max-w-[18ch]">Qué resuelve, concretamente</h2>
         </div>
 

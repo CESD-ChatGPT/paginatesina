@@ -25,7 +25,6 @@ export default function ProductSection() {
     <section className="section-pad rule-bottom" id="stockus">
       <div className="shell">
         <div className="flex items-baseline gap-4 mb-12 md:mb-16">
-          <span className="t-mono text-[13px] text-muted">01</span>
           <h2 className="t-h2 titulo-reveal max-w-[24ch]">Stockus, de SOLVUS</h2>
         </div>
 

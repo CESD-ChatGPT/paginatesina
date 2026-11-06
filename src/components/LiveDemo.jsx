@@ -59,7 +59,6 @@ export default function LiveDemo() {
     <section className="section-pad rule-bottom" id="demo">
       <div className="shell">
         <div className="flex items-baseline gap-4 mb-12 md:mb-16">
-          <span className="t-mono text-[13px] text-muted">02</span>
           <h2 className="t-h2 max-w-[20ch]">SOLVUS en acción</h2>
         </div>
 

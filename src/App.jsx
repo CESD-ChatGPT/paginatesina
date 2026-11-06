@@ -43,11 +43,11 @@ function Landing() {
         <ProductSection />
         <DepositoAnimacion />
         <VideoSection />
+        <AutomationStory />
         <ComoFunciona />
+        <Features />
         <Formulario />
         <Faq />
-        <AutomationStory />
-        <Features />
         <CTA />
       </main>
       <Footer />
