@@ -1,0 +1,43 @@
+STOCKUS · Presentación web (Solvus)
+====================================
+
+ABRIR
+  Doble clic en index.html (Chrome). No necesita servidor ni internet: las fuentes
+  IBM Plex Sans e IBM Plex Mono (licencia OFL) están dentro de assets/fonts/.
+  Al abrir se ve negro puro (diapositiva 1).
+
+PANTALLA COMPLETA
+  Tecla F, o el botón pequeño de la esquina inferior derecha (aparece al mover el
+  mouse, antes de empezar). Funciona en proyector 16:9 y 16:10 (franjas negras).
+
+CONTROL DE DIAPOSITIVAS (clicker)
+  Avanzar ........ Flecha derecha / abajo, Re Pág, Espacio, Enter, clic izquierdo
+  Retroceder ..... Flecha izquierda / arriba, Av Pág, clic derecho
+  Home / End ..... primera / última diapositiva
+  . o B .......... pantalla en negro total (alterna); pausa los videos
+  Escape ......... no hace nada
+  F5 ............. recarga y vuelve a la misma diapositiva (queda en la URL: #7)
+  Un clic = una diapositiva. Tras cada cambio hay 350 ms de bloqueo; la repetición
+  automática de teclas se descarta.
+
+VISTA DEL PRESENTADOR
+  Tecla P: abre una segunda ventana para la pantalla de la notebook (arrastrala al
+  monitor de la notebook). Muestra el número y título de la diapositiva, quién habla,
+  el texto de su bloque, el cronómetro de 10:00 (arranca al pasar de la 1 a la 2;
+  R lo reinicia) y si vas adelantado o atrasado respecto del guion.
+  Si el foco queda en esa ventana, las teclas del clicker también funcionan.
+  El cronómetro cuenta desde la diapositiva 2; el guion la ubica cerca de 0:50.
+
+MODO LIVIANO
+  Abrir index.html?lite  (sin partículas, sin grano ni brillos de las tiras; los halos
+  quedan como gradientes estáticos). Usarlo si la notebook del escenario va lenta.
+
+VIDEOS
+  Diapositiva 6 (chatbot, 71 s, sin audio) y 9 (así cambia un depósito, 21,2 s, sin
+  audio): arrancan solos al entrar, se pausan y vuelven al inicio al salir.
+  Los originales están en assets/originales/ (sin tocar).
+
+ARCHIVOS
+  index.html · presenter.html · css/ · js/ (app.js, notas.js, presenter.js)
+  assets/ (fonts, img, video, originales)
+  respaldo-diapositivas.pdf  (una captura por diapositiva, por si falla la notebook)

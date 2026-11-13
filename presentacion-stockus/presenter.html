@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Stockus · Vista del presentador</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+  html, body { cursor: default; overflow: auto; user-select: text; background: #0A0A0A; color: #fff; font-family: 'Plex Sans', sans-serif; }
+  #p { padding: 24px 32px 40px; max-width: 1200px; margin: 0 auto; }
+  .top { display: flex; gap: 28px; align-items: stretch; margin-bottom: 22px; }
+  .box { border: 1px solid rgba(79,179,206,.4); padding: 14px 20px; }
+  .lab { font: 500 14px/1 'Plex Mono', monospace; letter-spacing: .16em; color: #4FB3CE; text-transform: uppercase; }
+  #clock { font: 600 84px/1 'Plex Mono', monospace; letter-spacing: -.02em; margin-top: 10px; }
+  #clock.low { color: #4FB3CE; }
+  #clock.over { color: #fff; }
+  #slideTitle { font: 600 34px/1.15 'Plex Sans', sans-serif; margin-top: 8px; }
+  #delta { font: 500 22px/1.3 'Plex Mono', monospace; margin-top: 10px; }
+  .ok { color: #4FB3CE; } .late { color: #fff; background: #1F6C82; padding: 2px 8px; }
+  .bloque { border-left: 4px solid rgba(79,179,206,.35); padding: 8px 0 8px 22px; margin: 0 0 22px; }
+  .bloque.now { border-left-color: #4FB3CE; }
+  .meta { font: 500 18px/1.2 'Plex Mono', monospace; letter-spacing: .1em; color: #4FB3CE; text-transform: uppercase; }
+  .quien { font: 700 38px/1.1 'Plex Sans', sans-serif; margin: 6px 0 10px; }
+  .txt { font: 400 34px/1.45 'Plex Sans', sans-serif; white-space: pre-wrap; }
+  .txt.en { color: #4FB3CE; }
+  .ind { font: italic 400 24px/1.35 'Plex Sans', sans-serif; color: rgba(255,255,255,.6); margin: 8px 0; white-space: pre-wrap; }
+  .next { opacity: .7; font: 400 22px/1.3 'Plex Mono', monospace; margin-top: 30px; }
+  .hint { position: fixed; right: 16px; bottom: 10px; font: 400 14px/1 'Plex Mono', monospace; color: rgba(79,179,206,.6); }
+</style>
+</head>
+<body>
+<div id="p">
+  <div class="top">
+    <div class="box" style="min-width:330px"><div class="lab">Cronómetro · 10:00</div><div id="clock">10:00</div><div class="lab" id="elapsed" style="margin-top:10px">sin iniciar</div></div>
+    <div class="box" style="flex:1"><div class="lab" id="num">Diapositiva</div><div id="slideTitle">—</div><div id="delta"></div></div>
+  </div>
+  <div id="blocks"></div>
+  <div class="next" id="nextT"></div>
+</div>
+<div class="hint">←/→ avanzan · R reinicia el cronómetro · . pantalla en negro</div>
+<script src="js/notas.js"></script>
+<script src="js/presenter.js"></script>
+</body>
+</html>
