@@ -41,12 +41,21 @@ VIDEOS
   final), para usar fuera de la presentación.
   Los originales están en assets/originales/ (sin tocar).
 
-ORDEN
+ORDEN (provisorio: 16 diapositivas)
   1 negro · 2 Stockus · 3 LEDs y tecnología · 4 equipo · 5 identidad · 6 Vento ·
   7 video del chatbot · 8 metodología · 9 video del depósito · 10 escala ·
-  11 presupuesto · 12 punto de equilibrio · 13 caso y pago · 14 conclusiones · 15 cierre
+  11 presupuesto · 12 punto de equilibrio · 13 caso y pago ·
+  14 conclusiones, versión A (el estante que se abre) ·
+  15 conclusiones, versión B (la conversación con Stockus) · 16 cierre
+
+CAMBIAR EL ORDEN O SACAR UNA DIAPOSITIVA
+  Todo sale de js/orden.js: una línea por diapositiva. Para quedarte con una sola
+  versión de conclusiones, borrá la línea 'conclusiones-a' o 'conclusiones-b'.
+  La numeración, la barra de LEDs, el hash (#N), las notas y el cronómetro se
+  ajustan solos. No hace falta tocar index.html.
 
 ARCHIVOS
-  index.html · presenter.html · css/ · js/ (app.js, notas.js, presenter.js)
+  index.html · presenter.html · css/ · js/ (orden.js, app.js, notas.js, presenter.js)
   assets/ (fonts, img, video, originales)
   respaldo-diapositivas.pdf  (una captura por diapositiva, por si falla la notebook)
+  js/orden.js (orden de las diapositivas)

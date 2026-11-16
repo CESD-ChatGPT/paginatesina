@@ -1,7 +1,10 @@
 /* Vista del presentador: segunda ventana sincronizada con la principal (BroadcastChannel + localStorage). */
 (() => {
   'use strict';
-  const NOTAS = window.NOTAS, PLAN_T2 = window.PLAN_T2;
+  // Las notas se ordenan y numeran con la lista única de js/orden.js
+  const NOTAS = window.ORDEN.map((id, i) => Object.assign({ n: i + 1, id }, window.NOTAS[id] ||
+    { titulo: id, bloques: [{ t0: 0, t1: 0, quien: '—', bloque: 'Sin notas', texto: '' }] }));
+  const PLAN_T2 = window.PLAN_T2;
   let st = { idx: 0, timerStart: 0, enterAt: 0 };
   let bc = null;
   try { bc = new BroadcastChannel('stockus-presentacion'); } catch (e) { bc = null; }

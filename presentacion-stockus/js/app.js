@@ -6,14 +6,22 @@
   const EI = 'cubic-bezier(.2,.7,.2,1)';
   const EO = 'cubic-bezier(.4,0,.2,1)';
   const stage = document.getElementById('stage');
-  const slides = [...stage.querySelectorAll('.slide')];
+  /* Lista única de diapositivas (js/orden.js): se quitan del documento las que no figuran y se ordenan las demás.
+     Todo lo que depende de la posición (número, barra del pie, hash, cortes, cronómetro, notas) sale de acá. */
+  const ORDEN = window.ORDEN || [...stage.querySelectorAll('.slide')].map((s) => s.id);
+  const todas = Object.fromEntries([...stage.querySelectorAll('.slide')].map((s) => [s.id, s]));
+  Object.keys(todas).forEach((id) => { if (!ORDEN.includes(id)) todas[id].remove(); });
+  const slides = ORDEN.map((id) => todas[id]).filter(Boolean);
+  const overlay0 = document.getElementById('foot');
+  slides.forEach((s, i) => { stage.insertBefore(s, overlay0); s.setAttribute('aria-label', 'Diapositiva ' + (i + 1) + ': ' + (s.dataset.title || s.id)); });
   const N = slides.length;
   const params = new URLSearchParams(location.search);
   const LITE = params.has('lite');
   const REDUCE = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const VIDEO_SLIDES = [6, 8];                 // diapositivas 7 y 9
-  const NO_FOOT = [0, 1, 6, 8, 14];
-  const COLD_CUTS = new Set([6, 8]);          // alrededor de los videos no hay transición (6→7, 7→8, 8→9, 9→10)
+  const idxs = (f) => slides.map((s, i) => (f(s) ? i : -1)).filter((i) => i >= 0);
+  const VIDEO_SLIDES = idxs((s) => s.querySelector('video'));                         // los videos
+  const NO_FOOT = [0, N - 1, ...VIDEO_SLIDES, ...idxs((s) => s.hasAttribute('data-nofoot'))];
+  const COLD_CUTS = new Set(VIDEO_SLIDES);    // alrededor de los videos no hay transición de luz
   const SVGNS = 'http://www.w3.org/2000/svg';
   if (LITE) stage.classList.add('lite');
   if (LITE) document.documentElement.classList.add('lite');
@@ -84,7 +92,7 @@
   }
   buildStrips();
   buildCajoneras();
-  stage.querySelectorAll('#s4 .dw').forEach((d) => d.appendChild(document.createElement('b')));   // luz del cajón de cada tarjeta
+  stage.querySelectorAll('#equipo .dw').forEach((d) => d.appendChild(document.createElement('b')));   // luz del cajón de cada tarjeta
 
   /* ---------- Coreografía: helpers ---------- */
   const ease = (p) => 1 - Math.pow(1 - p, 3);
@@ -112,7 +120,18 @@
       cancels.push(() => cancelAnimationFrame(id));
     }
     const api = {
-      q, A, T,
+      q, A, T, instant,
+      typeC(el, o = {}) {                     // escritura letra por letra con cursor que parpadea solo mientras escribe
+        const text = el.dataset.full || (el.dataset.full = el.textContent);
+        const dur = text.length * (o.ms ?? 35) / 1000;
+        if (!instant) el.textContent = '';
+        const cur = document.createElement('i'); cur.className = 'cur';
+        T((p) => {
+          el.textContent = text.slice(0, Math.round(p * text.length));
+          if (p < 1) el.appendChild(cur);
+        }, { delay: o.delay, dur, linear: true });
+        return dur;
+      },
       cancel() { anims.forEach((a) => { try { a.cancel(); } catch (e) { /* ya cancelada */ } }); cancels.forEach((c) => c()); },
       loop(fn, o = {}) {                      // bucle continuo con rAF; se corta al salir de la diapositiva
         if (REDUCE) return;
@@ -184,7 +203,7 @@
     return api;
   }
 
-  /* ---------- Coreografía por diapositiva (índice desde 0) ---------- */
+  /* ---------- Coreografía por diapositiva (por id, ver js/orden.js) ---------- */
   // Tira de la 3: recorrido de luz continuo, de izquierda a derecha, con pausa corta.
   const RUN_SEG = .11, RUN_CYCLE = 2.3, RUN_BASE = .22, RUN_DRAWER_SEG = 6;
   function runLevel(h, i) {
@@ -194,7 +213,7 @@
     return Math.exp(-d / 2.2);                     // estela que se apaga
   }
   const ENTER = {
-    1(c, s) {
+    'stockus'(c, s) {
       const dot = s.querySelector('.dot'), halo = s.querySelector('.center .halo'), logo = s.querySelector('.logo');
       c.A(dot, [{ opacity: 0, scale: '.2' }, { opacity: 1, scale: '1' }], { dur: .5 });
       c.A(halo, [{ opacity: 0, scale: '.12' }, { opacity: 1, scale: '1' }], { delay: .2, dur: 1.3 });
@@ -206,7 +225,7 @@
       const sub = s.querySelector('.sub');
       c.type(sub, sub.dataset.text, { delay: 2.9, dur: 1.0 });
     },
-    2(c, s) {
+    'leds'(c, s) {
       c.fade('.cajonera svg', { dur: .8 });
       c.rise('.title');
       c.draw('.c1', { delay: .6, dur: .5 });
@@ -233,7 +252,7 @@
         reset: () => own.forEach((e) => { e.style.opacity = ''; })
       });
     },
-    3(c, s) {
+    'equipo'(c, s) {
       c.rise('.title');
       c.rise('.logo', { delay: .1, dist: 12 });
       // cascada pareja: todas las tarjetas igual, ninguna destacada
@@ -243,16 +262,43 @@
         c.A(card.querySelector('.dw b'), [{ opacity: 0 }, { opacity: 1 }], { delay: t + .35, dur: .4 });
       });
     },
-    4(c, s) {
+    'identidad'(c, s) {
       c.rise('.title');
-      c.A(s.querySelector('.logo'), [{ opacity: 0, translate: '0 12px' }, { opacity: 1, translate: '0 0' }], { delay: .05, dur: .7 });
-      c.rise('.cap5', { delay: .5, dist: 10 });
+      // Las flechas se dibujan: la de arriba avanza hacia su punta (sale), la de abajo en sentido contrario (entra).
+      const glow = [...s.querySelectorAll('.iso .glow circle')];
+      const flecha = (g, desdeElFinal, t0) => {
+        const path = g.querySelector('.st'), tri = g.querySelector('.tri');
+        const L = path.getTotalLength();
+        const hist = [];
+        if (!c.instant) { path.style.strokeDasharray = L + ' ' + L; path.style.strokeDashoffset = desdeElFinal ? -L : L; }
+        c.A(tri, [{ opacity: 0 }, { opacity: 1 }], { delay: t0 + .9, dur: .15 });
+        c.T((p) => {
+          const hecho = L * p;
+          if (p >= 1) {                     // final: trazo completo, sin rastro de la animación
+            path.style.strokeDasharray = 'none'; path.style.strokeDashoffset = '';
+            glow.forEach((e) => { e.style.opacity = 0; });
+            return;
+          }
+          path.style.strokeDashoffset = desdeElFinal ? -(L - hecho) : (L - hecho);
+          const pt = path.getPointAtLength(desdeElFinal ? L - hecho : hecho);
+          hist.unshift(pt); if (hist.length > 16) hist.pop();
+          glow.forEach((e, i) => {
+            const q = hist[Math.min(hist.length - 1, i * 3)];
+            e.setAttribute('cx', q.x); e.setAttribute('cy', q.y);
+            e.style.opacity = (i ? .55 - i * .1 : 1) * Math.min(1, p * 8);
+          });
+        }, { delay: t0, dur: 1.0 });
+      };
+      flecha(s.querySelector('.fa'), true, .35);
+      flecha(s.querySelector('.fb'), false, 1.45);
+      c.A(s.querySelector('.word'), [{ opacity: 0 }, { opacity: 1 }], { delay: 2.55, dur: .6, ease: EO });
+      c.A(s.querySelector('.isoline'), [{ opacity: 0 }, { opacity: 1 }], { delay: 2.75, dur: .45, ease: EO });
       s.querySelectorAll('.bar .sw').forEach((sw, i) => c.A(sw, [{ scale: '1 0' }, { scale: '1 1' }], { delay: .25 + i * .12, dur: .8 }));
       s.querySelectorAll('.bar .nm').forEach((e, i) => c.rise(e, { delay: .9 + i * .1, dur: .4, dist: 10 }));
       s.querySelectorAll('.bar .hx').forEach((e, i) => c.type(e, e.textContent, { delay: 1.0 + i * .12, dur: .35 }));
       c.rise('.samples > div', { delay: 1.5, stagger: .15 });
     },
-    5(c, s) {
+    'vento'(c, s) {
       c.rise('.title');
       c.rise('.def', { delay: .15, dist: 12 });
       c.fade('.frame', { dur: .5 });
@@ -267,7 +313,7 @@
         c.rise(d, { delay: t + .3, dur: .4, dist: 8 });
       });
     },
-    7(c, s) {
+    'metodologia'(c, s) {
       c.rise('.title');
       c.fade('.ghost', { dur: 1.2, to: .055 });
       c.count(s.querySelector('.cnt'), 3, { dur: .9, delay: .2 });
@@ -282,7 +328,7 @@
       });
       c.A(s.querySelector('.tl .halo'), [{ opacity: 0 }, { opacity: 1 }], { delay: 1.7, dur: .8 });
     },
-    9(c, s) {
+    'escala'(c, s) {
       c.rise('.title');
       s.querySelectorAll('.cajonera').forEach((cj, i) => {
         const t = .2 + i * .35;
@@ -294,7 +340,7 @@
       c.segs('.steps .strip', { delay: 1.6, gap: .016 });
       s.querySelectorAll('.steps .st').forEach((e, i) => c.rise(e, { delay: 1.6 + [0, 19, 38][i] * .016, dur: .5, dist: 14 }));
     },
-    10(c, s) {
+    'presupuesto'(c, s) {
       c.fade('.cajonera svg', { dur: .8 });
       c.rise('.title');
       const pcs = s.querySelectorAll('.pc');
@@ -303,7 +349,7 @@
       plus.forEach((p, i) => c.draw(p, { delay: .55 + Math.floor(i / 2) * .45, dur: .35 }));
       c.drawer('.cajonera', { delay: 1.2 });
     },
-    11(c, s) {
+    'equilibrio'(c, s) {
       c.fade('.cajonera svg', { dur: .8 });
       c.rise('.title');
       const fm = [...s.querySelectorAll('.formula .t')], ops = [...s.querySelectorAll('.formula .op')];
@@ -322,7 +368,7 @@
       c.rise('.lab2', { delay: 2.1, dur: .5, dist: 12 });
       c.rise('.frase', { delay: 2.2, dur: .5, dist: 12 });
     },
-    12(c, s) {
+    'pago'(c, s) {
       c.fade('.cajonera svg', { dur: .8 });
       c.rise('.title');
       c.rise('.hds', { delay: .2, dur: .6 });
@@ -343,16 +389,47 @@
       s.querySelectorAll('.pay .lb').forEach((e, i) => c.rise(e, { delay: ts[i] + .2, dur: .5, dist: 12 }));
       c.drawer('.cajonera', { delay: .4 });
     },
-    13(c, s) {
-      c.fade('.cajonera svg', { dur: .8 });
-      c.rise('.title');
-      c.rise('.aff > div', { delay: .25, stagger: .16, dur: .6 });
-      const v = s.querySelector('#s14vento');
-      c.type(v, v.dataset.text, { delay: 1.2, dur: .8 });
-      c.A(s.querySelector('.next'), [{ clipPath: 'inset(0 0 100% 0)', opacity: 0 }, { clipPath: 'inset(0 0 0% 0)', opacity: 1 }], { delay: 1.0, dur: .9, ease: EO });
-      c.drawer('.cajonera', { delay: .5 });
+    'conclusiones-a'(c, s) {
+      // El estante que se abre: la luz encuentra cada conclusión y el cajón se abre (unos 6 s)
+      const cj = s.querySelector('.estante');
+      c.fade(cj.querySelector('svg'), { dur: .9 });
+      if (!REDUCE && !LITE) cj.classList.add('respira');
+      s.querySelectorAll('.dr').forEach((d, i) => {
+        const t = .35 + i * 1.2;
+        c.A(d.querySelector('.front'), [
+          { opacity: 0, translate: '0 0' }, { opacity: 1, translate: '0 0', offset: .3 },
+          { opacity: 1, translate: '0 0', offset: .5 }, { opacity: 0, translate: '0 -55%' }], { delay: t, dur: 1.1, ease: 'ease-in-out' });
+        c.A(d.querySelector('.halo'), [{ opacity: 0 }, { opacity: 1, offset: .35 }, { opacity: .55 }], { delay: t, dur: 1.6 });
+        c.A(d.querySelector('.in'), [{ opacity: 0 }, { opacity: 1 }], { delay: t + .6, dur: .45 });
+        c.rise([...d.querySelectorAll('.in > *')], { delay: t + .65, stagger: .15, dist: 10, dur: .5 });
+      });
+      c.fade('.vento', { delay: 5.6, dur: .6 });
     },
-    14(c, s) {
+    'conclusiones-b'(c, s) {
+      // La conversación con Stockus: pregunta, LED, respuesta escrita letra por letra (unos 8,5 s)
+      c.fade(s.querySelector('.tenue svg'), { dur: .8 });
+      const led = s.querySelector('.led');
+      let t = .15;
+      c.fade('.q1', { delay: t, dur: .4 });
+      t += .3;
+      t += c.typeC(s.querySelector('.q1 .tx'), { delay: t, ms: 35 }) + .25;
+      c.A(led.querySelector('i'), [{ opacity: 0, scale: '.4' }, { opacity: 1, scale: '1' }], { delay: t, dur: .35 });
+      c.A(led.querySelector('.halo'), [{ opacity: 0 }, { opacity: 1 }], { delay: t, dur: .6 });
+      t += .3;
+      s.querySelectorAll('.a1 .tx').forEach((e) => { t += c.typeC(e, { delay: t, ms: 28 }) + .12; });
+      t += .15;
+      c.fade('.q2', { delay: t, dur: .4 });
+      t += .2;
+      t += c.typeC(s.querySelector('.q2 .tx'), { delay: t, ms: 35 }) + .2;
+      c.A(led, [{ translate: '0 0' }, { translate: '0 452px' }], { delay: t, dur: .45, ease: EO });
+      t += .45;
+      c.A(led, [{ scale: '1' }, { scale: '1.4' }, { scale: '1' }], { delay: t, dur: .5 });
+      t += .15;
+      t += c.typeC(s.querySelector('.a2 .big'), { delay: t, ms: 35 }) + .15;
+      t += c.typeC(s.querySelector('.a2 .sub'), { delay: t, ms: 22 }) + .1;
+      c.fade('.vento', { delay: t, dur: .5 });
+    },
+    'cierre'(c, s) {
       c.A(s.querySelector('.halo'), [{ opacity: 0 }, { opacity: 1 }], { dur: 1.4 });
       c.segs('.strip', { delay: .1, gap: .04 });
       c.A(s.querySelector('.gr'), [{ opacity: 0 }, { opacity: 1 }], { delay: .3, dur: 1.4, ease: EO });
@@ -498,10 +575,10 @@
     const base = cut ? 0 : .3;
     const ctx = makeCtx(to, instant, base);
     to._ctx = ctx;
-    const fn = ENTER[n];
+    const fn = ENTER[to.id];
     if (fn) fn(ctx, to);
     particles.stop();
-    if (n === 1 || n === 14) particles.start(to.querySelector('canvas.particles'));
+    if (to.querySelector('canvas.particles')) particles.start(to.querySelector('canvas.particles'));
 
     // videos de la entrante
     if (VIDEO_SLIDES.includes(n)) {

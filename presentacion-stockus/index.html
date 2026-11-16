@@ -9,11 +9,11 @@
 <body>
 <div id="stage">
 
-  <!-- 1 · Sala a oscuras -->
-  <section class="slide bg-black" id="s1" data-title="Sala a oscuras" aria-label="Diapositiva 1: sala a oscuras"></section>
+  <!-- Sala a oscuras -->
+  <section class="slide bg-black" id="negro" data-title="Sala a oscuras"></section>
 
-  <!-- 2 · Revelación -->
-  <section class="slide bg-pet" id="s2" data-title="Stockus" aria-label="Diapositiva 2: Stockus, control de stock con LEDs inteligentes">
+  <!-- Revelación -->
+  <section class="slide bg-pet" id="stockus" data-nofoot data-title="Stockus">
     <canvas class="particles" width="1920" height="1080"></canvas>
     <div class="center">
       <div class="halo" data-key></div>
@@ -24,8 +24,8 @@
     <div class="sub" id="s2sub" data-text="CONTROL DE STOCK CON LEDS INTELIGENTES">CONTROL DE STOCK CON LEDS INTELIGENTES</div>
   </section>
 
-  <!-- 3 · LEDs y tecnología -->
-  <section class="slide bg-pet" id="s3" data-title="Así se enciende la luz" aria-label="Diapositiva 3: LEDs y tecnología">
+  <!-- LEDs y tecnología -->
+  <section class="slide bg-pet" id="leds" data-title="Así se enciende la luz">
     <div class="cajonera" data-x="1330" data-y="150" data-cell="260,200" data-grid="3,4" data-lit="2:1"></div>
     <h2 class="title">Así se enciende la luz</h2>
     <div class="flow">
@@ -47,8 +47,8 @@
     </div>
   </section>
 
-  <!-- 4 · Equipo -->
-  <section class="slide bg-pet" id="s4" data-title="Somos Solvus" aria-label="Diapositiva 4: equipo">
+  <!-- Equipo -->
+  <section class="slide bg-pet" id="equipo" data-title="Somos Solvus">
     <h2 class="title">Somos Solvus</h2>
     <img class="logo" src="assets/img/solvus-isologotipo-horizontal-blanco.png" alt="Solvus">
     <div class="grid">
@@ -61,11 +61,21 @@
     </div>
   </section>
 
-  <!-- 5 · Identidad -->
-  <section class="slide bg-pet" id="s5" data-title="Una marca clara y sobria" aria-label="Diapositiva 5: identidad de marca">
+  <!-- Identidad -->
+  <section class="slide bg-pet" id="identidad" data-title="Una marca clara y sobria">
     <h2 class="title">Una marca clara y sobria</h2>
-    <img class="logo" data-key src="assets/img/solvus-isologotipo-horizontal-blanco.png" alt="Isologotipo horizontal de Solvus">
-    <div class="tag cap5">Isotipo: una S de dos flechas, entrada y salida de mercadería</div>
+    <div class="lockup">
+      <img class="word" src="assets/img/solvus-isologotipo-horizontal-blanco.png" alt="Isologotipo horizontal de Solvus">
+      <svg class="iso" data-key viewBox="157.58 271.91 83.39 86.90" aria-hidden="true">
+        <defs><radialGradient id="isoGlow"><stop offset="0" stop-color="#fff"/><stop offset=".35" stop-color="#4FB3CE" stop-opacity=".9"/><stop offset="1" stop-color="#4FB3CE" stop-opacity="0"/></radialGradient></defs>
+        <!-- Isotipo del manual de marca (pág. 5, pdftocairo -svg). Un solo trazo en S partido al medio en dos flechas;
+             los extremos exteriores se alargan medio grosor para reproducir el remate cuadrado del original. -->
+        <g class="fa"><path class="st" d="M 55.75 13.999853 L 26.500137 13.999853 C 26.155244 13.999853 25.812576 14.017654 25.469907 14.051031 C 25.129464 14.084408 24.789021 14.135586 24.450803 14.202339 C 24.11481 14.269093 23.781042 14.351422 23.451724 14.451552 C 23.122407 14.551683 22.799765 14.667389 22.481573 14.798671 C 22.163381 14.929953 21.854089 15.076811 21.549248 15.239244 C 21.246632 15.401678 20.952916 15.577463 20.665876 15.768823 C 20.38106 15.960183 20.105146 16.164894 19.838131 16.382956 C 19.573342 16.601017 19.317453 16.83243 19.074915 17.074968 C 18.832378 17.317506 18.600965 17.573394 18.382904 17.838183 C 18.164842 18.105198 17.960131 18.381112 17.768771 18.665928 C 17.57741 18.952968 17.401626 19.246684 17.239192 19.5493 C 17.076759 19.854141 16.929901 20.163433 16.798619 20.481625 C 16.667337 20.799817 16.551631 21.122459 16.4515 21.451776 C 16.35137 21.781094 16.269041 22.114862 16.202287 22.450855 C 16.135533 22.789073 16.084356 23.129516 16.050979 23.469959 C 16.017602 23.812628 15.999801 24.155296 15.999801 24.500189 C 15.999801 24.842858 16.017602 25.187751 16.050979 25.528194 C 16.084356 25.870863 16.135533 26.211306 16.202287 26.549524 C 16.269041 26.885517 16.35137 27.219285 16.4515 27.548602 C 16.551631 27.87792 16.667337 28.200562 16.798619 28.518754 C 16.929901 28.836946 17.076759 29.146238 17.239192 29.448854 C 17.401626 29.753695 17.57741 30.047411 17.768771 30.334451 C 17.960131 30.619266 18.164842 30.895181 18.382904 31.162195 C 18.600965 31.426985 18.832378 31.680648 19.074915 31.925411 C 19.317453 32.167949 19.573342 32.399361 19.838131 32.617423 C 20.105146 32.835485 20.38106 33.040196 20.665876 33.229331 C 20.952916 33.420691 21.246632 33.598701 21.549248 33.761134 C 21.854089 33.921343 22.163381 34.068201 22.481573 34.201708 C 22.799765 34.33299 23.122407 34.448696 23.451724 34.548826 C 23.781042 34.646732 24.11481 34.731286 24.450803 34.79804 C 24.789021 34.864793 25.129464 34.915971 25.469907 34.949348 C 25.812576 34.982725 26.155244 35.000525 26.500137 35.000525 L 32.4 35.000525" transform="matrix(1.755524, 0, 0, 1.755524, 143.095556, 253.919013)"/><path class="tri" d="M 234.382812 278.496094 L 213.316406 296.929688 L 234.382812 296.929688 Z"/></g>
+        <g class="fb"><path class="st" d="M 31.6 35.000525 L 37.4989 35.000525 C 37.843793 35.000525 38.186462 35.016101 38.52913 35.049478 C 38.871798 35.08508 39.212242 35.134033 39.548235 35.200786 C 39.886453 35.269765 40.217995 35.352094 40.547313 35.452225 C 40.876631 35.552355 41.201498 35.668061 41.517465 35.799343 C 41.835657 35.930625 42.147173 36.077483 42.44979 36.239917 C 42.752406 36.40235 43.048347 36.578135 43.333162 36.769495 C 43.620202 36.960855 43.896117 37.165566 44.160906 37.383628 C 44.42792 37.601689 44.681584 37.833102 44.924122 38.07564 C 45.168885 38.318178 45.398072 38.574066 45.616134 38.838856 C 45.834195 39.103645 46.038906 39.379559 46.230267 39.6666 C 46.421627 39.951415 46.597411 40.247356 46.759845 40.549972 C 46.922279 40.852588 47.069136 41.164105 47.200418 41.482297 C 47.3317 41.800489 47.447407 42.123131 47.547537 42.452449 C 47.647667 42.781766 47.732222 43.113309 47.798975 43.451527 C 47.865729 43.789745 47.914682 44.127963 47.950284 44.470632 C 47.98366 44.8133 47.999236 45.155968 47.999236 45.500862 C 47.999236 45.84353 47.98366 46.186198 47.950284 46.528867 C 47.914682 46.871535 47.865729 47.211978 47.798975 47.547971 C 47.732222 47.886189 47.647667 48.219957 47.547537 48.547049 C 47.447407 48.876367 47.3317 49.201234 47.200418 49.517201 C 47.069136 49.835393 46.922279 50.14691 46.759845 50.449526 C 46.597411 50.752142 46.421627 51.048083 46.230267 51.332898 C 46.038906 51.619939 45.834195 51.895853 45.616134 52.160642 C 45.398072 52.427657 45.168885 52.68132 44.924122 52.923858 C 44.681584 53.168621 44.42792 53.397809 44.160906 53.61587 C 43.896117 53.833932 43.620202 54.038643 43.333162 54.230003 C 43.048347 54.421363 42.752406 54.597148 42.44979 54.759581 C 42.147173 54.922015 41.835657 55.068873 41.517465 55.200155 C 41.201498 55.331437 40.876631 55.447143 40.547313 55.547273 C 40.217995 55.647404 39.886453 55.731958 39.548235 55.798712 C 39.212242 55.865465 38.871798 55.916643 38.52913 55.95002 C 38.186462 55.983397 37.843793 55.998973 37.4989 55.998973 L 11.999037 55.998973 L 8.249037 55.998973" transform="matrix(1.755524, 0, 0, 1.755524, 143.095556, 253.919013)"/><path class="tri" d="M 164.160156 352.226562 L 185.226562 333.796875 L 164.160156 333.796875 Z"/></g>
+        <g class="glow" transform="matrix(1.755524, 0, 0, 1.755524, 143.095556, 253.919013)"><circle r="5"/><circle r="4"/><circle r="3.3"/><circle r="2.6"/><circle r="2"/></g>
+      </svg>
+    </div>
+    <p class="isoline">Una S, dos flechas: entrada y salida.</p>
     <div class="bars">
       <div class="bar"><div class="sw" style="background:#1F6C82"></div><div class="nm">Teal</div><div class="hx">#1F6C82</div></div>
       <div class="bar"><div class="sw" style="background:#0B2C40;border-color:rgba(79,179,206,.6)"></div><div class="nm">Petróleo</div><div class="hx">#0B2C40</div></div>
@@ -78,8 +88,8 @@
     </div>
   </section>
 
-  <!-- 6 · Vento -->
-  <section class="slide bg-neg" id="s6" data-title="Todo Stockus, en un solo lugar" aria-label="Diapositiva 6: construido con Vento">
+  <!-- Vento -->
+  <section class="slide bg-neg" id="vento" data-title="Todo Stockus, en un solo lugar">
     <h2 class="title">Todo Stockus, en un solo lugar</h2>
     <p class="def"><b>Vento:</b> plataforma de IA para crear proyectos de hardware, robótica, IoT y automatizaciones con lenguaje natural</p>
     <div class="frame">
@@ -104,13 +114,13 @@
     </div>
   </section>
 
-  <!-- 7 · Demo: video del chatbot -->
-  <section class="slide bg-black" id="s7" data-title="Demo: el chatbot funcionando" aria-label="Diapositiva 7: video del chatbot funcionando">
+  <!-- Demo: video del chatbot -->
+  <section class="slide bg-black" id="demo" data-title="Demo: el chatbot funcionando">
     <video class="vid" src="assets/video/video-chatbot.mp4" poster="assets/video/video-chatbot.jpg" muted playsinline preload="auto"></video>
   </section>
 
-  <!-- 8 · Metodología -->
-  <section class="slide bg-pet" id="s8" data-title="Paso a paso, con Scrum" aria-label="Diapositiva 8: metodología">
+  <!-- Metodología -->
+  <section class="slide bg-pet" id="metodologia" data-title="Paso a paso, con Scrum">
     <div class="ghost word">SCRUM</div>
     <h2 class="title">Paso a paso, con Scrum</h2>
     <div class="big"><span class="cnt">3</span></div>
@@ -125,13 +135,13 @@
     </div>
   </section>
 
-  <!-- 9 · Video: así cambia un depósito -->
-  <section class="slide bg-vid" id="s9" data-title="Así cambia un depósito" aria-label="Diapositiva 9: video, así cambia un depósito">
+  <!-- Video: así cambia un depósito -->
+  <section class="slide bg-vid" id="deposito" data-title="Así cambia un depósito">
     <video class="vid" src="assets/video/animacion-landing.mp4" poster="assets/video/animacion-landing.jpg" muted playsinline preload="auto"></video>
   </section>
 
-  <!-- 10 · Escala -->
-  <section class="slide bg-pet" id="s10" data-title="Crece con cada empresa" aria-label="Diapositiva 10: Stockus crece con cada empresa">
+  <!-- Escala -->
+  <section class="slide bg-pet" id="escala" data-title="Crece con cada empresa">
     <h2 class="title">Crece con cada empresa</h2>
     <div class="cajonera cj1" data-x="72" data-y="470" data-cell="110,110" data-grid="2,2" data-lit="1:0"></div>
     <div class="cajonera cj2" data-x="352" data-y="360" data-cell="110,110" data-grid="3,3" data-lit="1:1,1:2,2:0,2:2"></div>
@@ -152,8 +162,8 @@
     </div>
   </section>
 
-  <!-- 11 · Presupuesto -->
-  <section class="slide bg-pet" id="s11" data-title="Qué entra en el presupuesto" aria-label="Diapositiva 11: cómo se arma el presupuesto">
+  <!-- Presupuesto -->
+  <section class="slide bg-pet" id="presupuesto" data-title="Qué entra en el presupuesto">
     <div class="cajonera" data-x="1240" data-y="-60" data-cell="220,150" data-grid="4,3" data-lit="1:2"></div>
     <h2 class="title">Qué entra en el presupuesto</h2>
     <div class="row">
@@ -165,8 +175,8 @@
     </div>
   </section>
 
-  <!-- 12 · Punto de equilibrio -->
-  <section class="slide bg-pet" id="s12" data-title="Nuestro punto de equilibrio" aria-label="Diapositiva 12: punto de equilibrio">
+  <!-- Punto de equilibrio -->
+  <section class="slide bg-pet" id="equilibrio" data-title="Nuestro punto de equilibrio">
     <div class="cajonera" data-x="1240" data-y="-60" data-cell="220,150" data-grid="4,3" data-lit="1:2"></div>
     <h2 class="title">Nuestro punto de equilibrio</h2>
     <div class="formula">
@@ -179,8 +189,8 @@
     <div class="frase">Las ventas por mes que cubren nuestros gastos fijos</div>
   </section>
 
-  <!-- 13 · Caso y pago -->
-  <section class="slide bg-pet" id="s13" data-title="Un caso real y cómo se paga" aria-label="Diapositiva 13: un caso real y cómo se paga">
+  <!-- Caso y pago -->
+  <section class="slide bg-pet" id="pago" data-title="Un caso real y cómo se paga">
     <div class="cajonera" data-x="1240" data-y="-60" data-cell="220,150" data-grid="4,3" data-lit="1:2"></div>
     <h2 class="title">Un caso real y cómo se paga</h2>
     <div class="hds box">
@@ -207,25 +217,36 @@
     </div>
   </section>
 
-  <!-- 14 · Conclusiones -->
-  <section class="slide bg-pet" id="s14" data-title="Lo que logramos" aria-label="Diapositiva 14: conclusiones">
-    <div class="cajonera" data-x="1240" data-y="-60" data-cell="220,150" data-grid="4,3" data-lit="1:2"></div>
-    <h2 class="title">Lo que logramos</h2>
-    <div class="aff">
-      <div><span class="n">01</span><span class="t">Un problema real, resuelto con luz.</span></div>
-      <div><span class="n">02</span><span class="t">Sin internet, sigue funcionando.</span></div>
-      <div><span class="n">03</span><span class="t">Cada producto, a un LED de distancia.</span></div>
-    </div>
-    <div class="vento" id="s14vento" data-text="Construido sobre Vento">Construido sobre Vento</div>
-    <div class="next">
-      <div class="tag">Lo que viene</div>
-      <p>Primeros clientes, relevamiento a relevamiento</p>
-      <p>Cada instalación, acompañada: soporte y mantenimiento</p>
-    </div>
+  <!-- Conclusiones · versión A: el estante que se abre -->
+  <section class="slide bg-pet" id="conclusiones-a" data-title="Conclusiones (versión A): el estante que se abre">
+    <div class="cajonera estante" data-x="-30" data-y="-30" data-cell="180,160" data-grid="12,7"></div>
+    <div class="dr d1" data-key-in style="left:154px;top:134px;width:1252px;height:152px"><div class="halo"></div><div class="in"><p>Un problema real, resuelto con luz.</p></div><div class="front"></div></div>
+    <div class="dr d2" style="left:334px;top:294px;width:1432px;height:152px"><div class="halo"></div><div class="in"><p>Funciona donde otros se caen: sin internet.</p></div><div class="front"></div></div>
+    <div class="dr d3" style="left:514px;top:454px;width:1252px;height:152px"><div class="halo"></div><div class="in"><p>Cada producto, a un LED de distancia.</p></div><div class="front"></div></div>
+    <div class="dr d4 grande" data-key-out style="left:694px;top:614px;width:1072px;height:312px"><div class="halo"></div><div class="in"><h3>Lo que viene</h3><p>Primeros clientes, relevamiento a relevamiento</p><p>Cada instalación, acompañada: soporte y mantenimiento</p></div><div class="front"></div></div>
+    <div class="vento">Construido sobre Vento</div>
   </section>
 
-  <!-- 15 · Cierre -->
-  <section class="slide bg-pet" id="s15" data-title="Gracias" aria-label="Diapositiva 15: gracias, preguntas">
+  <!-- Conclusiones · versión B: la conversación con Stockus -->
+  <section class="slide bg-pet" id="conclusiones-b" data-title="Conclusiones (versión B): la conversación con Stockus">
+    <div class="cajonera tenue" data-x="-30" data-y="-30" data-cell="180,160" data-grid="12,7"></div>
+    <div class="qb q1"><span class="tx" data-full="Stockus, ¿qué dejó este proyecto?">Stockus, ¿qué dejó este proyecto?</span></div>
+    <div class="led" data-key><div class="halo"></div><i></i></div>
+    <div class="ans a1">
+      <p class="tx" data-full="Un problema real, resuelto con luz.">Un problema real, resuelto con luz.</p>
+      <p class="tx" data-full="Funciona sin internet.">Funciona sin internet.</p>
+      <p class="tx" data-full="Cada producto, a un LED de distancia.">Cada producto, a un LED de distancia.</p>
+    </div>
+    <div class="qb q2"><span class="tx" data-full="¿Y ahora?">¿Y ahora?</span></div>
+    <div class="ans a2">
+      <p class="tx big" data-full="Primeros clientes.">Primeros clientes.</p>
+      <p class="tx sub" data-full="Relevamiento a relevamiento. Cada instalación, acompañada.">Relevamiento a relevamiento. Cada instalación, acompañada.</p>
+    </div>
+    <div class="vento">Construido sobre Vento</div>
+  </section>
+
+  <!-- Cierre -->
+  <section class="slide bg-pet" id="cierre" data-title="Gracias">
     <canvas class="particles" width="1920" height="1080"></canvas>
     <div class="halo" data-key></div>
     <div class="gr">Gracias</div>
@@ -240,6 +261,7 @@
   <div id="blackout"></div>
 </div>
 <button id="fsbtn" type="button" aria-label="Pantalla completa (F)"><svg viewBox="0 0 20 20"><path d="M3 7V3h4M13 3h4v4M17 13v4h-4M7 17H3v-4"/></svg></button>
+<script src="js/orden.js"></script>
 <script src="js/notas.js"></script>
 <script src="js/app.js"></script>
 </body>
