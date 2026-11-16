@@ -25,10 +25,9 @@
   </section>
 
   <!-- 3 · LEDs y tecnología -->
-  <section class="slide bg-pet" id="s3" data-title="LEDs y tecnología" aria-label="Diapositiva 3: LEDs y tecnología">
+  <section class="slide bg-pet" id="s3" data-title="Así se enciende la luz" aria-label="Diapositiva 3: LEDs y tecnología">
     <div class="cajonera" data-x="1330" data-y="150" data-cell="260,200" data-grid="3,4" data-lit="2:1"></div>
-    <div class="label">03 · Metodología de la luz</div>
-    <h2 class="title">LEDs y tecnología</h2>
+    <h2 class="title">Así se enciende la luz</h2>
     <div class="flow">
       <svg class="lines" viewBox="0 0 1240 280">
         <path class="c1" d="M320 85 H460 M444 75 L460 85 L444 95"/>
@@ -37,7 +36,7 @@
       <div class="node n1"><span class="tag">Raspberry Pi</span><span class="sm">computadora central</span></div>
       <div class="node n2"><span class="tag">ESP8266</span><span class="sm">control de la tira</span></div>
       <div class="wifi">WIFI</div>
-      <div class="node n3"><div class="strip" data-n="10" data-w="48" data-on="0,1,2,3,4,5,6"></div></div>
+      <div class="node n3"><div class="strip run" data-n="10" data-w="48" data-on="0,1,2,3,4,5,6"></div></div>
       <div class="tag" style="position:absolute;left:920px;top:196px;width:320px;font-size:26px">Tira de LEDs inteligentes</div>
     </div>
     <div class="pill tag">Red local · sin internet</div>
@@ -49,79 +48,24 @@
   </section>
 
   <!-- 4 · Equipo -->
-  <section class="slide bg-pet" id="s4" data-title="Equipo" aria-label="Diapositiva 4: equipo">
-    <img class="logo" src="assets/img/solvus-isologotipo-horizontal-blanco.svg" alt="Solvus">
-    <div class="label">04 · Quiénes somos</div>
-    <h2 class="title">Equipo</h2>
+  <section class="slide bg-pet" id="s4" data-title="Somos Solvus" aria-label="Diapositiva 4: equipo">
+    <h2 class="title">Somos Solvus</h2>
+    <img class="logo" src="assets/img/solvus-isologotipo-horizontal-blanco.png" alt="Solvus">
     <div class="grid">
-      <div class="card box key" data-key><i class="dw"></i><div class="num"><span class="n">01</span></div><div class="name">Gonzalo Ferrero</div><div class="role">Coordinador / Facilitador</div></div>
-      <div class="card box"><i class="dw"></i><div class="num"><span class="n">02</span></div><div class="name">Francisco Farías</div><div class="role">Comunicación</div></div>
-      <div class="card box"><i class="dw"></i><div class="num"><span class="n">03</span></div><div class="name">Luana Beltramone</div><div class="role">Documentación</div></div>
-      <div class="card box"><i class="dw"></i><div class="num"><span class="n">04</span></div><div class="name">Pedro Cabezas</div><div class="role">Desarrollador / Investigador</div></div>
-      <div class="card box"><i class="dw"></i><div class="num"><span class="n">05</span></div><div class="name">Luciano Albarracín</div><div class="role">Desarrollador / Investigador</div></div>
-      <div class="card box"><i class="dw"></i><div class="num"><span class="n">06</span></div><div class="name">Thomas Spalletti</div><div class="role">Desarrollador / Investigador</div></div>
+      <div class="card box"><i class="dw" data-key-in></i><div class="num">01</div><div class="who"><div class="name">Gonzalo Ferrero</div><div class="role">Scrum Master</div><div class="sub">Coordinador / Facilitador</div></div></div>
+      <div class="card box"><i class="dw"></i><div class="num">02</div><div class="who"><div class="name">Francisco Farias</div><div class="role">Product Owner</div><div class="sub">Comunicación</div></div></div>
+      <div class="card box"><i class="dw"></i><div class="num">03</div><div class="who"><div class="name">Luana Beltramone</div><div class="role">Documentación</div><div class="sub">&nbsp;</div></div></div>
+      <div class="card box"><i class="dw"></i><div class="num">04</div><div class="who"><div class="name">Pedro Cabezas</div><div class="role">Desarrollador / Investigador</div><div class="sub">&nbsp;</div></div></div>
+      <div class="card box"><i class="dw"></i><div class="num">05</div><div class="who"><div class="name">Luciano Albarracin</div><div class="role">Desarrollador / Investigador</div><div class="sub">&nbsp;</div></div></div>
+      <div class="card box"><i class="dw" data-key-out></i><div class="num">06</div><div class="who"><div class="name">Thomas Spalletti</div><div class="role">Desarrollador / Investigador</div><div class="sub">&nbsp;</div></div></div>
     </div>
   </section>
 
-  <!-- 5 · Vento -->
-  <section class="slide bg-neg" id="s5" data-title="Construido con Vento" aria-label="Diapositiva 5: construido con Vento">
-    <div class="label">05 · Con qué lo construimos</div>
-    <h2 class="title">Construido con Vento</h2>
-    <div class="frame">
-      <div class="inner" style="position:absolute;left:0;top:0;width:1146px;height:690px;transform:scale(1.0602);transform-origin:0 0">
-        <img class="shot" src="assets/img/vento-flujo.png" alt="Área de trabajo cesd en Vento: tres bases de datos, un dispositivo Raspberry Pi, cuatro páginas y dos agentes conectados">
-        <svg class="over" viewBox="0 0 1146 690">
-          <rect class="hl h1" x="208" y="146" width="280" height="80"/>
-          <rect class="hl h2" x="532" y="139" width="92" height="90"/>
-          <rect class="hl h3" x="54" y="479" width="459" height="146"/>
-          <rect class="hl h4" x="551" y="479" width="105" height="104"/>
-          <rect class="hl h5" x="986" y="479" width="105" height="104"/>
-          <path class="ln l1" d="M350 124 V146"/>
-          <path class="ln l2" d="M624 184 H650"/>
-          <path class="ln l3" d="M283 640 V625"/>
-          <path class="ln l4" d="M392 656 H1038 M604 656 V585 M1038 656 V585"/>
-        </svg>
-        <div class="vig"></div>
-        <div class="data d1" style="left:215px;top:98px">3 BASES DE DATOS</div>
-        <div class="data d2" style="left:652px;top:170px">1 RASPBERRY PI EN LÍNEA</div>
-        <div class="data d3" style="left:56px;top:640px">4 PÁGINAS · 2 AGENTES DE IA</div>
-      </div>
-    </div>
-    <div class="halo"></div>
-    <div class="drawer" data-key>VENTO</div>
-    <div class="cap">Todo Stockus vive en un solo lugar y conectado entre sí.</div>
-    <div class="cap2 tag">usuarios · inventario · movimientos</div>
-  </section>
-
-  <!-- 6 · Demo: video del chatbot -->
-  <section class="slide bg-black" id="s6" data-title="Demo: el chatbot funcionando" aria-label="Diapositiva 6: video del chatbot funcionando">
-    <video class="vid" src="assets/video/video-chatbot.mp4" poster="assets/video/video-chatbot.jpg" muted playsinline preload="auto"></video>
-  </section>
-
-  <!-- 7 · Metodología -->
-  <section class="slide bg-pet" id="s7" data-title="Cómo lo construimos" aria-label="Diapositiva 7: metodología">
-    <div class="ghost word" style="left:640px;top:520px">SCRUM</div>
-    <div class="label">07 · Metodología</div>
-    <h2 class="title">Cómo lo construimos</h2>
-    <div class="big"><span class="cnt">3</span></div>
-    <div class="bigl">SPRINTS</div>
-    <div class="bigl2">SCRUM · TRELLO · HISTORIAS DE USUARIO</div>
-    <div class="halo"></div>
-    <div class="tl">
-      <div class="line"></div><div class="fill"></div>
-      <div class="nd" style="left:0"><div class="dotn"><b></b></div><div class="tag">Sprint 1</div><p>Primeras historias de usuario</p></div>
-      <div class="nd" style="left:410px"><div class="dotn"><b></b></div><div class="tag">Sprint 2</div><p>Software propio terminado</p></div>
-      <div class="nd last" style="left:820px" data-key><div class="dotn"><b></b></div><div class="tag">Sprint 3</div><p>LEDs inteligentes funcionando con el software</p></div>
-    </div>
-    <div class="trello"><span>captura de Trello</span></div>
-  </section>
-
-  <!-- 8 · Identidad -->
-  <section class="slide bg-pet" id="s8" data-title="Identidad" aria-label="Diapositiva 8: identidad de marca">
-    <div class="label">08 · Identidad</div>
-    <h2 class="title">Identidad de Solvus</h2>
-    <img class="logo" data-key src="assets/img/solvus-isologotipo-horizontal-blanco.svg" alt="Isologotipo horizontal de Solvus">
-    <div class="tag cap8">Isotipo: una S de dos flechas, entrada y salida de mercadería</div>
+  <!-- 5 · Identidad -->
+  <section class="slide bg-pet" id="s5" data-title="Una marca clara y sobria" aria-label="Diapositiva 5: identidad de marca">
+    <h2 class="title">Una marca clara y sobria</h2>
+    <img class="logo" data-key src="assets/img/solvus-isologotipo-horizontal-blanco.png" alt="Isologotipo horizontal de Solvus">
+    <div class="tag cap5">Isotipo: una S de dos flechas, entrada y salida de mercadería</div>
     <div class="bars">
       <div class="bar"><div class="sw" style="background:#1F6C82"></div><div class="nm">Teal</div><div class="hx">#1F6C82</div></div>
       <div class="bar"><div class="sw" style="background:#0B2C40;border-color:rgba(79,179,206,.6)"></div><div class="nm">Petróleo</div><div class="hx">#0B2C40</div></div>
@@ -134,23 +78,72 @@
     </div>
   </section>
 
+  <!-- 6 · Vento -->
+  <section class="slide bg-neg" id="s6" data-title="Todo Stockus, en un solo lugar" aria-label="Diapositiva 6: construido con Vento">
+    <h2 class="title">Todo Stockus, en un solo lugar</h2>
+    <p class="def"><b>Vento:</b> plataforma de IA para crear proyectos de hardware, robótica, IoT y automatizaciones con lenguaje natural</p>
+    <div class="frame">
+      <div class="inner">
+        <div class="halo hub"></div>
+        <img class="shot" src="assets/img/vento-flujo-hd.png" alt="Espacio de trabajo cesd en Vento: tres bases de datos, una Raspberry Pi, cuatro páginas y dos agentes de IA conectados al centro">
+        <svg class="over" viewBox="0 0 1902 880">
+          <rect class="hl h0" data-key x="797" y="368" width="324" height="181"/>
+          <rect class="hl h1" x="302" y="20" width="496" height="276"/>
+          <rect class="hl h2" x="889" y="4" width="156" height="290"/>
+          <rect class="hl h3" x="24" y="622" width="818" height="254"/>
+          <rect class="hl h4" x="926" y="622" width="177" height="184"/>
+          <rect class="hl h5" x="1716" y="622" width="177" height="184"/>
+          <path class="ln l1" d="M400 296 V312"/>
+          <path class="ln l2" d="M1045 64 H1082"/>
+          <path class="ln l3" d="M433 586 V622 M842 586 H1809 V622 M1014 586 V622"/>
+        </svg>
+        <div class="data d1" style="left:306px;top:312px">3 BASES DE DATOS</div>
+        <div class="data d2" style="left:1090px;top:42px">1 RASPBERRY PI EN LÍNEA</div>
+        <div class="data d3" style="left:28px;top:564px">4 PÁGINAS · 2 AGENTES DE IA</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 · Demo: video del chatbot -->
+  <section class="slide bg-black" id="s7" data-title="Demo: el chatbot funcionando" aria-label="Diapositiva 7: video del chatbot funcionando">
+    <video class="vid" src="assets/video/video-chatbot.mp4" poster="assets/video/video-chatbot.jpg" muted playsinline preload="auto"></video>
+  </section>
+
+  <!-- 8 · Metodología -->
+  <section class="slide bg-pet" id="s8" data-title="Paso a paso, con Scrum" aria-label="Diapositiva 8: metodología">
+    <div class="ghost word">SCRUM</div>
+    <h2 class="title">Paso a paso, con Scrum</h2>
+    <div class="big"><span class="cnt">3</span></div>
+    <div class="bigl">SPRINTS</div>
+    <div class="bigl2">SCRUM · TRELLO · HISTORIAS DE USUARIO</div>
+    <div class="tl">
+      <div class="halo"></div>
+      <div class="line"></div><div class="fill"></div>
+      <div class="nd" style="left:0"><div class="dotn"><b></b></div><div class="tag">Sprint 1</div><p>Investigación general y límites del proyecto</p></div>
+      <div class="nd" style="left:620px"><div class="dotn"><b></b></div><div class="tag">Sprint 2</div><p>Desarrollo del software</p></div>
+      <div class="nd last" style="left:1240px"><div class="dotn" data-key><b></b></div><div class="tag">Sprint 3</div><p>Software integrado con el hardware</p></div>
+    </div>
+  </section>
+
   <!-- 9 · Video: así cambia un depósito -->
-  <section class="slide bg-black" id="s9" data-title="Así cambia un depósito" aria-label="Diapositiva 9: video, así cambia un depósito">
+  <section class="slide bg-vid" id="s9" data-title="Así cambia un depósito" aria-label="Diapositiva 9: video, así cambia un depósito">
     <video class="vid" src="assets/video/animacion-landing.mp4" poster="assets/video/animacion-landing.jpg" muted playsinline preload="auto"></video>
   </section>
 
   <!-- 10 · Escala -->
-  <section class="slide bg-pet" id="s10" data-title="Stockus escala con cada empresa" aria-label="Diapositiva 10: Stockus escala con cada empresa">
-    <div class="ghost" style="left:1180px;top:60px">∞</div>
-    <div class="label">10 · Modelo de precio</div>
-    <h2 class="title">Stockus escala con cada empresa</h2>
-    <div class="cajonera cj1" data-x="72" data-y="460" data-cell="100,100" data-grid="2,2" data-lit="1:0"></div>
-    <div class="cajonera cj2" data-x="312" data-y="360" data-cell="100,100" data-grid="3,3" data-lit="1:1,1:2,2:0,2:2"></div>
-    <div class="cajonera cj3" data-key data-x="652" data-y="260" data-cell="100,100" data-grid="5,4" data-lit="1:1,1:2,1:3,2:0,2:1,2:2,2:4,3:0,3:2,3:3,3:4,0:3"></div>
-    <div class="caps" style="left:72px;top:672px">UNA ZONA</div>
-    <div class="caps" style="left:312px;top:672px">VARIAS ZONAS</div>
-    <div class="caps" style="left:652px;top:672px">TODO EL DEPÓSITO</div>
-    <div class="phrase">Se adapta a cualquier depósito. <b>Por eso no hay un precio único, y esa es su ventaja.</b> Primero hacemos un relevamiento y armamos una propuesta a medida, con presupuesto y plazo.</div>
+  <section class="slide bg-pet" id="s10" data-title="Crece con cada empresa" aria-label="Diapositiva 10: Stockus crece con cada empresa">
+    <h2 class="title">Crece con cada empresa</h2>
+    <div class="cajonera cj1" data-x="72" data-y="470" data-cell="110,110" data-grid="2,2" data-lit="1:0"></div>
+    <div class="cajonera cj2" data-x="352" data-y="360" data-cell="110,110" data-grid="3,3" data-lit="1:1,1:2,2:0,2:2"></div>
+    <div class="cajonera cj3" data-key data-x="742" data-y="250" data-cell="110,110" data-grid="5,4" data-lit="1:1,1:2,1:3,2:0,2:1,2:2,2:4,3:0,3:2,3:3,3:4,0:3"></div>
+    <div class="caps" style="left:72px;top:712px">UNA ZONA</div>
+    <div class="caps" style="left:352px;top:712px">VARIAS ZONAS</div>
+    <div class="caps" style="left:742px;top:712px">TODO EL DEPÓSITO</div>
+    <div class="keys">
+      <div class="k"><div class="w">ESCALABLE</div><div class="s">De una zona a todo el depósito</div></div>
+      <div class="k"><div class="w">A MEDIDA</div><div class="s">Lo que cada cliente necesita</div></div>
+      <div class="k"><div class="w">SIN PRECIO ÚNICO</div><div class="s">Y esa es su ventaja</div></div>
+    </div>
     <div class="steps">
       <div class="strip" data-n="57" data-w="22"></div>
       <div class="st" style="left:0"><small>01</small>RELEVAMIENTO</div>
@@ -160,10 +153,9 @@
   </section>
 
   <!-- 11 · Presupuesto -->
-  <section class="slide bg-pet" id="s11" data-title="Cómo se arma el presupuesto" aria-label="Diapositiva 11: cómo se arma el presupuesto">
+  <section class="slide bg-pet" id="s11" data-title="Qué entra en el presupuesto" aria-label="Diapositiva 11: cómo se arma el presupuesto">
     <div class="cajonera" data-x="1240" data-y="-60" data-cell="220,150" data-grid="4,3" data-lit="1:2"></div>
-    <div class="label">11 · Presupuesto</div>
-    <h2 class="title">Cómo se arma el presupuesto</h2>
+    <h2 class="title">Qué entra en el presupuesto</h2>
     <div class="row">
       <div class="pc a" data-key><div class="tag">Costo fijo · igual para todos</div><h3>Software</h3><ul><li>Hardware base: Raspberry Pi, ESP8266 y fuente</li></ul></div>
       <div class="plus"><svg viewBox="0 0 56 56"><path d="M28 8 V48"/><path d="M8 28 H48"/></svg></div>
@@ -174,25 +166,23 @@
   </section>
 
   <!-- 12 · Punto de equilibrio -->
-  <section class="slide bg-pet" id="s12" data-title="Punto de equilibrio" aria-label="Diapositiva 12: punto de equilibrio">
+  <section class="slide bg-pet" id="s12" data-title="Nuestro punto de equilibrio" aria-label="Diapositiva 12: punto de equilibrio">
     <div class="cajonera" data-x="1240" data-y="-60" data-cell="220,150" data-grid="4,3" data-lit="1:2"></div>
-    <div class="label">12 · Punto de equilibrio</div>
-    <h2 class="title">Punto de equilibrio</h2>
+    <h2 class="title">Nuestro punto de equilibrio</h2>
     <div class="formula">
-      <span class="t">SUELDOS DEL EQUIPO</span><span class="op">÷</span><span class="t">LO QUE DEJA CADA VENTA</span><span class="op">=</span><span class="t">SISTEMAS POR MES</span>
+      <span class="t">GASTOS FIJOS</span><span class="op">÷</span><span class="t">LO QUE DEJA CADA VENTA</span><span class="op">=</span><span class="t">SISTEMAS POR MES</span>
     </div>
     <div class="num1"><span class="a">2</span>–<span class="b">3</span></div>
     <div class="lab1">SISTEMAS POR MES · JORNADA COMPLETA</div>
     <div class="num2">½</div>
     <div class="lab2">MEDIA JORNADA: APROXIMADAMENTE LA MITAD</div>
-    <div class="frase">Es la cantidad de ventas mensuales que cubre al equipo.</div>
+    <div class="frase">Las ventas por mes que cubren nuestros gastos fijos</div>
   </section>
 
   <!-- 13 · Caso y pago -->
-  <section class="slide bg-pet" id="s13" data-title="Un ejemplo y cómo se paga" aria-label="Diapositiva 13: un ejemplo y cómo se paga">
+  <section class="slide bg-pet" id="s13" data-title="Un caso real y cómo se paga" aria-label="Diapositiva 13: un caso real y cómo se paga">
     <div class="cajonera" data-x="1240" data-y="-60" data-cell="220,150" data-grid="4,3" data-lit="1:2"></div>
-    <div class="label">13 · Caso de referencia y pago</div>
-    <h2 class="title">Un ejemplo y cómo se paga</h2>
+    <h2 class="title">Un caso real y cómo se paga</h2>
     <div class="hds box">
       <div class="tag">HDS · Empresa mediana</div>
       <div class="big"><span class="a">2</span>–<span class="b">3</span><small>meses</small></div>
@@ -201,29 +191,36 @@
       <div class="fases">Siempre por fases</div>
     </div>
     <div class="pay">
-      <div class="strip" data-n="20" data-w="38" data-groups="10,6,4"></div>
-      <div class="tr t1"><div class="pc"><span class="v">50</span> %</div><div class="tx"><b>Al firmar</b>cubre el hardware</div></div>
-      <div class="tr t2"><div class="pc"><span class="v">30</span> %</div><div class="tx"><b>Al terminar la instalación</b></div></div>
-      <div class="tr t3"><div class="pc"><span class="v">20</span> %</div><div class="tx"><b>Al finalizar la capacitación</b>con la conformidad del cliente</div></div>
+      <div class="head">Se paga a medida que se ve el resultado</div>
+      <div class="rule"></div>
+      <div class="pcs">
+        <div class="pc p1"><span class="v">50</span><i>%</i></div>
+        <div class="pc p2"><span class="v">30</span><i>%</i></div>
+        <div class="pc p3"><span class="v">20</span><i>%</i></div>
+      </div>
+      <div class="strip" data-n="20" data-w="48" data-groups="10,6,4"></div>
+      <div class="labs">
+        <div class="lb l1"><b>Al firmar</b><span>cubre el hardware</span></div>
+        <div class="lb l2"><b>Instalación</b><span>al terminarla</span></div>
+        <div class="lb l3"><b>Capacitación</b><span>con conformidad</span></div>
+      </div>
     </div>
-    <div class="final">El cliente paga a medida que ve resultados.</div>
   </section>
 
   <!-- 14 · Conclusiones -->
-  <section class="slide bg-neg" id="s14" data-title="Conclusiones" aria-label="Diapositiva 14: conclusiones">
+  <section class="slide bg-pet" id="s14" data-title="Lo que logramos" aria-label="Diapositiva 14: conclusiones">
     <div class="cajonera" data-x="1240" data-y="-60" data-cell="220,150" data-grid="4,3" data-lit="1:2"></div>
-    <div class="label">14 · Conclusiones</div>
-    <h2 class="title">Conclusiones</h2>
+    <h2 class="title">Lo que logramos</h2>
     <div class="aff">
-      <div><span class="n">01</span><span class="t">Resolvimos un problema real</span></div>
-      <div><span class="n">02</span><span class="t">Funciona sin internet</span></div>
-      <div><span class="n">03</span><span class="t">Ubica cada producto con LEDs inteligentes</span></div>
+      <div><span class="n">01</span><span class="t">Un problema real, resuelto con luz.</span></div>
+      <div><span class="n">02</span><span class="t">Sin internet, sigue funcionando.</span></div>
+      <div><span class="n">03</span><span class="t">Cada producto, a un LED de distancia.</span></div>
     </div>
     <div class="vento" id="s14vento" data-text="Construido sobre Vento">Construido sobre Vento</div>
     <div class="next">
-      <div class="tag">Próximos pasos</div>
-      <p>Primeros clientes, siempre empezando con un relevamiento</p>
-      <p>Soporte y mantenimiento</p>
+      <div class="tag">Lo que viene</div>
+      <p>Primeros clientes, relevamiento a relevamiento</p>
+      <p>Cada instalación, acompañada: soporte y mantenimiento</p>
     </div>
   </section>
 
@@ -233,11 +230,11 @@
     <div class="halo" data-key></div>
     <div class="gr">Gracias</div>
     <div class="q">¿Preguntas?</div>
-    <img class="iso" src="assets/img/solvus-isologotipo-horizontal-blanco.svg" alt="Solvus">
+    <img class="iso" src="assets/img/solvus-isologotipo-horizontal-blanco.png" alt="Solvus">
     <div class="strip" data-n="30" data-w="40"></div>
   </section>
 
-  <div id="foot"><span class="l">SOLVUS · STOCKUS 2026</span><span class="bar"></span><span class="r"></span></div>
+  <div id="foot"><span class="bar"></span></div>
   <div id="travel"><div class="d"></div></div>
   <div class="grain"></div>
   <div id="blackout"></div>

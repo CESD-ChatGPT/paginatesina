@@ -11,9 +11,9 @@
   const params = new URLSearchParams(location.search);
   const LITE = params.has('lite');
   const REDUCE = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const VIDEO_SLIDES = [5, 8];
-  const NO_FOOT = [0, 1, 5, 8, 14];
-  const COLD_CUTS = new Set([5, 8]);          // alrededor de los videos no hay transición
+  const VIDEO_SLIDES = [6, 8];                 // diapositivas 7 y 9
+  const NO_FOOT = [0, 1, 6, 8, 14];
+  const COLD_CUTS = new Set([6, 8]);          // alrededor de los videos no hay transición (6→7, 7→8, 8→9, 9→10)
   const SVGNS = 'http://www.w3.org/2000/svg';
   if (LITE) stage.classList.add('lite');
   if (LITE) document.documentElement.classList.add('lite');
@@ -84,6 +84,7 @@
   }
   buildStrips();
   buildCajoneras();
+  stage.querySelectorAll('#s4 .dw').forEach((d) => d.appendChild(document.createElement('b')));   // luz del cajón de cada tarjeta
 
   /* ---------- Coreografía: helpers ---------- */
   const ease = (p) => 1 - Math.pow(1 - p, 3);
@@ -113,6 +114,17 @@
     const api = {
       q, A, T,
       cancel() { anims.forEach((a) => { try { a.cancel(); } catch (e) { /* ya cancelada */ } }); cancels.forEach((c) => c()); },
+      loop(fn, o = {}) {                      // bucle continuo con rAF; se corta al salir de la diapositiva
+        if (REDUCE) return;
+        let id = 0, t0 = 0;
+        const startAt = performance.now() + (instant ? 0 : (base + (o.delay || 0)) * 1000);
+        const step = (now) => {
+          if (now >= startAt) { if (!t0) { t0 = now; if (o.init) o.init(); } fn((now - t0) / 1000); }
+          id = requestAnimationFrame(step);
+        };
+        id = requestAnimationFrame(step);
+        cancels.push(() => { cancelAnimationFrame(id); if (o.reset) o.reset(); });
+      },
       rise(sel, o = {}) {
         q(sel).forEach((e, i) => A(e, [{ opacity: 0, translate: `0 ${o.dist ?? 24}px` }, { opacity: 1, translate: '0 0' }], { delay: (o.delay || 0) + i * (o.stagger ?? .07), dur: o.dur ?? .6 }));
       },
@@ -172,13 +184,22 @@
     return api;
   }
 
-  /* ---------- Coreografía por diapositiva ---------- */
+  /* ---------- Coreografía por diapositiva (índice desde 0) ---------- */
+  // Tira de la 3: recorrido de luz continuo, de izquierda a derecha, con pausa corta.
+  const RUN_SEG = .11, RUN_CYCLE = 2.3, RUN_BASE = .22, RUN_DRAWER_SEG = 6;
+  function runLevel(h, i) {
+    const d = h - i;
+    if (d < -1) return 0;
+    if (d < 0) return 1 + d;                       // entra la luz
+    return Math.exp(-d / 2.2);                     // estela que se apaga
+  }
   const ENTER = {
     1(c, s) {
       const dot = s.querySelector('.dot'), halo = s.querySelector('.center .halo'), logo = s.querySelector('.logo');
       c.A(dot, [{ opacity: 0, scale: '.2' }, { opacity: 1, scale: '1' }], { dur: .5 });
       c.A(halo, [{ opacity: 0, scale: '.12' }, { opacity: 1, scale: '1' }], { delay: .2, dur: 1.3 });
-      c.A(logo, [{ clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)' }], { delay: .9, dur: 1.2, ease: EO });
+      // la máscara abre más allá del texto: nunca recorta las letras
+      c.A(logo, [{ clipPath: 'inset(-25% 100% -25% -10%)' }, { clipPath: 'inset(-25% -10% -25% -10%)' }], { delay: .9, dur: 1.2, ease: EO });
       c.A(dot, [{ opacity: 1 }, { opacity: 0 }], { delay: 2.1, dur: .5 });
       c.segs('.strip', { delay: 2.0, gap: .033 });
       c.A(s.querySelector('.strip'), [{ opacity: 0 }, { opacity: 1 }], { delay: 1.9, dur: .2 });
@@ -187,7 +208,7 @@
     },
     2(c, s) {
       c.fade('.cajonera svg', { dur: .8 });
-      c.rise('.label,.title', { stagger: .08 });
+      c.rise('.title');
       c.draw('.c1', { delay: .6, dur: .5 });
       c.draw('.c2', { delay: 1.1, dur: .5 });
       c.rise('.node', { delay: .25, stagger: .3 });
@@ -196,30 +217,58 @@
       c.rise('.pill', { delay: .9 });
       c.rise('.phrases p', { delay: .9, stagger: .22 });
       c.drawer('.cajonera', { delay: 1.7 });
-    },
-    3(c, s) {
-      c.rise('.logo,.label,.title', { stagger: .08 });
-      c.rise('.card', { delay: .25, stagger: .08 });
-      s.querySelectorAll('.card .n').forEach((n, i) => c.count(n, i + 1, { pad: 2, delay: .35 + i * .08, dur: .8 }));
-    },
-    4(c, s) {
-      c.rise('.label,.title', { stagger: .08 });
-      c.fade('.frame', { dur: .5 });
-      c.A(s.querySelector('.shot'), [{ opacity: 0, scale: '1.03' }, { opacity: 1, scale: '1' }], { dur: 1.6 });
-      c.A(s.querySelector('.drawer'), [{ opacity: 0 }, { opacity: 1 }], { delay: .4, dur: .5 });
-      c.A(s.querySelector('.halo'), [{ opacity: 0 }, { opacity: 1 }], { delay: .4, dur: .9 });
-      c.rise('.cap', { delay: .8 });
-      c.rise('.cap2', { delay: 1.1, dist: 10 });
-      const hl = [['.h1', '.l1', '.d1'], ['.h2', '.l2', '.d2'], ['.h3', '.l3', '.d3'], ['.h4', '.l4', null], ['.h5', null, null]];
-      hl.forEach(([h, l, d], i) => {
-        const t = 1.0 + i * .28;
-        c.draw(h, { delay: t, dur: .5 });
-        if (l) c.draw(l, { delay: t + .1, dur: .5 });
-        if (d) c.rise(d, { delay: t + .3, dur: .4, dist: 8 });
+      // bucle: la luz recorre la tira y el cajón iluminado se enciende cuando pasa por su segmento
+      const bs = [...s.querySelectorAll('.n3 .seg b')];
+      const lit = s.querySelector('.cajonera .lit'), lhalo = s.querySelector('.cajonera .halo');
+      const own = [...bs, lit, lhalo];
+      c.loop((t) => {
+        const h = (t % RUN_CYCLE) / RUN_SEG - 1;
+        bs.forEach((b, i) => { b.style.opacity = (RUN_BASE + (1 - RUN_BASE) * runLevel(h, i)).toFixed(3); });
+        const v = runLevel(h, RUN_DRAWER_SEG);
+        lit.style.opacity = (.3 + .7 * v).toFixed(3);
+        lhalo.style.opacity = (.15 + .85 * v).toFixed(3);
+      }, {
+        delay: 2.7,
+        init: () => own.forEach((e) => e.getAnimations().forEach((a) => a.cancel())),
+        reset: () => own.forEach((e) => { e.style.opacity = ''; })
       });
     },
-    6(c, s) {
-      c.rise('.label,.title', { stagger: .08 });
+    3(c, s) {
+      c.rise('.title');
+      c.rise('.logo', { delay: .1, dist: 12 });
+      // cascada pareja: todas las tarjetas igual, ninguna destacada
+      s.querySelectorAll('.card').forEach((card, i) => {
+        const t = .25 + i * .1;
+        c.rise(card, { delay: t, dur: .6 });
+        c.A(card.querySelector('.dw b'), [{ opacity: 0 }, { opacity: 1 }], { delay: t + .35, dur: .4 });
+      });
+    },
+    4(c, s) {
+      c.rise('.title');
+      c.A(s.querySelector('.logo'), [{ opacity: 0, translate: '0 12px' }, { opacity: 1, translate: '0 0' }], { delay: .05, dur: .7 });
+      c.rise('.cap5', { delay: .5, dist: 10 });
+      s.querySelectorAll('.bar .sw').forEach((sw, i) => c.A(sw, [{ scale: '1 0' }, { scale: '1 1' }], { delay: .25 + i * .12, dur: .8 }));
+      s.querySelectorAll('.bar .nm').forEach((e, i) => c.rise(e, { delay: .9 + i * .1, dur: .4, dist: 10 }));
+      s.querySelectorAll('.bar .hx').forEach((e, i) => c.type(e, e.textContent, { delay: 1.0 + i * .12, dur: .35 }));
+      c.rise('.samples > div', { delay: 1.5, stagger: .15 });
+    },
+    5(c, s) {
+      c.rise('.title');
+      c.rise('.def', { delay: .15, dist: 12 });
+      c.fade('.frame', { dur: .5 });
+      c.A(s.querySelector('.shot'), [{ opacity: 0, scale: '1.02' }, { opacity: 1, scale: '1' }], { dur: 1.4 });
+      c.draw('.h0', { delay: .6, dur: .5 });
+      c.A(s.querySelector('.halo.hub'), [{ opacity: 0 }, { opacity: .5 }], { delay: .6, dur: .9 });
+      const groups = [[['.h1'], ['.l1'], '.d1'], [['.h2'], ['.l2'], '.d2'], [['.h3', '.h4', '.h5'], ['.l3'], '.d3']];
+      groups.forEach(([hs, ls, d], i) => {
+        const t = 1.1 + i * .35;
+        hs.forEach((h) => c.draw(h, { delay: t, dur: .5 }));
+        ls.forEach((l) => c.draw(l, { delay: t + .15, dur: .5 }));
+        c.rise(d, { delay: t + .3, dur: .4, dist: 8 });
+      });
+    },
+    7(c, s) {
+      c.rise('.title');
       c.fade('.ghost', { dur: 1.2, to: .055 });
       c.count(s.querySelector('.cnt'), 3, { dur: .9, delay: .2 });
       c.rise('.bigl', { delay: .5 });
@@ -231,35 +280,23 @@
         c.rise([nd.querySelector('.tag'), nd.querySelector('p')], { delay: t, dur: .5, dist: 14 });
         c.A(nd.querySelector('.dotn b'), [{ opacity: 0, scale: '.3' }, { opacity: 1, scale: '1' }], { delay: t, dur: .35 });
       });
-      c.A(s.querySelector('.halo'), [{ opacity: 0 }, { opacity: 1 }], { delay: 1.7, dur: .8 });
-      c.fade('.trello', { delay: .5, dur: .6 });
-    },
-    7(c, s) {
-      c.rise('.label,.title', { stagger: .08 });
-      c.rise('.logo', { delay: .1, dist: 12 });
-      s.querySelectorAll('.bar .sw').forEach((sw, i) => c.A(sw, [{ scale: '1 0' }, { scale: '1 1' }], { delay: .25 + i * .12, dur: .8 }));
-      s.querySelectorAll('.bar .nm').forEach((e, i) => c.rise(e, { delay: .9 + i * .1, dur: .4, dist: 10 }));
-      s.querySelectorAll('.bar .hx').forEach((e, i) => c.type(e, e.textContent, { delay: 1.0 + i * .12, dur: .35 }));
-      c.rise('.samples > div', { delay: 1.5, stagger: .15 });
+      c.A(s.querySelector('.tl .halo'), [{ opacity: 0 }, { opacity: 1 }], { delay: 1.7, dur: .8 });
     },
     9(c, s) {
-      c.fade('.ghost', { dur: 1, to: .055 });
-      c.rise('.label,.title', { stagger: .08 });
+      c.rise('.title');
       s.querySelectorAll('.cajonera').forEach((cj, i) => {
         const t = .2 + i * .35;
         c.cajoneraIn(cj, { delay: t, from: '.2' });
         c.drawer(cj, { delay: t + .5, stagger: .07 });
       });
       c.rise('.caps', { delay: .5, stagger: .35, dur: .5, dist: 10 });
-      c.rise('.phrase', { delay: .7 });
-      const total = s.querySelectorAll('.steps .seg').length;
-      c.segs('.steps .strip', { delay: 1.5, gap: .016 });
-      s.querySelectorAll('.steps .st').forEach((e, i) => c.rise(e, { delay: 1.5 + [0, 19, 38][i] * .016, dur: .5, dist: 14 }));
-      void total;
+      c.rise('.keys .k', { delay: .6, stagger: .3, dist: 16 });
+      c.segs('.steps .strip', { delay: 1.6, gap: .016 });
+      s.querySelectorAll('.steps .st').forEach((e, i) => c.rise(e, { delay: 1.6 + [0, 19, 38][i] * .016, dur: .5, dist: 14 }));
     },
     10(c, s) {
       c.fade('.cajonera svg', { dur: .8 });
-      c.rise('.label,.title', { stagger: .08 });
+      c.rise('.title');
       const pcs = s.querySelectorAll('.pc');
       pcs.forEach((p, i) => c.rise(p, { delay: .2 + i * .45, dur: .6, dist: 20 }));
       const plus = s.querySelectorAll('.plus path');
@@ -268,7 +305,7 @@
     },
     11(c, s) {
       c.fade('.cajonera svg', { dur: .8 });
-      c.rise('.label,.title', { stagger: .08 });
+      c.rise('.title');
       const fm = [...s.querySelectorAll('.formula .t')], ops = [...s.querySelectorAll('.formula .op')];
       fm.forEach((t, i) => {
         const txt = t.dataset.full || t.textContent;
@@ -287,25 +324,28 @@
     },
     12(c, s) {
       c.fade('.cajonera svg', { dur: .8 });
-      c.rise('.label,.title', { stagger: .08 });
+      c.rise('.title');
       c.rise('.hds', { delay: .2, dur: .6 });
       c.fade('.hds .big', { delay: .4, dur: .3 });
       c.count(s.querySelector('.hds .a'), 2, { delay: .5, dur: .9 });
       c.count(s.querySelector('.hds .b'), 3, { delay: .5, dur: .9 });
       c.rise('.hds .lb,.hds p,.hds .fases', { delay: .9, stagger: .12, dist: 14 });
+      c.rise('.pay .head', { delay: .3, dist: 12 });
+      c.A(s.querySelector('.pay .rule'), [{ scale: '0 1' }, { scale: '1 1' }], { delay: .5, dur: .6, ease: EO });
       const segs = [...s.querySelectorAll('.pay .seg')];
-      c.segs(segs.slice(0, 10), { delay: .6, gap: .06 });
-      c.segs(segs.slice(10, 16), { delay: 1.3, gap: .08 });
-      c.segs(segs.slice(16), { delay: 1.9, gap: .1 });
-      const vs = [...s.querySelectorAll('.pay .v')], tos = [50, 30, 20], ts = [.6, 1.3, 1.9], durs = [.7, .55, .45];
+      const ts = [.8, 1.5, 2.1];
+      c.segs(segs.slice(0, 10), { delay: ts[0], gap: .06 });
+      c.segs(segs.slice(10, 16), { delay: ts[1], gap: .08 });
+      c.segs(segs.slice(16), { delay: ts[2], gap: .1 });
+      const vs = [...s.querySelectorAll('.pay .v')], tos = [50, 30, 20], durs = [.7, .55, .45];
+      s.querySelectorAll('.pay .pc').forEach((p, i) => c.rise(p, { delay: ts[i], dur: .5, dist: 16 }));
       vs.forEach((v, i) => c.count(v, tos[i], { delay: ts[i], dur: durs[i] }));
-      s.querySelectorAll('.pay .tr').forEach((tr, i) => c.rise(tr, { delay: ts[i], dur: .5, dist: 12 }));
-      c.rise('.final', { delay: 2.0, dur: .5, dist: 12 });
+      s.querySelectorAll('.pay .lb').forEach((e, i) => c.rise(e, { delay: ts[i] + .2, dur: .5, dist: 12 }));
       c.drawer('.cajonera', { delay: .4 });
     },
     13(c, s) {
       c.fade('.cajonera svg', { dur: .8 });
-      c.rise('.label,.title', { stagger: .08 });
+      c.rise('.title');
       c.rise('.aff > div', { delay: .25, stagger: .16, dur: .6 });
       const v = s.querySelector('#s14vento');
       c.type(v, v.dataset.text, { delay: 1.2, dur: .8 });
@@ -364,9 +404,8 @@
   const foot = document.getElementById('foot');
   const bar = foot.querySelector('.bar');
   for (let i = 0; i < N; i++) bar.appendChild(document.createElement('i'));
-  function updateFoot(idx) {
+  function updateFoot(idx) {                  // solo la barra de LEDs: sin texto ni contador
     foot.classList.toggle('on', !NO_FOOT.includes(idx));
-    foot.querySelector('.r').textContent = String(idx + 1).padStart(2, '0') + ' / ' + N;
     [...bar.children].forEach((b, i) => b.classList.toggle('on', i <= idx));
   }
 
@@ -376,8 +415,8 @@
   const ghosts = Array.from({ length: 7 }, () => { const g = dotMain.cloneNode(); g.removeAttribute('class'); g.className = 'd'; travel.appendChild(g); return g; });
   const ring = document.createElement('div'); ring.className = 'ring'; travel.appendChild(ring);
   let travelRaf = 0, travelRingAnim = null;
-  function anchorOf(slide) {
-    let el = slide.querySelector('[data-key]');
+  function anchorOf(slide, role) {
+    let el = (role && slide.querySelector('[data-key-' + role + ']')) || slide.querySelector('[data-key]');
     if (el && el.classList.contains('cajonera')) el = el.querySelector('.lit');
     if (!el) el = slide.querySelector('.lit');
     if (!el) return null;
@@ -443,9 +482,9 @@
     // anclas (antes de ocultar la saliente)
     let a = null, b = null;
     if (!cut) {
-      a = anchorOf(from);
+      a = anchorOf(from, 'out');
       to.classList.add('active'); to.style.opacity = 0;
-      b = anchorOf(to);
+      b = anchorOf(to, 'in');
     }
     to.classList.add('active');
 

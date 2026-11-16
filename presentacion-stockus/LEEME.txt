@@ -16,7 +16,7 @@ CONTROL DE DIAPOSITIVAS (clicker)
   Home / End ..... primera / última diapositiva
   . o B .......... pantalla en negro total (alterna); pausa los videos
   Escape ......... no hace nada
-  F5 ............. recarga y vuelve a la misma diapositiva (queda en la URL: #7)
+  F5 ............. recarga y vuelve a la misma diapositiva (queda en la URL: #8)
   Un clic = una diapositiva. Tras cada cambio hay 350 ms de bloqueo; la repetición
   automática de teclas se descarta.
 
@@ -33,9 +33,18 @@ MODO LIVIANO
   quedan como gradientes estáticos). Usarlo si la notebook del escenario va lenta.
 
 VIDEOS
-  Diapositiva 6 (chatbot, 71 s, sin audio) y 9 (así cambia un depósito, 21,2 s, sin
-  audio): arrancan solos al entrar, se pausan y vuelven al inicio al salir.
+  Diapositiva 7 (chatbot, 1:10, sin audio; termina antes de la placa «Pedí tu demo»)
+  y 9 (así cambia un depósito, 21,7 s, sin audio, recortado sin la barra de arriba
+  ni el botón «Pedí tu demo»): arrancan solos al entrar, se pausan y vuelven al
+  inicio al salir. Entre la 6 y la 10 los cambios son cortes directos.
+  assets/video/video-chatbot-completo.mp4 es la edición completa (1:14, con la placa
+  final), para usar fuera de la presentación.
   Los originales están en assets/originales/ (sin tocar).
+
+ORDEN
+  1 negro · 2 Stockus · 3 LEDs y tecnología · 4 equipo · 5 identidad · 6 Vento ·
+  7 video del chatbot · 8 metodología · 9 video del depósito · 10 escala ·
+  11 presupuesto · 12 punto de equilibrio · 13 caso y pago · 14 conclusiones · 15 cierre
 
 ARCHIVOS
   index.html · presenter.html · css/ · js/ (app.js, notas.js, presenter.js)
