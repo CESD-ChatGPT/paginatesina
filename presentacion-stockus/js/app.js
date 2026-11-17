@@ -145,7 +145,14 @@
         cancels.push(() => { cancelAnimationFrame(id); if (o.reset) o.reset(); });
       },
       rise(sel, o = {}) {
-        q(sel).forEach((e, i) => A(e, [{ opacity: 0, translate: `0 ${o.dist ?? 24}px` }, { opacity: 1, translate: '0 0' }], { delay: (o.delay || 0) + i * (o.stagger ?? .07), dur: o.dur ?? .6 }));
+        q(sel).forEach((e, i) => {
+          const d = (o.delay || 0) + i * (o.stagger ?? .07), dur = o.dur ?? .6;
+          A(e, [{ opacity: 0, translate: `0 ${o.dist ?? 24}px` }, { opacity: 1, translate: '0 0' }], { delay: d, dur });
+          // los títulos se "descubren" con un barrido de izquierda a derecha, además de subir
+          if (e.classList.contains('title') && !REDUCE && !LITE) {
+            A(e, [{ clipPath: 'inset(-10% 100% -10% 0)' }, { clipPath: 'inset(-10% -10% -10% 0)' }], { delay: d, dur: dur + .25, ease: EO });
+          }
+        });
       },
       fade(sel, o = {}) {
         q(sel).forEach((e, i) => A(e, [{ opacity: 0 }, { opacity: o.to ?? 1 }], { delay: (o.delay || 0) + i * (o.stagger ?? 0), dur: o.dur ?? .6, ease: o.ease }));
@@ -595,6 +602,7 @@
       from.classList.remove('active'); from.classList.add('leaving');
       const fo = from.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 260, easing: EO, fill: 'forwards' });
       const fi = to.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 300, delay: 90, easing: EO, fill: 'both' });
+      if (!REDUCE && !LITE) to.animate([{ transform: 'scale(1.012)' }, { transform: 'scale(1)' }], { duration: 700, easing: EO, fill: 'none' });
       to.style.opacity = '';
       if (a && b) runTravel(a, b, 360);
       const timer = setTimeout(() => finishPending && finishTransition(), 460);
