@@ -453,7 +453,6 @@ img.logo, img.iso { display: block; height: auto; object-fit: contain; max-width
 .pe .tel-chat rect, .pe .tel-chat line { fill: none; stroke: var(--cel); stroke-width: 1.6; }
 
 /* 21 a 24 · conversación: contenedor centrado; texto de las burbujas a la izquierda, interlineado 1,35 */
-.conv .chead { justify-content: center; gap: 44px; }
 .conv .unit { display: flex; flex-direction: column; align-items: center; }
 .conv .lab, .conv .q .lab, .conv .a .lab { text-align: center; padding-left: 0; }
 .conv .bub, .conv .q .bub, .conv .a .bub { text-align: left; padding: 28px 36px; }
@@ -473,3 +472,41 @@ img.logo, img.iso { display: block; height: auto; object-fit: contain; max-width
 #cierre .gq { top: 646px; display: flex; justify-content: center; gap: 28px; font-size: 38px; }
 #cierre .gq b { font-weight: 400; color: rgba(79,179,206,.6); }
 #cierre .iso { left: 50%; margin-left: -190px; top: 736px; }
+
+/* =====================================================================
+   TANDA DE CORRECCIONES PUNTUALES (2, 9, 10, 11, 12, 13, 20, 21 a 24)
+   ===================================================================== */
+/* 2 · NO STOCK SYSTEM con su centro en y = 540 (dos renglones de 137 px) */
+.th .th-nost { top: 403px; }
+/* 9 · nudo de las conexiones */
+.pe .enl .nudo { fill: var(--cel); stroke: none; }
+/* 10 · rótulo superior alineado con el borde izquierdo de las tres cajas */
+#pe-hardware .pe-kick { left: 240px; }
+/* 11 · sin subtítulo */
+#pe-maqueta .subband { display: none; }
+/* 12 · tarjetas sin número: nombre y rol centrados en el alto de la tarjeta */
+#equipo .card .who { top: 50%; bottom: auto; transform: translateY(-50%); }
+/* 13 · cuadro de texto debajo del logo */
+#identidad .isobox { position: absolute; left: var(--mx); top: 590px; width: 840px; box-sizing: border-box; padding: 44px 52px 48px 60px;
+  border: 1px solid var(--cel); border-radius: 2px; background: color-mix(in srgb, #0B2C40 92%, #ffffff); }
+#identidad .isobox::before { content: ''; position: absolute; left: 0; top: -1px; bottom: -1px; width: 4px; background: var(--teal); }
+#identidad .isobox .ib-t { font: 600 44px/1.2 'Plex Sans', sans-serif; color: var(--cel); }
+#identidad .isobox .ib-p { margin: 20px 0 0; font: 400 38px/1.35 'Plex Sans', sans-serif; color: #fff; }
+/* 20 · cada columna (número, tramo y rótulo) arranca en el x de su tramo: 0 · 612 · 984 (separaciones de 18 px) */
+#pago .pay { left: 556px; }
+#pago .pay .p1 { left: 0; } #pago .pay .p2 { left: 612px; } #pago .pay .p3 { left: 984px; right: auto; }
+#pago .pay .lb { text-align: left; }
+#pago .pay .lb b { font-size: 26px; line-height: 1.25; letter-spacing: .02em; }
+#pago .pay .lb span { margin-top: 10px; font-size: 22px; line-height: 1.3; letter-spacing: .02em; }
+#pago .pay .l1 { left: 0; } #pago .pay .l2 { left: 612px; } #pago .pay .l3 { left: 984px; right: auto; text-align: left; }
+/* 21 a 24 · encabezado: STOCKUS a la izquierda y EN LÍNEA a la derecha, mismo alto de caja y mismo centro */
+.conv .chead { justify-content: space-between; align-items: center; }
+.conv .hl { height: 40px; align-items: center; }
+.conv .nm, .conv .est { display: flex; align-items: center; height: 40px; line-height: 40px; }
+#pago .pay .foot2 { top: 588px; }      /* base en y = 884, la misma que la tarjeta de HDS; 56 px debajo de los rótulos */
+/* 25 · bloque centrado en y = 540: tinta de la frase desde y = 231, logo visible hasta y = 849 */
+#cierre .frase { top: 211px; }
+#cierre .strip { top: 599px; }
+#cierre .stripHalo { top: 485px; }
+#cierre .gq { top: 661px; }
+#cierre .iso { top: 751px; }

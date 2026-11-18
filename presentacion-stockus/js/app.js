@@ -255,7 +255,7 @@
       flecha(s.querySelector('.fa'), true, .35);
       flecha(s.querySelector('.fb'), false, 1.45);
       c.A(s.querySelector('.word'), [{ opacity: 0 }, { opacity: 1 }], { delay: 2.55, dur: .6, ease: EO });
-      c.A(s.querySelector('.isoline'), [{ opacity: 0 }, { opacity: 1 }], { delay: 2.75, dur: .45, ease: EO });
+      c.A(s.querySelector('.isobox'), [{ opacity: 0 }, { opacity: 1 }], { delay: 2.75, dur: .45, ease: EO });
       s.querySelectorAll('.bar .sw').forEach((sw, i) => c.A(sw, [{ scale: '1 0' }, { scale: '1 1' }], { delay: .25 + i * .12, dur: .8 }));
       s.querySelectorAll('.bar .nm').forEach((e, i) => c.rise(e, { delay: .9 + i * .1, dur: .4, dist: 10 }));
       s.querySelectorAll('.bar .hx').forEach((e, i) => c.type(e, e.textContent, { delay: 1.0 + i * .12, dur: .35 }));

@@ -149,7 +149,8 @@
     }
     const gA = globo(pa[0] - 40, pa[1] - 230, 230, true);
     const gB = globo(pb[0] + 70, pb[1] - 230, 300, false);
-    const decA = ['4?', '6?', '5?'], decB = ['7?', '4?', 'creo que 3…'];     // el último queda fijo
+    const decA = ['5?', '4?', '5?'], decB = ['4?', '5?', 'creo que 3…'];     // en la 3 el diálogo se repite en bucle
+    const BUCLE_GLOBOS = slide.id === 'th-palabra' && !RM, CICLO = 4.5;
 
     // --- Zigzag con rastro punteado ---
     const ruta = [[-40, 260], [120, 140], [270, 30], [300, 240], [450, 130], [600, 25], [640, 260], [800, 140], [930, 250]].map((q) => P(q[0], q[1], 0));
@@ -175,7 +176,7 @@
     H('div', 'd', rot, 'Logística y depósitos');
     const nost = H('div', 'th-nost', slide);
     nost.innerHTML = 'NO STOCK<br>SYSTEM';
-    const reloj = S('g', { class: 'reloj' }, svg);
+    const reloj = S('g', { class: 'reloj', transform: 'translate(430 500) scale(1.5) translate(-430 -500)' }, svg);   // 1,5 veces
     const RC = [430, 500], RR = 160;
     S('circle', { cx: RC[0], cy: RC[1], r: RR }, reloj);
     for (let i = 0; i < 12; i++) {
@@ -232,7 +233,7 @@
         [[96, 70], [136, 110], [176, 50], [216, 90]].forEach(([bx, bh]) => S('rect', { class: 'lleno', x: bx, y: 240 - bh, width: 26, height: bh }, sk));
         S('polyline', { points: '200,104 226,118 252,96 276,108' }, sk);
       }
-      const lb = S('text', { class: 'plab', x: 0, y: PH + 52 }, g); lb.textContent = etiquetas[i].toUpperCase();
+      const lb = S('text', { class: 'plab', x: PW / 2, y: PH + 52, 'text-anchor': 'middle' }, g); lb.textContent = etiquetas[i].toUpperCase();
       return { g, hl, fr, led, sk, lb };
     });
 
@@ -256,9 +257,14 @@
         });
         // personas y globos (3); los números cambian mientras aparecen y después quedan fijos
         const gv = pr(t, M.voces, .5) * (1 - pr(t, M.zigzag, .5));
-        op(perB, gv); op(gA, gv); op(gB, gv);
-        if (gv > 0) {
-          const u = lin(t, M.voces, M.vocesDur);
+        let gg = gv, tc = t - M.voces;
+        if (BUCLE_GLOBOS && tc >= CICLO) {          // cada 4,5 s los globos se apagan y se vuelven a escribir
+          tc = tc % CICLO;
+          gg = gv * Math.min(lin(tc, 0, .3), 1 - lin(tc, CICLO - .3, .3));
+        } else if (BUCLE_GLOBOS) gg = gv * (1 - lin(tc, CICLO - .3, .3));
+        op(perB, gv); op(gA, RM && slide.id === 'th-palabra' ? 0 : gg); op(gB, gg);   // movimiento reducido: un solo globo fijo
+        if (gg > 0) {
+          const u = RM ? 1 : lin(tc + M.voces, M.voces, M.vocesDur);
           gA._t.textContent = decA[Math.min(decA.length - 1, Math.floor(u * decA.length))];
           gB._t.textContent = decB[Math.min(decB.length - 1, Math.floor(u * decB.length))];
         }
@@ -285,7 +291,7 @@
         op(nost, nv);
         const nm = mv(t, M.nostock, M.nostockDur * .7);
         nost.style.clipPath = nm >= 1 ? 'none' : `inset(-10% ${((1 - nm) * 100).toFixed(1)}% -10% 0)`;
-        op(reloj, pr(t, M.reloj, .6) * apaga);
+        op(reloj, (t >= M.reloj ? 1 : 0) * apaga);
         const gira = RM ? 1 : lin(t, M.reloj, M.relojDur);       // gira y se detiene
         hMin.setAttribute('transform', `rotate(${(gira * 720 + 60).toFixed(1)} ${RC[0]} ${RC[1]})`);
         hHora.setAttribute('transform', `rotate(${(gira * 60 + 300).toFixed(1)} ${RC[0]} ${RC[1]})`);
@@ -400,67 +406,72 @@
     // --- 9: red local, wifi tachado, señal débil (grupo centrado en x = 960) ---
     if (id === 'pe-red') {
       const e2 = S('g', { class: 'pe-red' }, svg);
-      const RX = 635, RY = 560, RR = 350, RCY = RY - 20;          // dispositivos centrados dentro del anillo
-      const anillo = S('circle', { class: 'anillo', cx: RX, cy: RCY, r: RR }, e2);
-      const rlab = S('text', { class: 'rlab', x: RX, y: RCY - RR + 50 }, e2); rlab.textContent = 'RED LOCAL';
-      // rótulo centrado bajo su dispositivo, a 16 px (y es el borde inferior del dispositivo)
+      // Tres gráficos en fila, mismo espacio entre ellos y a los costados (165 px), centrados en y = 515:
+      // anillo (600 de ancho) · wifi tachado (424) · señal débil (234)
+      const RX = 465, RY = 515, RR = 300;
+      const anillo = S('circle', { class: 'anillo', cx: RX, cy: RY, r: RR }, e2);
+      const rlab = S('text', { class: 'rlab', x: RX, y: RY - RR + 58 }, e2); rlab.textContent = 'RED LOCAL';
       const rotulo = (g, cx, y, txt) => { const t = S('text', { class: 'dlab', x: cx, y: y + 16 + 18 }, g); t.textContent = txt; return y + 16 + 24; };
-      // Raspberry Pi: en el centro del anillo
+      // cuatro dispositivos en los vértices de un rombo (a 150 px del centro del anillo)
+      const D4 = 150;
+      // Raspberry Pi: abajo
+      const PY = RY + D4;
       const dRpi = S('g', { class: 'disp' }, e2);
-      S('rect', { x: RX - 80, y: RY - 50, width: 160, height: 100 }, dRpi);
-      S('rect', { x: RX - 50, y: RY - 24, width: 44, height: 44 }, dRpi);
-      S('rect', { x: RX + 12, y: RY - 24, width: 48, height: 24 }, dRpi);
-      S('path', { class: 'pins', d: `M${RX - 68} ${RY - 40} H${RX + 68}` }, dRpi);
-      rotulo(dRpi, RX, RY + 50, 'RASPBERRY PI');
+      S('rect', { x: RX - 80, y: PY - 50, width: 160, height: 100 }, dRpi);
+      S('rect', { x: RX - 50, y: PY - 24, width: 44, height: 44 }, dRpi);
+      S('rect', { x: RX + 12, y: PY - 24, width: 48, height: 24 }, dRpi);
+      S('path', { class: 'pins', d: `M${RX - 68} ${PY - 40} H${RX + 68}` }, dRpi);
+      rotulo(dRpi, RX, PY + 50, 'RASPBERRY PI');
       // ESP8266: arriba
+      const EY = RY - D4 - 35;
       const dEsp = S('g', { class: 'disp' }, e2);
-      const EY = RY - 220;                                  // borde superior
       S('rect', { x: RX - 55, y: EY, width: 110, height: 70 }, dEsp);
       S('path', { class: 'pins', d: `M${RX - 35} ${EY + 16} h12 v12 h12 v-12 h12 v12 h12 v-12 h12` }, dEsp);
       S('rect', { x: RX - 30, y: EY + 40, width: 30, height: 20 }, dEsp);
       const espBajo = rotulo(dEsp, RX, EY + 70, 'ESP8266');
-      // Computadora: a la izquierda (pantalla + base)
+      // Computadora: a la izquierda (pantalla centrada en la altura del anillo + base)
+      const LX = RX - D4;
       const dLap = S('g', { class: 'disp' }, e2);
-      const LX = RX - 235;                                  // centro de la pantalla
-      S('rect', { x: LX - 65, y: RY - 49, width: 130, height: 82 }, dLap);
-      S('rect', { x: LX - 57, y: RY - 41, width: 114, height: 66 }, dLap);
-      S('path', { d: `M${LX - 87} ${RY + 49} H${LX + 87} L${LX + 73} ${RY + 33} H${LX - 73} Z` }, dLap);
-      rotulo(dLap, LX, RY + 49, 'COMPUTADORA');
-      // Celular: a la derecha, vertical 9:19, un poco más alto que la computadora
+      S('rect', { x: LX - 65, y: RY - 41, width: 130, height: 82 }, dLap);
+      S('rect', { x: LX - 57, y: RY - 33, width: 114, height: 66 }, dLap);
+      S('path', { d: `M${LX - 87} ${RY + 57} H${LX + 87} L${LX + 73} ${RY + 41} H${LX - 73} Z` }, dLap);
+      rotulo(dLap, LX, RY + 57, 'COMPUTADORA');
+      // Celular: a la derecha, vertical 9:19
       const dTel = S('g', { class: 'disp' }, e2);
-      const TW = 66, TH = 139, TX = RX + 170, TY = RY - 8 - TH / 2, TC = TX + TW / 2;   // centrado a la altura de la conexión
+      const TW = 66, TH = 139, TC = RX + D4, TX = TC - TW / 2, TY = RY - TH / 2;
       const marcoTel = S('rect', { x: TX, y: TY, width: TW, height: TH, rx: 2 }, dTel);
       const pantTel = S('rect', { x: TX + 6, y: TY + 16, width: TW - 12, height: TH - 32 }, dTel);
       S('line', { x1: TC - 11, x2: TC + 5, y1: TY + 8, y2: TY + 8 }, dTel);             // parlante
       S('circle', { class: 'lleno', cx: TC + 13, cy: TY + 8, r: 2.2 }, dTel);            // cámara
       S('line', { x1: TC - 11, x2: TC + 11, y1: TY + TH - 8, y2: TY + TH - 8 }, dTel);   // barra de gestos
       const burbujas = S('g', { class: 'tel-chat' }, dTel);
-      S('rect', { x: TX + TW - 12 - 24, y: TY + 30, width: 24, height: 13 }, burbujas);   // consulta (chica, a la derecha)
-      S('rect', { x: TX + 12, y: TY + 52, width: 38, height: 22 }, burbujas);             // respuesta de Stockus (más larga)
+      S('rect', { x: TX + TW - 12 - 24, y: TY + 30, width: 24, height: 13 }, burbujas);
+      S('rect', { x: TX + 12, y: TY + 52, width: 38, height: 22 }, burbujas);
       S('line', { x1: TX + 17, x2: TX + 44, y1: TY + 59, y2: TY + 59 }, burbujas);
       S('line', { x1: TX + 17, x2: TX + 36, y1: TY + 66, y2: TY + 66 }, burbujas);
       rotulo(dTel, TC, TY + TH, 'CELULAR');
-      // conexiones: desde el centro del borde de cada dispositivo a la Raspberry Pi; rectas, simétricas, sin cruzar textos
+      // conexiones rectas: computadora y celular, en horizontal, hasta el eje; el ESP baja por el eje hasta la Pi
       const enlaces = S('g', { class: 'enl' }, e2);
-      S('line', { x1: LX + 65, y1: RY - 8, x2: RX - 80, y2: RY - 8 }, enlaces);         // computadora (centro de su pantalla) → Pi
-      S('line', { x1: TX, y1: RY - 8, x2: RX + 80, y2: RY - 8 }, enlaces);              // celular → Pi
-      S('line', { x1: RX, y1: espBajo + 6, x2: RX, y2: RY - 50 }, enlaces);             // ESP8266 (eje de su borde, debajo del rótulo) → Pi
+      S('line', { x1: LX + 65, y1: RY, x2: RX, y2: RY }, enlaces);
+      S('line', { x1: TX, y1: RY, x2: RX, y2: RY }, enlaces);
+      S('line', { x1: RX, y1: espBajo + 6, x2: RX, y2: PY - 50 }, enlaces);
+      S('circle', { class: 'nudo', cx: RX, cy: RY, r: 5 }, enlaces);
       const devs = [dRpi, dEsp, dLap, dTel];
-      // wifi que se tacha + cartel NO INTERNET
-      const WX = RX + 605, WY = 560;
+      // wifi que se tacha + cartel NO INTERNET (centro en x = 1143)
+      const WX = 1143, WY = 562;
       const wifi = S('g', { class: 'wifi' }, e2);
-      const arcos = [70, 125, 180].map((r) => S('path', { d: `M${(WX - r * .7071).toFixed(1)} ${(WY - r * .7071).toFixed(1)} A${r} ${r} 0 0 1 ${(WX + r * .7071).toFixed(1)} ${(WY - r * .7071).toFixed(1)}` }, wifi));
-      const wdot = S('circle', { class: 'lleno', cx: WX, cy: WY - 8, r: 14 }, wifi);
-      const strike = S('path', { class: 'tacha', d: `M${WX - 170} ${WY - 210} L${WX + 170} ${WY + 40}` }, e2);
+      const arcos = [88, 156, 225].map((r) => S('path', { d: `M${(WX - r * .7071).toFixed(1)} ${(WY - r * .7071).toFixed(1)} A${r} ${r} 0 0 1 ${(WX + r * .7071).toFixed(1)} ${(WY - r * .7071).toFixed(1)}` }, wifi));
+      const wdot = S('circle', { class: 'lleno', cx: WX, cy: WY - 10, r: 17 }, wifi);
+      const strike = S('path', { class: 'tacha', d: `M${WX - 200} ${WY - 250} L${WX + 200} ${WY + 46}` }, e2);
       const cartel = S('g', { class: 'cartel' }, e2);
-      S('rect', { x: WX - 175, y: WY + 70, width: 350, height: 76 }, cartel);
-      const ct = S('text', { x: WX, y: WY + 121 }, cartel); ct.textContent = 'NO INTERNET';
-      // señal débil con tilde
-      const BX = RX + 850, BY = 620;
+      S('rect', { x: WX - 190, y: WY + 88, width: 380, height: 80 }, cartel);
+      const ct = S('text', { x: WX, y: WY + 143 }, cartel); ct.textContent = 'NO INTERNET';
+      // señal débil con tilde (barras de 1543 a 1733)
+      const BX = 1543, BY = 644;
       const senal = S('g', { class: 'senal' }, e2);
-      [30, 58, 86, 114].forEach((hh, i) => S('rect', { class: i < 2 ? 'lleno' : 'vacio', x: BX + i * 40, y: BY - hh, width: 26, height: hh }, senal));
-      const tilde = S('path', { class: 'tilde', d: `M${BX + 14} ${BY - 200} L${BX + 50} ${BY - 166} L${BX + 128} ${BY - 252}` }, e2);
-      const slab = S('text', { class: 'rlab', x: BX + 73, y: BY + 50 }, e2); slab.textContent = 'SEÑAL DÉBIL';
+      [40, 76, 112, 148].forEach((hh, i) => S('rect', { class: i < 2 ? 'lleno' : 'vacio', x: BX + i * 52, y: BY - hh, width: 34, height: hh }, senal));
+      const tilde = S('path', { class: 'tilde', d: `M${BX + 18} ${BY - 260} L${BX + 65} ${BY - 216} L${BX + 166} ${BY - 328}` }, e2);
+      const slab = S('text', { class: 'rlab', x: BX + 95, y: BY + 66 }, e2); slab.textContent = 'SEÑAL DÉBIL';
       const trazosTel = [marcoTel, pantTel];
       piezas.push((t) => {
         draw(anillo, mv(t, M.anillo, M.anilloDur * .5));
@@ -507,7 +518,7 @@
       S('path', { d: 'M150 142 h14 v14 h14 v-14 h14 v14 h14 v-14 h14 v14 h14', class: 'pins' }, n2.dib);
       S('rect', { x: 180, y: 180, width: 40, height: 28 }, n2.dib);
       const n3 = nodo(2, 'TIRA DE LED', 'LEDS INTELIGENTES');           // 12 segmentos, centrados
-      const csegs = [], SWD = 25, SGP = 8, SX = (BW - (12 * SWD + 11 * SGP)) / 2;
+      const csegs = [], SGP = 8, SWD = (BW - 48 - 11 * SGP) / 12, SX = 24;     // 24 px de aire a cada lado
       for (let i = 0; i < 12; i++) {
         S('rect', { class: 'base', x: SX + i * (SWD + SGP), y: 162, width: SWD, height: 16 }, n3.dib);
         csegs.push(S('rect', { class: 'luz', x: SX + i * (SWD + SGP), y: 162, width: SWD, height: 16 }, n3.dib));
@@ -611,15 +622,14 @@
     f:  { tipo: 'f', grande: 'Primeros clientes.', sub: 'Relevamiento a relevamiento. Cada instalación, acompañada.' }
   };
   const PASOS_CHAT = { 'conv-pregunta': [null, 'q1'], 'conv-respuesta': ['q1', 'a1'], 'conv-ahora': ['a1', 'q2'], 'conv-final': ['q2', 'f'] };
-  const ALTO = { q: 174, a: 328, f: 292 }, SEP = 40;     // etiqueta (42) + burbuja; interlineado 1,35
+  const ALTO = { q: 132, a: 286, f: 250 }, SEP = 48;     // solo la burbuja (sin etiqueta ni avatar); interlineado 1,35
   function mensaje(col, key, top) {
     const m = MSG[key];
     const el = H('div', 'msg ' + (m.tipo === 'q' ? 'q' : 'a'), col);
     el.style.top = top + 'px';
     const row = H('div', 'row', el);
-    const av = m.tipo !== 'q' ? H('i', 'av', row) : null;
+    const av = null;
     const unit = H('div', 'unit', row);                     // la etiqueta queda centrada sobre su burbuja
-    H('div', 'lab', unit, m.tipo === 'q' ? 'Pregunta' : 'Stockus');
     const bub = H('div', 'bub' + (m.tipo === 'f' ? ' fin' : ''), unit);
     const o = { m, el, av, parts: [] };
     if (m.tipo !== 'q') { o.dots = H('div', 'dots', bub); for (let k = 0; k < 3; k++) H('i', null, o.dots); }
@@ -644,7 +654,7 @@
     const box = H('div', 'chat', slide);
     const head = H('div', 'chead', box);
     const hl = H('div', 'hl', head);
-    H('i', 'ledp', hl); H('span', 'nm', hl, 'STOCKUS');
+    H('span', 'nm', hl, 'STOCKUS');
     H('div', 'est', head, 'En línea · sin internet');
     const body = H('div', 'cbody', box);
     const col = H('div', 'col', body);

@@ -10,12 +10,12 @@ window.ANIMACIONES = {
     m: { dibujo: 0, dibujoDur: 8, rotulo: 8, preguntas: 14, preguntasDur: 3, nostock: 17, nostockDur: 3 },
     subs: [{ t: 0, en: 'An internship at HDS Technology', es: 'Una pasantía en HDS Technology' },
            { t: 14, en: 'A big problem: no stock system', es: 'El problema: no había sistema de stock' }] },
-  'th-palabra': { dur: 4,
+  'th-palabra': { dur: 4, bucle: true,      // el diálogo de los globos se repite mientras la diapositiva está en pantalla
     m: { voces: 0, vocesDur: 3, desalineado: 2, desalineadoDur: 2 },
     subs: [{ t: 0, en: 'Stock controlled verbally', es: 'El stock se controlaba de palabra' },
            { t: 3, en: 'Poorly organized', es: 'Poco organizado' }] },
   'th-tiempo': { dur: 7,
-    m: { zigzag: 0, zigzagDur: 5, reloj: 3, relojDur: 3, cruces: 5, crucesDur: 2 },
+    m: { zigzag: 0, zigzagDur: 5, reloj: 0, relojDur: 5, cruces: 5, crucesDur: 2 },   // el reloj gira mientras la persona camina
     subs: [{ t: 0, en: 'Lost time. Common mistakes.', es: 'Pérdida de tiempo y errores frecuentes' }] },
   'th-stockus': { dur: 8,
     m: { apaga: 0, apagaDur: 2, revela: 2, revelaDur: 3, tira: 5, tiraDur: 3 },
@@ -42,8 +42,7 @@ window.ANIMACIONES = {
     m: { raspberry: 0, esp: 3, tira: 6, piezaDur: 3 },
     subs: [{ t: 0, en: 'Raspberry Pi + ESP8266 + LED strip', es: 'Raspberry Pi, ESP8266 y tira de LED' }] },
   'pe-maqueta': { dur: 14, bucle: true,      // el recorrido de luz de la maqueta es el único bucle de la presentación
-    m: { maqueta: 0, maquetaDur: 4, leds: [8, 11, 14] },
-    subs: [{ t: 0, en: 'Our live model', es: 'Nuestra maqueta en vivo' }] },
+    m: { maqueta: 0, maquetaDur: 4, leds: [8, 11, 14] }, },
   /* ---------- Conclusiones (21 a 24): un mensaje por diapositiva ----------
      partes = [inicio, duración] de cada texto que se escribe letra por letra; escribiendo = fin de los tres puntos */
   'conv-pregunta':  { dur: 4.2, m: { partes: [[.2, 3.8]] } },
