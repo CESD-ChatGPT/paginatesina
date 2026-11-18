@@ -13,6 +13,8 @@
   #clock { font: 600 84px/1 'Plex Mono', monospace; letter-spacing: -.02em; margin-top: 10px; }
   #clock.low { color: #4FB3CE; }
   #clock.over { color: #fff; }
+  #speed { font: 600 64px/1 'Plex Mono', monospace; margin-top: 10px; }
+  #speed.mod { color: #4FB3CE; }
   #slideTitle { font: 600 34px/1.15 'Plex Sans', sans-serif; margin-top: 8px; }
   #delta { font: 500 22px/1.3 'Plex Mono', monospace; margin-top: 10px; }
   .ok { color: #4FB3CE; } .late { color: #fff; background: #1F6C82; padding: 2px 8px; }
@@ -32,11 +34,12 @@
   <div class="top">
     <div class="box" style="min-width:330px"><div class="lab">Cronómetro · 10:00</div><div id="clock">10:00</div><div class="lab" id="elapsed" style="margin-top:10px">sin iniciar</div></div>
     <div class="box" style="flex:1"><div class="lab" id="num">Diapositiva</div><div id="slideTitle">—</div><div id="delta"></div></div>
+    <div class="box" style="min-width:250px"><div class="lab">Velocidad animaciones</div><div id="speed">100 %</div><div class="lab" id="anim" style="margin-top:10px;text-transform:none;letter-spacing:.06em">sin animación guiada</div></div>
   </div>
   <div id="blocks"></div>
   <div class="next" id="nextT"></div>
 </div>
-<div class="hint">←/→ avanzan · R reinicia el cronómetro · . pantalla en negro</div>
+<div class="hint">←/→ avanzan · [ ] velocidad (0 = 100 %) · R reinicia la animación · T reinicia el cronómetro · . pantalla en negro</div>
 <script src="js/orden.js"></script>
 <script src="js/notas.js"></script>
 <script src="js/presenter.js"></script>

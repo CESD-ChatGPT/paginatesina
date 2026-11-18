@@ -26,7 +26,7 @@
   addEventListener('keydown', (e) => {
     if (e.ctrlKey || e.metaKey || e.altKey || e.repeat) return;
     if (['F5', 'F11', 'F12'].includes(e.key)) return;
-    if (['ArrowRight', 'ArrowDown', 'PageDown', ' ', 'Enter', 'ArrowLeft', 'ArrowUp', 'PageUp', 'Home', 'End', '.', 'b', 'B', 'r', 'R'].includes(e.key)) {
+    if (['ArrowRight', 'ArrowDown', 'PageDown', ' ', 'Enter', 'ArrowLeft', 'ArrowUp', 'PageUp', 'Home', 'End', '.', 'b', 'B', 'r', 'R', 't', 'T', '[', ']', '0'].includes(e.key)) {
       e.preventDefault(); send({ type: 'key', key: e.key });
     }
   });
@@ -35,12 +35,11 @@
     const nota = NOTAS[st.idx] || NOTAS[0];
     $('num').textContent = 'Diapositiva ' + nota.n + ' de ' + NOTAS.length;
     $('slideTitle').textContent = nota.titulo;
-    const el = st.timerStart ? (Date.now() - st.timerStart) / 1000 : 0;
+    const el = st.timerStart ? (Date.now() - st.timerStart) / 1000 + PLAN_T2 : 0;
     const blocks = $('blocks');
     blocks.textContent = '';
     nota.bloques.forEach((b) => {
-      const rel0 = Math.max(0, b.t0 - PLAN_T2), rel1 = Math.max(0, b.t1 - PLAN_T2);
-      const now = st.timerStart && el >= rel0 && el < rel1;
+      const now = st.timerStart && el >= b.t0 && el < b.t1;
       const d = document.createElement('div');
       d.className = 'bloque' + (now ? ' now' : '');
       const meta = document.createElement('div'); meta.className = 'meta';
@@ -58,18 +57,23 @@
   }
   function tick() {
     const nota = NOTAS[st.idx] || NOTAS[0];
+    // velocidad de las animaciones y reloj de la animación guiada (solo se ven acá)
+    const sp = Math.round((st.speed || 1) * 100);
+    $('speed').textContent = sp + ' %';
+    $('speed').className = sp === 100 ? '' : 'mod';
+    $('anim').textContent = st.anim ? 'animación ' + mmss(st.anim.t) + ' / ' + mmss(st.anim.dur) + (st.anim.t >= st.anim.dur ? ' · terminada' : '') : 'sin animación guiada';
     const clock = $('clock');
     if (!st.timerStart) {
       clock.textContent = '10:00'; clock.className = ''; $('elapsed').textContent = 'arranca al pasar de la 1 a la 2'; $('delta').textContent = '';
       return;
     }
-    const el = (Date.now() - st.timerStart) / 1000;
+    const el = (Date.now() - st.timerStart) / 1000 + PLAN_T2;   // tiempo del guion (la 2 empieza en 0:30)
     const rem = 600 - el;
     clock.textContent = fmt(rem);
     clock.className = rem < 0 ? 'over' : rem < 60 ? 'low' : '';
     $('elapsed').textContent = 'transcurrido ' + fmt(el);
-    const plan = Math.max(0, nota.bloques[0].t0 - PLAN_T2);
-    const enter = (st.enterAt - st.timerStart) / 1000;
+    const plan = nota.bloques[0].t0;
+    const enter = (st.enterAt - st.timerStart) / 1000 + PLAN_T2;
     const diff = Math.round(enter - plan);
     const d = $('delta');
     if (st.idx <= 1) { d.textContent = ''; return; }

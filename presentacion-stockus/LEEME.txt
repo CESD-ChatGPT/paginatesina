@@ -17,16 +17,31 @@ CONTROL DE DIAPOSITIVAS (clicker)
   . o B .......... pantalla en negro total (alterna); pausa los videos
   Escape ......... no hace nada
   F5 ............. recarga y vuelve a la misma diapositiva (queda en la URL: #8)
+  [ y ] .......... bajan / suben la velocidad de TODAS las animaciones, en pasos de 5 %
+                   (entre 50 % y 150 %). Sirve si Thomas o Pedro hablan más lento o más
+                   rápido que la animación. Queda guardada en esta compu.
+  0 .............. vuelve la velocidad a 100 %
+  R .............. reinicia la animación de la diapositiva actual (para ensayar)
+  T .............. reinicia el cronómetro de la vista del presentador
+  La velocidad solo se ve en la vista del presentador; en la pantalla principal no aparece nada.
   Un clic = una diapositiva. Tras cada cambio hay 350 ms de bloqueo; la repetición
   automática de teclas se descarta.
 
 VISTA DEL PRESENTADOR
   Tecla P: abre una segunda ventana para la pantalla de la notebook (arrastrala al
   monitor de la notebook). Muestra el número y título de la diapositiva, quién habla,
-  el texto de su bloque, el cronómetro de 10:00 (arranca al pasar de la 1 a la 2;
-  R lo reinicia) y si vas adelantado o atrasado respecto del guion.
-  Si el foco queda en esa ventana, las teclas del clicker también funcionan.
-  El cronómetro cuenta desde la diapositiva 2; el guion la ubica cerca de 0:50.
+  el texto de su bloque, el cronómetro de 10:00 (arranca al pasar de la 1 a la 2, que
+  en el guion es 0:30; T lo reinicia), si vas adelantado o atrasado, la velocidad de
+  las animaciones y el reloj de la animación guiada (por ejemplo «0:42 / 1:10»).
+  Si el foco queda en esa ventana, las teclas del clicker y [ ] 0 R T también funcionan.
+
+ANIMACIONES GUIADAS (diapositivas 2 y 3)
+  Arrancan solas al entrar y acompañan el inglés de Thomas (unos 70 s) y de Pedro
+  (unos 66 s) con subtítulos en inglés y español. Al terminar quedan quietas; al
+  retroceder se muestran terminadas; si se avanza a mitad, se cortan limpio.
+  Los segundos de cada momento (y los subtítulos) están en js/beats.js: un solo
+  archivo para retocarlos. La 13 (conversación con Stockus) se escribe sola en
+  unos 10 s y queda quieta.
 
 MODO LIVIANO
   Abrir index.html?lite  (sin partículas, sin grano ni brillos de las tiras; los halos
@@ -41,21 +56,22 @@ VIDEOS
   final), para usar fuera de la presentación.
   Los originales están en assets/originales/ (sin tocar).
 
-ORDEN (provisorio: 16 diapositivas)
-  1 negro · 2 Stockus · 3 LEDs y tecnología · 4 equipo · 5 identidad · 6 Vento ·
-  7 video del chatbot · 8 metodología · 9 video del depósito · 10 escala ·
-  11 presupuesto · 12 punto de equilibrio · 13 caso y pago ·
-  14 conclusiones, versión A (el estante que se abre) ·
-  15 conclusiones, versión B (la conversación con Stockus) · 16 cierre
+ORDEN (14 diapositivas)
+  1 negro · 2 la historia de Thomas (animación guiada) · 3 la explicación de Pedro
+  (animación guiada) · 4 equipo · 5 identidad · 6 Vento · 7 video del chatbot ·
+  8 metodología · 9 video del depósito · 10 a medida (escala) · 11 presupuesto, con
+  el punto de equilibrio de fondo · 12 caso HDS y plan de pago · 13 conversación
+  con Stockus · 14 cierre: «Cada producto, a un LED de distancia.»
+  Cortes directos (sin la luz que viaja): de la 1 a la 2 y alrededor de los videos.
 
 CAMBIAR EL ORDEN O SACAR UNA DIAPOSITIVA
-  Todo sale de js/orden.js: una línea por diapositiva. Para quedarte con una sola
-  versión de conclusiones, borrá la línea 'conclusiones-a' o 'conclusiones-b'.
+  Todo sale de js/orden.js: una línea por diapositiva.
   La numeración, la barra de LEDs, el hash (#N), las notas y el cronómetro se
   ajustan solos. No hace falta tocar index.html.
 
 ARCHIVOS
-  index.html · presenter.html · css/ · js/ (orden.js, app.js, notas.js, presenter.js)
+  index.html · presenter.html · css/ · js/ (orden.js, beats.js, escenas.js, app.js,
+  notas.js, presenter.js) · guion.md (fuente de las notas y los tiempos)
   assets/ (fonts, img, video, originales)
   respaldo-diapositivas.pdf  (una captura por diapositiva, por si falla la notebook)
   js/orden.js (orden de las diapositivas)

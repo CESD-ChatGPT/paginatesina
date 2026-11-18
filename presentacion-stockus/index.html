@@ -12,40 +12,11 @@
   <!-- Sala a oscuras -->
   <section class="slide bg-black" id="negro" data-title="Sala a oscuras"></section>
 
-  <!-- Revelación -->
-  <section class="slide bg-pet" id="stockus" data-nofoot data-title="Stockus">
-    <canvas class="particles" width="1920" height="1080"></canvas>
-    <div class="center">
-      <div class="halo" data-key></div>
-      <div class="dot"></div>
-      <h1 class="logo" style="margin:0">STOCKUS</h1>
-    </div>
-    <div class="strip" data-n="30" data-w="30"></div>
-    <div class="sub" id="s2sub" data-text="CONTROL DE STOCK CON LEDS INTELIGENTES">CONTROL DE STOCK CON LEDS INTELIGENTES</div>
-  </section>
+  <!-- Historia de Thomas: animación guiada con subtítulos (js/beats.js + js/escenas.js) -->
+  <section class="slide bg-pet beat" id="thomas" data-title="La historia: HDS y Stockus"></section>
 
-  <!-- LEDs y tecnología -->
-  <section class="slide bg-pet" id="leds" data-title="Así se enciende la luz">
-    <div class="cajonera" data-x="1330" data-y="150" data-cell="260,200" data-grid="3,4" data-lit="2:1"></div>
-    <h2 class="title">Así se enciende la luz</h2>
-    <div class="flow">
-      <svg class="lines" viewBox="0 0 1240 280">
-        <path class="c1" d="M320 85 H460 M444 75 L460 85 L444 95"/>
-        <path class="c2" d="M780 85 H920 M904 75 L920 85 L904 95"/>
-      </svg>
-      <div class="node n1"><span class="tag">Raspberry Pi</span><span class="sm">computadora central</span></div>
-      <div class="node n2"><span class="tag">ESP8266</span><span class="sm">control de la tira</span></div>
-      <div class="wifi">WIFI</div>
-      <div class="node n3"><div class="strip run" data-n="10" data-w="48" data-on="0,1,2,3,4,5,6"></div></div>
-      <div class="tag" style="position:absolute;left:920px;top:196px;width:320px;font-size:26px">Tira de LEDs inteligentes</div>
-    </div>
-    <div class="pill tag">Red local · sin internet</div>
-    <div class="phrases">
-      <p>Funciona sin internet</p>
-      <p>LEDs inteligentes que muestran la ubicación exacta</p>
-      <p>Maqueta funcionando en vivo</p>
-    </div>
-  </section>
+  <!-- Explicación de Pedro: animación guiada con subtítulos -->
+  <section class="slide bg-pet beat" id="pedro" data-title="Lo que diferencia a Stockus"></section>
 
   <!-- Equipo -->
   <section class="slide bg-pet" id="equipo" data-title="Somos Solvus">
@@ -59,6 +30,7 @@
       <div class="card box"><i class="dw"></i><div class="num">05</div><div class="who"><div class="name">Luciano Albarracin</div><div class="role">Desarrollador / Investigador</div><div class="sub">&nbsp;</div></div></div>
       <div class="card box"><i class="dw" data-key-out></i><div class="num">06</div><div class="who"><div class="name">Thomas Spalletti</div><div class="role">Desarrollador / Investigador</div><div class="sub">&nbsp;</div></div></div>
     </div>
+    <div class="beneficios"><span><i></i>Ahorra tiempo</span><b>·</b><span><i></i>Reduce errores</span><b>·</b><span><i></i>Stock organizado</span></div>
   </section>
 
   <!-- Identidad -->
@@ -119,19 +91,19 @@
     <video class="vid" src="assets/video/video-chatbot.mp4" poster="assets/video/video-chatbot.jpg" muted playsinline preload="auto"></video>
   </section>
 
-  <!-- Metodología -->
+  <!-- Metodología: solo las metas de cada sprint -->
   <section class="slide bg-pet" id="metodologia" data-title="Paso a paso, con Scrum">
     <div class="ghost word">SCRUM</div>
     <h2 class="title">Paso a paso, con Scrum</h2>
     <div class="big"><span class="cnt">3</span></div>
     <div class="bigl">SPRINTS</div>
-    <div class="bigl2">SCRUM · TRELLO · HISTORIAS DE USUARIO</div>
+    <div class="bigl2">CADA UNO CON SU SPRINT GOAL</div>
     <div class="tl">
       <div class="halo"></div>
       <div class="line"></div><div class="fill"></div>
-      <div class="nd" style="left:0"><div class="dotn"><b></b></div><div class="tag">Sprint 1</div><p>Investigación general y límites del proyecto</p></div>
-      <div class="nd" style="left:620px"><div class="dotn"><b></b></div><div class="tag">Sprint 2</div><p>Desarrollo del software</p></div>
-      <div class="nd last" style="left:1240px"><div class="dotn" data-key><b></b></div><div class="tag">Sprint 3</div><p>Software integrado con el hardware</p></div>
+      <div class="nd" style="left:0"><div class="dotn"><b></b></div><div class="tag">Sprint Goal 1</div><p>Investigar y definir los límites</p></div>
+      <div class="nd" style="left:620px"><div class="dotn"><b></b></div><div class="tag">Sprint Goal 2</div><p>Desarrollar el software</p></div>
+      <div class="nd last" style="left:1240px"><div class="dotn" data-key><b></b></div><div class="tag">Sprint Goal 3</div><p>Integrar software y hardware</p></div>
     </div>
   </section>
 
@@ -150,8 +122,8 @@
     <div class="caps" style="left:352px;top:712px">VARIAS ZONAS</div>
     <div class="caps" style="left:742px;top:712px">TODO EL DEPÓSITO</div>
     <div class="keys">
+      <div class="k main"><div class="w">A MEDIDA</div><div class="s">Lo que cada cliente necesita</div></div>
       <div class="k"><div class="w">ESCALABLE</div><div class="s">De una zona a todo el depósito</div></div>
-      <div class="k"><div class="w">A MEDIDA</div><div class="s">Lo que cada cliente necesita</div></div>
       <div class="k"><div class="w">SIN PRECIO ÚNICO</div><div class="s">Y esa es su ventaja</div></div>
     </div>
     <div class="steps">
@@ -162,97 +134,63 @@
     </div>
   </section>
 
-  <!-- Presupuesto -->
+  <!-- Presupuesto, con el punto de equilibrio como recurso de fondo -->
   <section class="slide bg-pet" id="presupuesto" data-title="Qué entra en el presupuesto">
-    <div class="cajonera" data-x="1240" data-y="-60" data-cell="220,150" data-grid="4,3" data-lit="1:2"></div>
+    <div class="cajonera" data-x="1240" data-y="-60" data-cell="220,150" data-grid="4,3" data-lit="0:2"></div>
     <h2 class="title">Qué entra en el presupuesto</h2>
     <div class="row">
-      <div class="pc a" data-key><div class="tag">Costo fijo · igual para todos</div><h3>Software</h3><ul><li>Hardware base: Raspberry Pi, ESP8266 y fuente</li></ul></div>
+      <div class="pc a" data-key><div class="tag">Costo fijo · igual para todos</div><h3>Software y hardware base</h3><ul><li>Software de Stockus</li><li>Raspberry Pi, ESP8266 y fuente</li></ul></div>
       <div class="plus"><svg viewBox="0 0 56 56"><path d="M28 8 V48"/><path d="M8 28 H48"/></svg></div>
       <div class="pc b"><div class="tag">Variable · según cada empresa</div><h3>Se mide en cada depósito</h3><ul><li>Metros de LEDs inteligentes</li><li>Tamaño del depósito</li><li>Qué automatizar</li></ul></div>
-      <div class="plus"><svg viewBox="0 0 56 56"><path d="M28 8 V48"/><path d="M8 28 H48"/></svg></div>
-      <div class="pc c"><div class="tag">Extras, si hace falta</div><h3>Opcionales</h3><ul><li>Capacitación</li><li>Soporte mensual opcional</li></ul></div>
+    </div>
+    <div class="equil">
+      <div class="eq1"><span class="k">Punto de equilibrio</span><span class="v">2–3 sistemas por mes</span><span class="j">(jornada completa)</span></div>
+      <div class="eq2">Gastos fijos ÷ lo que deja cada venta</div>
     </div>
   </section>
 
-  <!-- Punto de equilibrio -->
-  <section class="slide bg-pet" id="equilibrio" data-title="Nuestro punto de equilibrio">
-    <div class="cajonera" data-x="1240" data-y="-60" data-cell="220,150" data-grid="4,3" data-lit="1:2"></div>
-    <h2 class="title">Nuestro punto de equilibrio</h2>
-    <div class="formula">
-      <span class="t">GASTOS FIJOS</span><span class="op">÷</span><span class="t">LO QUE DEJA CADA VENTA</span><span class="op">=</span><span class="t">SISTEMAS POR MES</span>
-    </div>
-    <div class="num1"><span class="a">2</span>–<span class="b">3</span></div>
-    <div class="lab1">SISTEMAS POR MES · JORNADA COMPLETA</div>
-    <div class="num2">½</div>
-    <div class="lab2">MEDIA JORNADA: APROXIMADAMENTE LA MITAD</div>
-    <div class="frase">Las ventas por mes que cubren nuestros gastos fijos</div>
-  </section>
-
-  <!-- Caso y pago -->
+  <!-- Caso HDS y plan de pago (el plan de pago es el protagonista) -->
   <section class="slide bg-pet" id="pago" data-title="Un caso real y cómo se paga">
-    <div class="cajonera" data-x="1240" data-y="-60" data-cell="220,150" data-grid="4,3" data-lit="1:2"></div>
     <h2 class="title">Un caso real y cómo se paga</h2>
     <div class="hds box">
       <div class="tag">HDS · Empresa mediana</div>
-      <div class="big"><span class="a">2</span>–<span class="b">3</span><small>meses</small></div>
-      <div class="tag lb">Conteo · 8 h por día</div>
-      <p>Después: armado · capacitación del personal · ajustes</p>
+      <div class="big"><span class="a">2</span>–<span class="b">3</span></div>
+      <div class="mes">meses</div>
+      <div class="lb">Hasta tener el sistema funcionando</div>
+      <div class="fichas"><span>Contar</span><span>Armar</span><span>Capacitar</span><span>Ajustar</span></div>
       <div class="fases">Siempre por fases</div>
     </div>
     <div class="pay">
-      <div class="head">Se paga a medida que se ve el resultado</div>
-      <div class="rule"></div>
+      <div class="head">Cada empresa, su propia propuesta de pago</div>
       <div class="pcs">
         <div class="pc p1"><span class="v">50</span><i>%</i></div>
         <div class="pc p2"><span class="v">30</span><i>%</i></div>
         <div class="pc p3"><span class="v">20</span><i>%</i></div>
       </div>
-      <div class="strip" data-n="20" data-w="48" data-groups="10,6,4"></div>
+      <div class="strip" data-n="20" data-w="54" data-groups="10,6,4"></div>
       <div class="labs">
-        <div class="lb l1"><b>Al firmar</b><span>cubre el hardware</span></div>
-        <div class="lb l2"><b>Instalación</b><span>al terminarla</span></div>
-        <div class="lb l3"><b>Capacitación</b><span>con conformidad</span></div>
+        <div class="lb l1" data-key><b>Al firmar</b><span>cubre el hardware</span></div>
+        <div class="lb l2"><b>Al terminar<br>la instalación</b></div>
+        <div class="lb l3"><b>Al finalizar<br>la capacitación</b><span>con la conformidad<br>del cliente</span></div>
       </div>
+      <div class="foot2">Se paga a medida que se ve el resultado</div>
     </div>
   </section>
 
-  <!-- Conclusiones · versión A: el estante que se abre -->
-  <section class="slide bg-pet" id="conclusiones-a" data-title="Conclusiones (versión A): el estante que se abre">
-    <div class="cajonera estante" data-x="-30" data-y="-30" data-cell="180,160" data-grid="12,7"></div>
-    <div class="dr d1" data-key-in style="left:154px;top:134px;width:1252px;height:152px"><div class="halo"></div><div class="in"><p>Un problema real, resuelto con luz.</p></div><div class="front"></div></div>
-    <div class="dr d2" style="left:334px;top:294px;width:1432px;height:152px"><div class="halo"></div><div class="in"><p>Funciona donde otros se caen: sin internet.</p></div><div class="front"></div></div>
-    <div class="dr d3" style="left:514px;top:454px;width:1252px;height:152px"><div class="halo"></div><div class="in"><p>Cada producto, a un LED de distancia.</p></div><div class="front"></div></div>
-    <div class="dr d4 grande" data-key-out style="left:694px;top:614px;width:1072px;height:312px"><div class="halo"></div><div class="in"><h3>Lo que viene</h3><p>Primeros clientes, relevamiento a relevamiento</p><p>Cada instalación, acompañada: soporte y mantenimiento</p></div><div class="front"></div></div>
-    <div class="vento">Construido sobre Vento</div>
-  </section>
-
-  <!-- Conclusiones · versión B: la conversación con Stockus -->
-  <section class="slide bg-pet" id="conclusiones-b" data-title="Conclusiones (versión B): la conversación con Stockus">
+  <!-- Conclusiones: la conversación con Stockus (se escribe sola, js/escenas.js) -->
+  <section class="slide bg-pet" id="conversacion" data-title="Conclusiones: la conversación con Stockus">
     <div class="cajonera tenue" data-x="-30" data-y="-30" data-cell="180,160" data-grid="12,7"></div>
-    <div class="qb q1"><span class="tx" data-full="Stockus, ¿qué dejó este proyecto?">Stockus, ¿qué dejó este proyecto?</span></div>
-    <div class="led" data-key><div class="halo"></div><i></i></div>
-    <div class="ans a1">
-      <p class="tx" data-full="Un problema real, resuelto con luz.">Un problema real, resuelto con luz.</p>
-      <p class="tx" data-full="Funciona sin internet.">Funciona sin internet.</p>
-      <p class="tx" data-full="Cada producto, a un LED de distancia.">Cada producto, a un LED de distancia.</p>
-    </div>
-    <div class="qb q2"><span class="tx" data-full="¿Y ahora?">¿Y ahora?</span></div>
-    <div class="ans a2">
-      <p class="tx big" data-full="Primeros clientes.">Primeros clientes.</p>
-      <p class="tx sub" data-full="Relevamiento a relevamiento. Cada instalación, acompañada.">Relevamiento a relevamiento. Cada instalación, acompañada.</p>
-    </div>
-    <div class="vento">Construido sobre Vento</div>
   </section>
 
-  <!-- Cierre -->
-  <section class="slide bg-pet" id="cierre" data-title="Gracias">
+  <!-- Cierre: la frase clave -->
+  <section class="slide bg-pet" id="cierre" data-title="Cada producto, a un LED de distancia">
+    <div class="cajonera tenue" data-x="-30" data-y="-30" data-cell="180,160" data-grid="12,7" data-lit="1:9"></div>
     <canvas class="particles" width="1920" height="1080"></canvas>
-    <div class="halo" data-key></div>
-    <div class="gr">Gracias</div>
-    <div class="q">¿Preguntas?</div>
+    <div class="frase" data-key><div class="l"><span>Cada</span> <span>producto,</span></div><div class="l"><span>a</span> <span>un</span> <span>LED</span> <span>de</span> <span>distancia.</span></div><div class="luz"></div></div>
+    <div class="halo stripHalo"></div>
+    <div class="strip" data-n="30" data-w="34"></div>
+    <div class="gq">Gracias · ¿Preguntas?</div>
     <img class="iso" src="assets/img/solvus-isologotipo-horizontal-blanco.png" alt="Solvus">
-    <div class="strip" data-n="30" data-w="40"></div>
   </section>
 
   <div id="foot"><span class="bar"></span></div>
@@ -263,6 +201,8 @@
 <button id="fsbtn" type="button" aria-label="Pantalla completa (F)"><svg viewBox="0 0 20 20"><path d="M3 7V3h4M13 3h4v4M17 13v4h-4M7 17H3v-4"/></svg></button>
 <script src="js/orden.js"></script>
 <script src="js/notas.js"></script>
+<script src="js/beats.js"></script>
+<script src="js/escenas.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

@@ -143,44 +143,11 @@ body.show-ui #fsbtn { display: block; }
 /* ---------- Logos de Solvus: PNG con área de seguridad incluida, siempre completos ---------- */
 img.logo, img.iso { display: block; height: auto; object-fit: contain; max-width: none; }
 
-/* ---------- revelación ---------- */
-#stockus .center { position: absolute; left: 960px; top: 470px; }
-#stockus .halo { width: 1500px; height: 900px; left: -750px; top: -450px; border-radius: 50%; }
-#stockus .dot { position: absolute; width: 26px; height: 26px; left: -13px; top: -13px; border-radius: 50%;
-  background: radial-gradient(closest-side, #fff, #4FB3CE 55%, rgba(79,179,206,0)); }
-#stockus .logo {
-  position: absolute; left: 0; top: 0; transform: translate(-50%, -50%); white-space: nowrap;
-  font: 600 250px/1.2 'Plex Sans', sans-serif; letter-spacing: .26em; padding: 0 .1em 0 .36em; color: #fff;
-}
-#stockus .strip { left: 960px; top: 650px; transform: translateX(-50%); gap: 12px; }
-#stockus .strip .seg { width: 30px; height: 9px; }
-#stockus .sub {
-  position: absolute; left: 0; width: 1920px; top: 730px; text-align: center;
-  font: 500 34px/1 'Plex Mono', monospace; letter-spacing: .26em; color: var(--cel); text-transform: uppercase; white-space: nowrap;
-}
-#stockus canvas, #cierre canvas { position: absolute; inset: 0; width: 1920px; height: 1080px; }
-
-/* ---------- LEDs y tecnología ---------- */
-#leds .flow { position: absolute; left: 72px; top: 262px; width: 1240px; height: 280px; }
-#leds .node {
-  position: absolute; top: 0; width: 320px; height: 170px; border: 1.5px solid rgba(79,179,206,.7);
-  display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: 0 22px;
-}
-#leds .node .tag { font-size: 30px; }
-#leds .node .sm { font: 400 24px/1.2 'Plex Mono', monospace; color: rgba(255,255,255,.65); margin-top: 8px; letter-spacing: .04em; }
-#leds .n1 { left: 0; } #leds .n2 { left: 460px; } #leds .n3 { left: 920px; padding: 0; align-items: center; }
-#leds .n3 .strip { position: static; gap: 8px; flex-wrap: wrap; justify-content: center; width: 272px; }
-#leds .n3 .seg { width: 48px; height: 14px; }
-#leds svg.lines { position: absolute; left: 0; top: 0; width: 1240px; height: 280px; overflow: visible; }
-#leds svg.lines path { fill: none; stroke: var(--cel); stroke-width: 1.5; }
-#leds .wifi { position: absolute; left: 780px; top: 46px; width: 140px; text-align: center; font: 500 22px/1 'Plex Mono', monospace; color: var(--cel); letter-spacing: .14em; }
-#leds .pill { position: absolute; left: 72px; top: 574px; padding: 14px 24px; border: 1px solid rgba(79,179,206,.7); font-size: 26px; }
-#leds .phrases { position: absolute; left: 72px; top: 668px; width: 1180px; display: flex; flex-direction: column; gap: 24px; }
-#leds .phrases p { margin: 0; font: 500 46px/1.2 'Plex Sans', sans-serif; padding-left: 28px; border-left: 3px solid var(--cel); }
+#cierre canvas { position: absolute; inset: 0; width: 1920px; height: 1080px; }
 
 /* ---------- equipo (seis tarjetas iguales) ---------- */
 #equipo .logo { position: absolute; right: 64px; top: 46px; width: 360px; }
-#equipo .grid { position: absolute; left: 72px; top: 248px; width: 1776px; display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: 340px; gap: 32px; }
+#equipo .grid { position: absolute; left: 72px; top: 248px; width: 1776px; display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: 300px; gap: 32px; }
 #equipo .card { position: relative; padding: 34px 40px; background: rgba(10,10,10,.18); }
 #equipo .card .num { font: 500 32px/1 'Plex Mono', monospace; color: var(--cel); letter-spacing: .1em; }
 #equipo .card .who { position: absolute; left: 40px; right: 30px; bottom: 34px; }
@@ -189,6 +156,13 @@ img.logo, img.iso { display: block; height: auto; object-fit: contain; max-width
 #equipo .card .sub { margin-top: 10px; font: 400 26px/1.2 'Plex Sans', sans-serif; color: rgba(255,255,255,.72); white-space: nowrap; }
 #equipo .card .dw { position: absolute; right: 34px; top: 30px; width: 56px; height: 40px; border: 1.5px solid rgba(79,179,206,.6); }
 #equipo .card .dw b { position: absolute; inset: 3px; background: var(--cel); box-shadow: 0 0 18px rgba(79,179,206,.6); }
+#equipo .beneficios { position: absolute; left: 72px; top: 918px; width: 1776px; display: flex; justify-content: center; align-items: center; gap: 30px;
+  font: 500 26px/1 'Plex Mono', monospace; letter-spacing: .16em; text-transform: uppercase; color: rgba(255,255,255,.82); }
+#equipo .beneficios span { display: inline-flex; align-items: center; gap: 16px; }
+#equipo .beneficios i { display: block; width: 24px; height: 8px; background: var(--cel); box-shadow: 0 0 12px 2px rgba(79,179,206,.6); opacity: 0; }
+#equipo .beneficios i.on { opacity: 1; }
+#equipo .beneficios b { color: rgba(79,179,206,.6); font-weight: 400; }
+.lite #equipo .beneficios i { box-shadow: none; }
 #equipo .card .dw::after { content: ''; position: absolute; left: 50%; bottom: 8px; width: 16px; height: 2px; margin-left: -8px; background: var(--pet); }
 .lite #equipo .card .dw b { box-shadow: none; }
 
@@ -224,7 +198,7 @@ img.logo, img.iso { display: block; height: auto; object-fit: contain; max-width
 #metodologia .ghost.word { left: 1090px; top: 150px; }
 #metodologia .big { position: absolute; left: 56px; top: 176px; font: 600 420px/1 'Plex Mono', monospace; letter-spacing: -.04em; color: #fff; }
 #metodologia .bigl { position: absolute; left: 380px; top: 300px; font: 500 116px/1 'Plex Mono', monospace; letter-spacing: .1em; color: var(--cel); }
-#metodologia .bigl2 { position: absolute; left: 386px; top: 450px; font: 400 30px/1 'Plex Mono', monospace; letter-spacing: .16em; color: rgba(79,179,206,.75); }
+#metodologia .bigl2 { position: absolute; left: 386px; top: 450px; white-space: nowrap; font: 400 30px/1 'Plex Mono', monospace; letter-spacing: .16em; color: rgba(79,179,206,.75); }
 #metodologia .tl { position: absolute; left: 72px; top: 640px; width: 1776px; height: 320px; }
 #metodologia .tl .line { position: absolute; left: 0; top: 35px; height: 2px; width: 1312px; background: rgba(79,179,206,.2); }
 #metodologia .tl .fill { position: absolute; left: 0; top: 35px; height: 2px; width: 1312px; background: var(--cel); transform-origin: left; }
@@ -240,64 +214,19 @@ img.logo, img.iso { display: block; height: auto; object-fit: contain; max-width
 
 /* ---------- escala ---------- */
 #escala .caps { position: absolute; font: 500 24px/1.1 'Plex Mono', monospace; letter-spacing: .14em; color: var(--cel); white-space: nowrap; }
-#escala .keys { position: absolute; left: 1350px; top: 250px; width: 520px; display: flex; flex-direction: column; gap: 52px; }
-#escala .k { padding-left: 26px; border-left: 3px solid var(--cel); }
-#escala .k .w { font: 600 54px/1 'Plex Sans', sans-serif; letter-spacing: .02em; white-space: nowrap; }
-#escala .k .s { margin-top: 12px; font: 400 30px/1.2 'Plex Sans', sans-serif; color: rgba(255,255,255,.75); white-space: nowrap; }
+#escala .keys { position: absolute; left: 1336px; top: 236px; width: 512px; display: flex; flex-direction: column; gap: 44px; }
+#escala .k { padding-left: 24px; border-left: 3px solid rgba(79,179,206,.5); }
+#escala .k .w { font: 600 44px/1 'Plex Sans', sans-serif; letter-spacing: .02em; white-space: nowrap; color: rgba(255,255,255,.85); }
+#escala .k .s { margin-top: 10px; font: 400 28px/1.2 'Plex Sans', sans-serif; color: rgba(255,255,255,.7); white-space: nowrap; }
+#escala .k.main { border-left: 4px solid var(--cel); margin-bottom: 18px; }
+#escala .k.main .w { font-size: 92px; line-height: 1; letter-spacing: 0; color: var(--cel); text-shadow: 0 0 34px rgba(79,179,206,.55); }
+#escala .k.main .s { font-size: 32px; color: #fff; margin-top: 14px; }
+.lite #escala .k.main .w { text-shadow: none; }
 #escala .steps { position: absolute; left: 72px; top: 800px; width: 1776px; height: 160px; }
 #escala .steps .st { position: absolute; top: 40px; font: 500 36px/1.1 'Plex Mono', monospace; letter-spacing: .1em; }
 #escala .steps .st small { display: block; font-size: 26px; color: var(--cel); margin-bottom: 10px; }
 #escala .steps .strip { top: 14px; left: 0; gap: 9px; }
 #escala .steps .seg { width: 22px; }
-
-/* ---------- presupuesto ---------- */
-#presupuesto .row { position: absolute; left: 72px; top: 236px; width: 1776px; height: 680px; display: flex; align-items: stretch; gap: 0; }
-#presupuesto .pc { position: relative; padding: 44px 44px; }
-#presupuesto .pc h3 { margin: 18px 0 0; font: 600 48px/1.15 'Plex Sans', sans-serif; }
-#presupuesto .pc ul { list-style: none; margin: 28px 0 0; padding: 0; }
-#presupuesto .pc li { font: 400 40px/1.3 'Plex Sans', sans-serif; padding: 10px 0 10px 24px; border-left: 3px solid rgba(79,179,206,.6); margin-bottom: 16px; }
-#presupuesto .a { width: 560px; background: var(--teal); }
-#presupuesto .a .tag { color: #fff; }
-#presupuesto .a li { border-left-color: rgba(255,255,255,.7); }
-#presupuesto .b { width: 560px; border: 1px solid rgba(79,179,206,.7); }
-#presupuesto .c { width: 480px; border: 1.5px dashed rgba(79,179,206,.7); }
-#presupuesto .plus { width: 88px; display: flex; align-items: center; justify-content: center; }
-#presupuesto .plus svg { width: 56px; height: 56px; }
-#presupuesto .plus path { stroke: var(--cel); stroke-width: 3; fill: none; }
-
-/* ---------- punto de equilibrio ---------- */
-#equilibrio .formula { position: absolute; left: 72px; top: 226px; display: flex; align-items: flex-end; gap: 28px; font: 500 36px/1 'Plex Mono', monospace; letter-spacing: .06em; }
-#equilibrio .formula .t { padding-bottom: 12px; border-bottom: 1.5px solid rgba(79,179,206,.7); white-space: nowrap; min-width: 40px; }
-#equilibrio .formula .op { color: var(--cel); padding-bottom: 12px; }
-#equilibrio .num1 { position: absolute; left: 60px; top: 330px; font: 600 420px/1 'Plex Mono', monospace; letter-spacing: -.05em; }
-#equilibrio .lab1 { position: absolute; left: 80px; top: 774px; font: 500 30px/1.2 'Plex Mono', monospace; letter-spacing: .14em; color: var(--cel); }
-#equilibrio .num2 { position: absolute; left: 1210px; top: 420px; font: 500 330px/1 'Plex Mono', monospace; color: rgba(79,179,206,.55); }
-#equilibrio .lab2 { position: absolute; left: 1215px; top: 774px; width: 640px; font: 500 26px/1.35 'Plex Mono', monospace; letter-spacing: .12em; color: rgba(79,179,206,.75); }
-#equilibrio .frase { position: absolute; left: 72px; top: 880px; font: 500 46px/1.2 'Plex Sans', sans-serif; color: #fff; }
-
-/* ---------- caso y pago ---------- */
-#pago .hds { position: absolute; left: 72px; top: 236px; width: 610px; padding: 44px 48px; background: rgba(10,10,10,.22); }
-#pago .hds .big { margin-top: 30px; font: 600 150px/1 'Plex Mono', monospace; letter-spacing: -.04em; white-space: nowrap; }
-#pago .hds .big small { font-size: 62px; letter-spacing: 0; margin-left: 10px; color: var(--cel); font-weight: 500; }
-#pago .hds .lb { margin-top: 16px; }
-#pago .hds p { font: 400 38px/1.3 'Plex Sans', sans-serif; margin: 40px 0 0; }
-#pago .hds .fases { margin-top: 34px; padding-top: 24px; border-top: 1px solid rgba(79,179,206,.4); font: 600 40px/1 'Plex Sans', sans-serif; }
-#pago .pay { position: absolute; left: 740px; top: 350px; width: 1098px; height: 470px; }
-#pago .pay .head { position: absolute; left: 0; top: 0; width: 1098px; font: 600 58px/1.1 'Plex Sans', sans-serif; white-space: nowrap; }
-#pago .pay .rule { position: absolute; left: 0; top: 92px; width: 1098px; height: 1.5px; background: rgba(79,179,206,.8); transform-origin: left; }
-#pago .pay .rule::before { content: ''; position: absolute; left: 0; top: 0; width: 1.5px; height: 208px; background: rgba(79,179,206,.8); }
-#pago .pay .pcs { position: absolute; left: 0; top: 118px; width: 1098px; height: 170px; }
-#pago .pay .pc { position: absolute; top: 0; font: 600 164px/1 'Plex Mono', monospace; letter-spacing: -.04em; white-space: nowrap; }
-#pago .pay .pc i { font: 500 64px/1 'Plex Mono', monospace; font-style: normal; color: var(--cel); margin-left: 6px; letter-spacing: 0; }
-#pago .pay .p1 { left: 24px; } #pago .pay .p2 { left: 552px; } #pago .pay .p3 { right: 0; }
-#pago .pay .strip { position: absolute; left: 0; top: 300px; gap: 6px; }
-#pago .pay .seg { width: 48px; height: 34px; }
-#pago .pay .seg.sp { margin-left: 12px; }
-#pago .pay .labs { position: absolute; left: 0; top: 360px; width: 1098px; }
-#pago .pay .lb { position: absolute; top: 0; white-space: nowrap; }
-#pago .pay .lb b { display: block; font: 600 34px/1.1 'Plex Sans', sans-serif; }
-#pago .pay .lb span { display: block; margin-top: 8px; font: 500 24px/1.2 'Plex Mono', monospace; letter-spacing: .06em; color: var(--cel); }
-#pago .pay .l1 { left: 0; } #pago .pay .l2 { left: 552px; } #pago .pay .l3 { right: 0; text-align: right; }
 
 /* ---------- Identidad: las flechas se dibujan ---------- */
 /* PNG horizontal (2400x829, con su área de seguridad) a 880 px: escala .36667, margen 76 px.
@@ -311,60 +240,198 @@ img.logo, img.iso { display: block; height: auto; object-fit: contain; max-width
 #identidad .iso .glow circle { fill: url(#isoGlow); opacity: 0; }
 #identidad .isoline { position: absolute; left: 72px; top: 554px; margin: 0; font: 400 42px/1 'Plex Sans', sans-serif; letter-spacing: 0; color: var(--cel); white-space: nowrap; }
 
-/* ---------- Conclusiones A: el estante que se abre ---------- */
-#conclusiones-a .estante .cell { opacity: .15; }
-#conclusiones-a .estante .hand { opacity: .1; }
-#conclusiones-a .estante.respira .cell { animation: respira 7s ease-in-out infinite; }
-@keyframes respira { 0%, 100% { stroke-opacity: 1; } 50% { stroke-opacity: .5; } }
-.lite #conclusiones-a .estante.respira .cell, .calm #conclusiones-a .estante.respira .cell { animation: none; }
-#conclusiones-a .dr { position: absolute; }
-#conclusiones-a .dr .halo { left: -18%; top: -70%; width: 136%; height: 240%; opacity: 0; }
-#conclusiones-a .dr.grande .halo { left: -20%; top: -45%; width: 140%; height: 190%; }
-#conclusiones-a .dr .in {
-  position: absolute; inset: 0; opacity: 0; padding: 0 40px;
-  display: flex; flex-direction: column; justify-content: center;
-  background: rgba(79,179,206,.1); border: 1.5px solid var(--cel);
-}
-#conclusiones-a .dr .in p { margin: 0; font: 600 64px/1.1 'Plex Sans', sans-serif; color: #fff; white-space: nowrap; }
-#conclusiones-a .dr.grande .in { padding: 0 48px; }
-#conclusiones-a .dr.grande .in h3 { margin: 0 0 26px; font: 600 64px/1 'Plex Sans', sans-serif; color: var(--cel); }
-#conclusiones-a .dr.grande .in p { font: 400 36px/1.3 'Plex Sans', sans-serif; color: rgba(255,255,255,.92); margin: 4px 0; }
-#conclusiones-a .dr .front { position: absolute; inset: 0; background: var(--cel); opacity: 0; }
-#conclusiones-a .dr .front::after { content: ''; position: absolute; left: 50%; bottom: 22%; width: 140px; height: 4px; margin-left: -70px; background: var(--pet); }
-#conclusiones-a .vento, #conclusiones-b .vento { position: absolute; font: 500 24px/1 'Plex Mono', monospace; letter-spacing: .16em; color: rgba(79,179,206,.8); text-transform: uppercase; white-space: nowrap; }
-#conclusiones-a .vento { left: 154px; top: 972px; }
 
-/* ---------- Conclusiones B: la conversación con Stockus ---------- */
-#conclusiones-b .tenue .cell { opacity: .08; }
-#conclusiones-b .tenue .hand { opacity: .06; }
-#conclusiones-b .qb {
-  position: absolute; left: 330px; width: 1260px; height: 92px; padding: 0 32px;
-  display: flex; align-items: center; border: 1.5px solid rgba(79,179,206,.7); border-radius: 2px;
-  font: 500 38px/1 'Plex Mono', monospace; color: #fff; white-space: nowrap;
-}
-#conclusiones-b .q1 { top: 130px; }
-#conclusiones-b .q2 { top: 578px; }
-#conclusiones-b .led { position: absolute; left: 330px; top: 303px; width: 44px; height: 14px; }
-#conclusiones-b .led i { position: absolute; inset: 0; background: var(--cel); box-shadow: 0 0 18px 4px rgba(79,179,206,.7); }
-#conclusiones-b .led .halo { left: -118px; top: -93px; width: 280px; height: 200px; }
-.lite #conclusiones-b .led i { box-shadow: none; }
-#conclusiones-b .ans { position: absolute; left: 420px; }
-#conclusiones-b .a1 { top: 268px; }
-#conclusiones-b .a2 { top: 712px; }
-#conclusiones-b .ans p { margin: 0; white-space: nowrap; }
-#conclusiones-b .a1 p { height: 84px; font: 600 64px/84px 'Plex Sans', sans-serif; color: #fff; }
-#conclusiones-b .a2 .big { height: 100px; font: 600 88px/100px 'Plex Sans', sans-serif; color: var(--cel); }
-#conclusiones-b .a2 .sub { height: 52px; margin-top: 14px; font: 400 38px/52px 'Plex Sans', sans-serif; color: rgba(255,255,255,.92); }
-#conclusiones-b .vento { right: 72px; top: 978px; }
-.cur { display: inline-block; width: 3px; height: .9em; margin-left: 6px; background: var(--cel); vertical-align: -.1em; animation: parpadeo 1s steps(1) infinite; }
-@keyframes parpadeo { 50% { opacity: 0; } }
+/* ---------- Presupuesto: dos piezas + punto de equilibrio de fondo ---------- */
+#presupuesto .row { position: absolute; left: 72px; top: 236px; width: 1776px; height: 540px; display: flex; align-items: stretch; }
+#presupuesto .pc { position: relative; padding: 48px 52px; width: 820px; }
+#presupuesto .pc h3 { margin: 20px 0 0; font: 600 54px/1.15 'Plex Sans', sans-serif; }
+#presupuesto .pc ul { list-style: none; margin: 34px 0 0; padding: 0; }
+#presupuesto .pc li { font: 400 42px/1.3 'Plex Sans', sans-serif; padding: 10px 0 10px 26px; border-left: 3px solid rgba(79,179,206,.6); margin-bottom: 18px; }
+#presupuesto .a { background: var(--teal); }
+#presupuesto .a .tag { color: #fff; }
+#presupuesto .a li { border-left-color: rgba(255,255,255,.7); }
+#presupuesto .b { border: 1px solid rgba(79,179,206,.7); background: var(--pet); }
+#presupuesto .plus { width: 136px; display: flex; align-items: center; justify-content: center; }
+#presupuesto .plus svg { width: 64px; height: 64px; }
+#presupuesto .plus path { stroke: var(--cel); stroke-width: 3; fill: none; }
+#presupuesto .equil { position: absolute; left: 72px; top: 846px; width: 1776px; padding-top: 22px; border-top: 1px solid rgba(79,179,206,.22); opacity: .62; }
+#presupuesto .eq1 { display: flex; align-items: baseline; gap: 22px; white-space: nowrap; }
+#presupuesto .eq1 .k { font: 500 22px/1 'Plex Mono', monospace; letter-spacing: .16em; text-transform: uppercase; color: var(--cel); }
+#presupuesto .eq1 .v { font: 600 34px/1 'Plex Sans', sans-serif; color: rgba(255,255,255,.9); }
+#presupuesto .eq1 .j { font: 400 22px/1 'Plex Mono', monospace; letter-spacing: .08em; color: rgba(255,255,255,.7); }
+#presupuesto .eq2 { margin-top: 14px; font: 400 20px/1 'Plex Mono', monospace; letter-spacing: .14em; text-transform: uppercase; color: rgba(79,179,206,.8); }
 
-/* ---------- cierre ---------- */
-#cierre .halo { left: 360px; top: 160px; width: 1200px; height: 800px; }
-#cierre .gr { position: absolute; left: 0; width: 1920px; top: 210px; text-align: center; font: 600 330px/1 'Plex Sans', sans-serif; letter-spacing: -.02em; }
-#cierre .q { position: absolute; left: 0; width: 1920px; top: 590px; text-align: center; font: 500 72px/1 'Plex Mono', monospace; letter-spacing: .12em; color: var(--cel); }
-#cierre .iso { position: absolute; left: 760px; top: 740px; width: 400px; }
-#cierre .strip { left: 960px; top: 960px; transform: translateX(-50%); gap: 12px; }
-#cierre .strip .seg { width: 40px; height: 10px; }
+/* ---------- Caso HDS (chico, a la izquierda) y plan de pago (protagonista) ---------- */
+#pago .hds { position: absolute; left: 72px; top: 236px; width: 440px; padding: 36px 40px 34px; background: rgba(10,10,10,.22); }
+#pago .hds .big { margin-top: 18px; font: 600 140px/1 'Plex Mono', monospace; letter-spacing: -.04em; white-space: nowrap; }
+#pago .hds .mes { margin-top: 4px; font: 500 40px/1 'Plex Mono', monospace; color: var(--cel); }
+#pago .hds .lb { margin-top: 24px; font: 500 22px/1.4 'Plex Mono', monospace; letter-spacing: .12em; text-transform: uppercase; color: #fff; }
+#pago .hds .fichas { margin-top: 22px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+#pago .hds .fichas span { border: 1px solid rgba(79,179,206,.6); padding: 12px 0; text-align: center; font: 500 22px/1 'Plex Mono', monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--cel); }
+#pago .hds .fases { margin-top: 26px; padding-top: 22px; border-top: 1px solid rgba(79,179,206,.4); font: 600 34px/1 'Plex Sans', sans-serif; }
+#pago .pay { position: absolute; left: 584px; top: 236px; width: 1264px; height: 700px; }
+#pago .pay .head { position: absolute; left: 0; top: 0; font: 600 52px/1.1 'Plex Sans', sans-serif; white-space: nowrap; }
+#pago .pay .pcs { position: absolute; left: 0; top: 104px; width: 1258px; height: 200px; }
+#pago .pay .pc { position: absolute; top: 0; font: 600 200px/1 'Plex Mono', monospace; letter-spacing: -.04em; white-space: nowrap; }
+#pago .pay .pc i { font: 500 80px/1 'Plex Mono', monospace; font-style: normal; color: var(--cel); margin-left: 6px; letter-spacing: 0; }
+#pago .pay .p1 { left: 0; } #pago .pay .p2 { left: 632px; } #pago .pay .p3 { right: 0; }
+#pago .pay .strip { position: absolute; left: 0; top: 330px; gap: 6px; }
+#pago .pay .seg { height: 40px; }
+#pago .pay .seg.sp { margin-left: 12px; }
+#pago .pay .labs { position: absolute; left: 0; top: 400px; width: 1258px; }
+#pago .pay .lb { position: absolute; top: 0; white-space: nowrap; }
+#pago .pay .lb b { display: block; font: 600 30px/1.2 'Plex Sans', sans-serif; text-transform: uppercase; letter-spacing: .03em; }
+#pago .pay .lb span { display: block; margin-top: 8px; font: 500 22px/1.3 'Plex Mono', monospace; letter-spacing: .06em; color: var(--cel); }
+#pago .pay .l1 { left: 0; } #pago .pay .l2 { left: 632px; } #pago .pay .l3 { right: 0; text-align: right; }
+#pago .pay .foot2 { position: absolute; left: 0; top: 590px; font: 400 44px/1.1 'Plex Sans', sans-serif; color: var(--cel); white-space: nowrap; }
+
+/* ---------- Cajonera tenue de fondo ---------- */
+.cajonera.tenue .cell { opacity: .08; }
+.cajonera.tenue .hand { opacity: .06; }
+
+/* ---------- Animaciones guiadas (2 y 3): dibujo SVG + subtítulos ---------- */
+.beat svg.dib { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; }
+.beat svg text { font-family: 'Plex Sans', sans-serif; }
+.subband { position: absolute; left: 0; right: 0; top: 832px; height: 172px; z-index: 5; opacity: 0;
+  background: rgba(10,10,10,.24); border-top: 1px solid rgba(79,179,206,.2); }
+.subs { position: absolute; left: 0; right: 0; top: 20px; text-align: center; opacity: 0; }
+.subs .en { margin: 0; font: 600 60px/1.12 'Plex Sans', sans-serif; color: #fff; white-space: nowrap; }
+.subs .es { margin: 10px 0 0; font: 400 38px/1.2 'Plex Sans', sans-serif; color: var(--cel); white-space: nowrap; }
+
+/* Thomas: depósito isométrico */
+#thomas .piso polyline { fill: none; stroke: var(--cel); stroke-width: 1; }
+#thomas .rack .cara { fill: var(--pet); stroke: var(--cel); stroke-width: 1.5; stroke-opacity: .75; stroke-linejoin: round; }
+#thomas .rack .cara.top { fill: color-mix(in srgb, #0B2C40 90%, #4FB3CE); }
+#thomas .rack .cara.lado { fill: color-mix(in srgb, #0B2C40 95%, #4FB3CE); stroke-opacity: .5; }
+#thomas .cajon polygon { fill: none; stroke: var(--cel); stroke-width: 1.2; stroke-opacity: .65; }
+#thomas .cajon .manija, .manija { fill: none; stroke: var(--cel); stroke-width: 1.5; stroke-opacity: .7; }
+#thomas text.preg { font: 600 34px 'Plex Sans', sans-serif; fill: #fff; text-anchor: middle; }
+.cruz path { fill: none; stroke: #fff; stroke-width: 4.5; stroke-linecap: square; }
+.cruz.grande path { stroke-width: 9; }
+.per circle { fill: var(--pet); stroke: #fff; stroke-width: 1.3; }
+.per path { fill: none; stroke: #fff; stroke-width: 1.3; stroke-linecap: square; }
+#thomas .globo rect, #thomas .globo path { fill: var(--pet); stroke: var(--cel); stroke-width: 1.5; }
+#thomas .globo text { font: 600 40px 'Plex Sans', sans-serif; fill: #fff; text-anchor: middle; }
+#thomas .rastro circle { fill: var(--cel); }
+#thomas .reloj circle { fill: none; stroke: var(--cel); stroke-width: 2; }
+#thomas .reloj line { stroke: var(--cel); stroke-width: 2; }
+#thomas .reloj .aguja { stroke: #fff; stroke-width: 6; stroke-linecap: square; }
+#thomas .reloj .aguja.m { stroke-width: 4; }
+#thomas .reloj .eje { fill: #fff; stroke: none; }
+#thomas .th-rot { position: absolute; left: 120px; top: 250px; opacity: 0; }
+#thomas .th-rot .k { font: 500 26px/1 'Plex Mono', monospace; letter-spacing: .18em; text-transform: uppercase; color: var(--cel); }
+#thomas .th-rot .n { margin-top: 22px; font: 600 84px/1 'Plex Sans', sans-serif; letter-spacing: .01em; white-space: nowrap; }
+#thomas .th-rot .d { margin-top: 20px; font: 500 30px/1 'Plex Mono', monospace; letter-spacing: .16em; text-transform: uppercase; color: var(--cel); }
+#thomas .th-nost { position: absolute; left: 112px; top: 226px; font: 600 132px/1.04 'Plex Sans', sans-serif; letter-spacing: .02em; color: #fff; white-space: nowrap; opacity: 0; }
+#thomas .th-rev { position: absolute; inset: 0; opacity: 0; pointer-events: none; }
+#thomas .th-rev .halo { width: 1500px; height: 900px; left: 210px; top: -70px; opacity: 0; }
+#thomas .th-rev .dot { position: absolute; left: 947px; top: 367px; width: 26px; height: 26px; border-radius: 50%; opacity: 0;
+  background: radial-gradient(closest-side, #fff, #4FB3CE 55%, rgba(79,179,206,0)); }
+#thomas .th-rev .word { position: absolute; left: 960px; top: 380px; transform: translate(-50%, -50%); transform-origin: 50% 50%; opacity: 0;
+  font: 600 200px/1.2 'Plex Sans', sans-serif; letter-spacing: .26em; padding: 0 .1em 0 .36em; color: #fff; white-space: nowrap;
+  text-shadow: 0 0 40px rgba(79,179,206,.45); }
+.lite #thomas .th-rev .word { text-shadow: none; }
+#thomas .th-strip { left: 960px; top: 560px; transform: translateX(-50%); gap: 12px; opacity: 0; }
+#thomas .th-strip .seg { width: 30px; height: 9px; }
+#thomas .pasos .pfr { fill: rgba(10,10,10,.16); stroke: var(--cel); stroke-width: 2; }
+#thomas .pasos .pled { fill: var(--cel); }
+#thomas .pasos .pnum { font: 500 26px 'Plex Mono', monospace; fill: var(--cel); letter-spacing: .1em; }
+#thomas .pasos .esq * { fill: none; stroke: #fff; stroke-width: 2.4; }
+#thomas .pasos .esq .lleno { fill: var(--cel); stroke: none; }
+#thomas .pasos .esq .lapiz { stroke: var(--cel); }
+#thomas .pasos .esq .tenue { stroke-opacity: .4; }
+#thomas .pasos .esq .tnum { font: 600 40px 'Plex Mono', monospace; fill: #fff; stroke: none; }
+#thomas .pasos .plab { font: 500 26px 'Plex Mono', monospace; fill: #fff; letter-spacing: .12em; }
+
+/* Pedro */
+#pedro .pe-tit { position: absolute; left: 120px; top: 92px; font: 500 30px/1 'Plex Mono', monospace; letter-spacing: .16em; text-transform: uppercase; color: var(--cel); opacity: 0; }
+#pedro .pe-caj rect { fill: none; stroke: var(--cel); stroke-width: 1.5; stroke-opacity: .55; }
+#pedro .base { fill: rgba(79,179,206,.15); stroke: none; }
+#pedro .luz { fill: var(--cel); stroke: none; opacity: 0; }
+#pedro .obj { fill: var(--cel); opacity: 0; }
+#pedro .pe-snake circle { fill: #fff; }
+#pedro .pe-chat { position: absolute; left: 120px; top: 300px; width: 860px; opacity: 0; }
+#pedro .pe-chat .lab { font: 500 24px/1 'Plex Mono', monospace; letter-spacing: .16em; text-transform: uppercase; color: var(--cel); margin-bottom: 16px; }
+#pedro .pe-chat .campo { height: 124px; border: 1.5px solid var(--cel); border-radius: 2px; display: flex; align-items: center; padding: 0 36px;
+  font: 500 56px/1 'Plex Mono', monospace; color: #fff; white-space: nowrap; background: rgba(10,10,10,.2); }
+#pedro .pe-chat .caret { display: inline-block; width: 4px; height: 60px; margin-left: 8px; background: var(--cel); }
+#pedro .anillo { fill: none; stroke: var(--cel); stroke-width: 2.5; }
+#pedro .rlab { font: 500 28px 'Plex Mono', monospace; fill: var(--cel); text-anchor: middle; letter-spacing: .16em; }
+#pedro .disp rect, #pedro .disp path { fill: none; stroke: #fff; stroke-width: 2; }
+#pedro .pins { stroke: var(--cel) !important; }
+#pedro .dlab { font: 500 22px 'Plex Mono', monospace; fill: var(--cel); text-anchor: middle; letter-spacing: .08em; stroke: none; }
+#pedro .enl line { stroke: var(--cel); stroke-width: 1.5; stroke-dasharray: 4 8; }
+#pedro .wifi path { fill: none; stroke: var(--cel); stroke-width: 10; stroke-linecap: butt; }
+#pedro .lleno { fill: var(--cel); stroke: none; }
+#pedro .tacha { fill: none; stroke: #fff; stroke-width: 9; stroke-linecap: square; }
+#pedro .cartel rect { fill: var(--pet); stroke: #fff; stroke-width: 2.5; }
+#pedro .cartel text { font: 600 44px 'Plex Mono', monospace; fill: #fff; text-anchor: middle; letter-spacing: .1em; }
+#pedro .senal .vacio { fill: none; stroke: var(--cel); stroke-width: 2; stroke-opacity: .55; }
+#pedro .tilde { fill: none; stroke: #fff; stroke-width: 10; stroke-linecap: square; stroke-linejoin: miter; }
+#pedro .nfr { fill: rgba(10,10,10,.18); stroke: var(--cel); stroke-width: 2; }
+#pedro .ntit { font: 600 36px 'Plex Mono', monospace; fill: #fff; letter-spacing: .04em; }
+#pedro .nsub { font: 500 22px 'Plex Mono', monospace; fill: var(--cel); letter-spacing: .12em; }
+#pedro .ndib rect, #pedro .ndib path { fill: none; stroke: #fff; stroke-width: 2; }
+#pedro .ndib rect.base { fill: rgba(79,179,206,.15); stroke: none; }
+#pedro .ndib rect.luz { fill: var(--cel); stroke: none; }
+#pedro .flecha { fill: none; stroke: var(--cel); stroke-width: 3; }
+#pedro .mueble { fill: none; stroke: var(--cel); stroke-width: 2.5; }
+#pedro .estante { stroke: var(--cel); stroke-width: 3; }
+#pedro .mc { fill: none; stroke: var(--cel); stroke-width: 1.5; stroke-opacity: .6; }
+#pedro .pe-maqlab { position: absolute; left: 1410px; top: 170px; display: flex; align-items: center; gap: 16px; opacity: 0;
+  font: 500 30px/1 'Plex Mono', monospace; letter-spacing: .14em; text-transform: uppercase; color: #fff; }
+#pedro .pe-maqlab i { display: block; width: 22px; height: 22px; border-radius: 50%; background: var(--cel); box-shadow: 0 0 16px 4px rgba(79,179,206,.6); }
+.lite .beat .pe-maqlab i { box-shadow: none; }
+
+/* ---------- Conversación con Stockus: chat de layout fijo ---------- */
+#conversacion .chat { position: absolute; left: 240px; top: 52px; width: 1440px; height: 944px; opacity: 0;
+  border: 1px solid var(--cel); border-radius: 2px; background: color-mix(in srgb, #0B2C40 93%, #ffffff); }
+#conversacion .chead { position: absolute; left: 0; right: 0; top: 0; height: 96px; display: flex; align-items: center; justify-content: space-between;
+  padding: 0 64px; border-bottom: 1px solid rgba(79,179,206,.45); }
+#conversacion .hl { display: flex; align-items: center; gap: 22px; }
+#conversacion .ledp { display: block; width: 18px; height: 18px; border-radius: 50%; background: var(--cel); box-shadow: 0 0 16px 5px rgba(79,179,206,.6); }
+#conversacion .nm { font: 600 34px/1 'Plex Sans', sans-serif; letter-spacing: .26em; }
+#conversacion .est { font: 500 22px/1 'Plex Mono', monospace; letter-spacing: .14em; text-transform: uppercase; color: var(--cel); }
+#conversacion .cbody { position: absolute; left: 0; right: 0; top: 97px; bottom: 0; overflow: hidden; }
+#conversacion .col { position: absolute; left: 64px; right: 64px; top: 64px; }
+#conversacion .msg { position: absolute; left: 0; right: 0; opacity: 0; }
+#conversacion .m1 { top: 0; } #conversacion .m2 { top: 196px; } #conversacion .m3 { top: 564px; } #conversacion .m4 { top: 760px; }
+#conversacion .lab { height: 30px; margin-bottom: 12px; font: 500 24px/30px 'Plex Mono', monospace; letter-spacing: .16em; text-transform: uppercase; color: var(--cel); }
+#conversacion .q .lab { text-align: right; }
+#conversacion .a .lab { padding-left: 60px; }
+#conversacion .row { display: flex; align-items: flex-start; }
+#conversacion .q .row { justify-content: flex-end; }
+#conversacion .bub { position: relative; border-radius: 2px; }
+#conversacion .q .bub { height: 114px; padding: 22px 28px; max-width: 940px; background: var(--teal); font: 500 56px/70px 'Plex Sans', sans-serif; color: #fff; white-space: nowrap; }
+#conversacion .a .bub { padding: 28px 36px; max-width: 1252px; background: var(--pet); border: 1px solid var(--cel); color: #fff; }
+#conversacion .a .bub:not(.fin) { height: 286px; }
+#conversacion .av { display: block; flex: none; width: 22px; height: 22px; margin: 34px 38px 0 0; border-radius: 50%; background: var(--cel); box-shadow: 0 0 16px 5px rgba(79,179,206,.55); opacity: 0; }
+#conversacion .ln { margin: 0; display: flex; align-items: center; gap: 16px; font: 400 56px/75.6px 'Plex Sans', sans-serif; white-space: nowrap; }
+#conversacion .ln .l { display: block; flex: none; width: 12px; height: 12px; background: var(--cel); box-shadow: 0 0 10px 2px rgba(79,179,206,.7); opacity: 0; }
+#conversacion .fin { height: 232px; }
+#conversacion .fin .big { margin: 0; font: 400 96px/110px 'Plex Sans', sans-serif; color: var(--cel); white-space: nowrap; }
+#conversacion .fin .sub { margin: 10px 0 0; font: 400 40px/54px 'Plex Sans', sans-serif; color: rgba(255,255,255,.92); white-space: nowrap; }
+#conversacion .hold { position: relative; display: inline-block; }
+#conversacion .ghost2 { visibility: hidden; }
+#conversacion .tx { position: absolute; left: 0; top: 0; white-space: nowrap; }
+#conversacion .dots { position: absolute; left: 36px; top: 56px; display: flex; gap: 14px; opacity: 0; }
+#conversacion .fin .dots { top: 70px; }
+#conversacion .dots i { display: block; width: 14px; height: 14px; border-radius: 50%; background: var(--cel); }
+#conversacion .cvento { position: absolute; right: 64px; bottom: 36px; opacity: 0; font: 500 24px/1 'Plex Mono', monospace; letter-spacing: .16em; text-transform: uppercase; color: rgba(79,179,206,.8); }
+.lite #conversacion .ledp, .lite #conversacion .av, .lite #conversacion .ln .l { box-shadow: none; }
+
+/* ---------- Cierre: la frase clave ---------- */
+#cierre .frase { position: absolute; left: 0; top: 214px; width: 1920px; text-align: center; }
+#cierre .frase .l { font: 600 132px/1.14 'Plex Sans', sans-serif; letter-spacing: -.01em; white-space: nowrap; }
+#cierre .frase span { color: #fff; opacity: .2; }
+#cierre .frase span.on { opacity: 1; text-shadow: 0 0 34px rgba(79,179,206,.55); }
+.lite #cierre .frase span.on { text-shadow: none; }
+#cierre .frase .luz { position: absolute; left: 0; top: 0; width: 64px; height: 64px; margin: -32px 0 0 -32px; border-radius: 50%; opacity: 0;
+  background: radial-gradient(closest-side, #fff, rgba(79,179,206,.9) 40%, rgba(79,179,206,0)); }
+#cierre .strip { left: 960px; top: 590px; transform: translateX(-50%); gap: 12px; }
+#cierre .strip .seg { width: 34px; height: 10px; }
+#cierre .stripHalo { left: 260px; top: 470px; width: 1400px; height: 250px; }
+#cierre .gq { position: absolute; left: 0; width: 1920px; top: 668px; text-align: center; font: 500 40px/1 'Plex Mono', monospace; letter-spacing: .14em; text-transform: uppercase; color: var(--cel); }
+#cierre .iso { position: absolute; left: 770px; top: 770px; width: 380px; }
 
 @media (prefers-reduced-motion: reduce) { .breathe { animation: none !important; } }
