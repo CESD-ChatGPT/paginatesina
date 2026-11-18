@@ -406,72 +406,70 @@
     // --- 9: red local, wifi tachado, señal débil (grupo centrado en x = 960) ---
     if (id === 'pe-red') {
       const e2 = S('g', { class: 'pe-red' }, svg);
-      // Tres gráficos en fila, mismo espacio entre ellos y a los costados (165 px), centrados en y = 515:
-      // anillo (600 de ancho) · wifi tachado (424) · señal débil (234)
-      const RX = 465, RY = 515, RR = 300;
+      // Tres paneles en fila: 120 | anillo 600 | 160 | wifi 380 | 160 | señal 380 | 120. Centro vertical común: y = 523
+      // (centro del área útil, entre el rótulo superior y la banda de subtítulos).
+      const CY = 523, RX = 420, RY = CY, RR = 300;
       const anillo = S('circle', { class: 'anillo', cx: RX, cy: RY, r: RR }, e2);
-      const rlab = S('text', { class: 'rlab', x: RX, y: RY - RR + 58 }, e2); rlab.textContent = 'RED LOCAL';
-      const rotulo = (g, cx, y, txt) => { const t = S('text', { class: 'dlab', x: cx, y: y + 16 + 18 }, g); t.textContent = txt; return y + 16 + 24; };
-      // cuatro dispositivos en los vértices de un rombo (a 150 px del centro del anillo)
-      const D4 = 150;
-      // Raspberry Pi: abajo
-      const PY = RY + D4;
+      const rlab = S('text', { class: 'rlab', x: RX, y: RY - RR + 60 + 30 }, e2); rlab.textContent = 'RED LOCAL';   // 60 px del borde
+      const rotulo = (g, cx, y, txt) => { const t = S('text', { class: 'dlab', x: cx, y: y + 16 + 9 }, g); t.textContent = txt; return y + 16 + 13; };
+      // Raspberry Pi en el centro; ESP8266, computadora y celular a 120° entre sí, a la misma distancia DR
+      const DR = 155, ang = (g) => [RX + DR * Math.cos(g * Math.PI / 180), RY + DR * Math.sin(g * Math.PI / 180)];
+      const [EX, EYc] = ang(-90), [LX, LYc] = ang(150), [TC, TYc] = ang(30);
+      const PIW = 96, PIH = 60;
       const dRpi = S('g', { class: 'disp' }, e2);
-      S('rect', { x: RX - 80, y: PY - 50, width: 160, height: 100 }, dRpi);
-      S('rect', { x: RX - 50, y: PY - 24, width: 44, height: 44 }, dRpi);
-      S('rect', { x: RX + 12, y: PY - 24, width: 48, height: 24 }, dRpi);
-      S('path', { class: 'pins', d: `M${RX - 68} ${PY - 40} H${RX + 68}` }, dRpi);
-      rotulo(dRpi, RX, PY + 50, 'RASPBERRY PI');
-      // ESP8266: arriba
-      const EY = RY - D4 - 35;
+      S('rect', { x: RX - PIW / 2, y: RY - PIH / 2, width: PIW, height: PIH }, dRpi);
+      S('rect', { x: RX - 32, y: RY - 14, width: 28, height: 28 }, dRpi);
+      S('rect', { x: RX + 6, y: RY - 14, width: 30, height: 15 }, dRpi);
+      S('path', { class: 'pins', d: `M${RX - 40} ${RY - 22} H${RX + 40}` }, dRpi);
+      rotulo(dRpi, RX, RY + PIH / 2, 'RASPBERRY PI');
       const dEsp = S('g', { class: 'disp' }, e2);
-      S('rect', { x: RX - 55, y: EY, width: 110, height: 70 }, dEsp);
-      S('path', { class: 'pins', d: `M${RX - 35} ${EY + 16} h12 v12 h12 v-12 h12 v12 h12 v-12 h12` }, dEsp);
-      S('rect', { x: RX - 30, y: EY + 40, width: 30, height: 20 }, dEsp);
-      const espBajo = rotulo(dEsp, RX, EY + 70, 'ESP8266');
-      // Computadora: a la izquierda (pantalla centrada en la altura del anillo + base)
-      const LX = RX - D4;
-      const dLap = S('g', { class: 'disp' }, e2);
-      S('rect', { x: LX - 65, y: RY - 41, width: 130, height: 82 }, dLap);
-      S('rect', { x: LX - 57, y: RY - 33, width: 114, height: 66 }, dLap);
-      S('path', { d: `M${LX - 87} ${RY + 57} H${LX + 87} L${LX + 73} ${RY + 41} H${LX - 73} Z` }, dLap);
-      rotulo(dLap, LX, RY + 57, 'COMPUTADORA');
-      // Celular: a la derecha, vertical 9:19
-      const dTel = S('g', { class: 'disp' }, e2);
-      const TW = 66, TH = 139, TC = RX + D4, TX = TC - TW / 2, TY = RY - TH / 2;
+      const EW = 84, EH = 54, EY = EYc - EH / 2;
+      S('rect', { x: EX - EW / 2, y: EY, width: EW, height: EH }, dEsp);
+      S('path', { class: 'pins', d: `M${EX - 26} ${EY + 12} h9 v9 h9 v-9 h9 v9 h9 v-9 h9` }, dEsp);
+      S('rect', { x: EX - 22, y: EY + 30, width: 22, height: 15 }, dEsp);
+      const espBajo = rotulo(dEsp, EX, EY + EH, 'ESP8266');
+      const dLap = S('g', { class: 'disp' }, e2);       // computadora: pantalla 80x52 + base de 90 (alto total 64)
+      const LT = LYc - 32;
+      S('rect', { x: LX - 40, y: LT, width: 80, height: 52 }, dLap);
+      S('rect', { x: LX - 34, y: LT + 6, width: 68, height: 40 }, dLap);
+      S('path', { d: `M${LX - 45} ${LT + 64} H${LX + 45} L${LX + 37} ${LT + 52} H${LX - 37} Z` }, dLap);
+      rotulo(dLap, LX, LT + 64, 'COMPUTADORA');
+      const dTel = S('g', { class: 'disp' }, e2);       // celular 9:19
+      const TW = 46, TH = 97, TX = TC - TW / 2, TY = TYc - TH / 2;
       const marcoTel = S('rect', { x: TX, y: TY, width: TW, height: TH, rx: 2 }, dTel);
-      const pantTel = S('rect', { x: TX + 6, y: TY + 16, width: TW - 12, height: TH - 32 }, dTel);
-      S('line', { x1: TC - 11, x2: TC + 5, y1: TY + 8, y2: TY + 8 }, dTel);             // parlante
-      S('circle', { class: 'lleno', cx: TC + 13, cy: TY + 8, r: 2.2 }, dTel);            // cámara
-      S('line', { x1: TC - 11, x2: TC + 11, y1: TY + TH - 8, y2: TY + TH - 8 }, dTel);   // barra de gestos
+      const pantTel = S('rect', { x: TX + 4, y: TY + 12, width: TW - 8, height: TH - 24 }, dTel);
+      S('line', { x1: TC - 8, x2: TC + 3, y1: TY + 6, y2: TY + 6 }, dTel);
+      S('circle', { class: 'lleno', cx: TC + 9, cy: TY + 6, r: 1.8 }, dTel);
+      S('line', { x1: TC - 8, x2: TC + 8, y1: TY + TH - 6, y2: TY + TH - 6 }, dTel);
       const burbujas = S('g', { class: 'tel-chat' }, dTel);
-      S('rect', { x: TX + TW - 12 - 24, y: TY + 30, width: 24, height: 13 }, burbujas);
-      S('rect', { x: TX + 12, y: TY + 52, width: 38, height: 22 }, burbujas);
-      S('line', { x1: TX + 17, x2: TX + 44, y1: TY + 59, y2: TY + 59 }, burbujas);
-      S('line', { x1: TX + 17, x2: TX + 36, y1: TY + 66, y2: TY + 66 }, burbujas);
+      S('rect', { x: TX + TW - 8 - 17, y: TY + 22, width: 17, height: 9 }, burbujas);
+      S('rect', { x: TX + 8, y: TY + 38, width: 27, height: 16 }, burbujas);
+      S('line', { x1: TX + 12, x2: TX + 31, y1: TY + 43, y2: TY + 43 }, burbujas);
+      S('line', { x1: TX + 12, x2: TX + 25, y1: TY + 49, y2: TY + 49 }, burbujas);
       rotulo(dTel, TC, TY + TH, 'CELULAR');
-      // conexiones rectas: computadora y celular, en horizontal, hasta el eje; el ESP baja por el eje hasta la Pi
+      // líneas desde el centro de la Raspberry Pi, por el rayo, del borde de la Pi al borde del otro dispositivo
       const enlaces = S('g', { class: 'enl' }, e2);
-      S('line', { x1: LX + 65, y1: RY, x2: RX, y2: RY }, enlaces);
-      S('line', { x1: TX, y1: RY, x2: RX, y2: RY }, enlaces);
-      S('line', { x1: RX, y1: espBajo + 6, x2: RX, y2: PY - 50 }, enlaces);
-      S('circle', { class: 'nudo', cx: RX, cy: RY, r: 5 }, enlaces);
+      const rayo = (g, d0, d1) => { const c = Math.cos(g * Math.PI / 180), sn = Math.sin(g * Math.PI / 180); S('line', { x1: RX + c * d0, y1: RY + sn * d0, x2: RX + c * d1, y2: RY + sn * d1 }, enlaces); };
+      rayo(-90, PIH / 2 + 4, RY - espBajo - 6);           // hasta debajo del rótulo del ESP
+      rayo(150, 56, DR - 50);
+      rayo(30, 56, DR - 30);
       const devs = [dRpi, dEsp, dLap, dTel];
-      // wifi que se tacha + cartel NO INTERNET (centro en x = 1143)
-      const WX = 1143, WY = 562;
+      // panel 2 (880 a 1260): wifi tachado + cartel. Base de los gráficos en YB, rótulos en una misma línea debajo
+      const YB = CY + 58, WX = 1070, WY = YB - 6;
       const wifi = S('g', { class: 'wifi' }, e2);
-      const arcos = [88, 156, 225].map((r) => S('path', { d: `M${(WX - r * .7071).toFixed(1)} ${(WY - r * .7071).toFixed(1)} A${r} ${r} 0 0 1 ${(WX + r * .7071).toFixed(1)} ${(WY - r * .7071).toFixed(1)}` }, wifi));
-      const wdot = S('circle', { class: 'lleno', cx: WX, cy: WY - 10, r: 17 }, wifi);
-      const strike = S('path', { class: 'tacha', d: `M${WX - 200} ${WY - 250} L${WX + 200} ${WY + 46}` }, e2);
+      const arcos = [88, 162, 236].map((r) => S('path', { d: `M${(WX - r * .7071).toFixed(1)} ${(WY - r * .7071).toFixed(1)} A${r} ${r} 0 0 1 ${(WX + r * .7071).toFixed(1)} ${(WY - r * .7071).toFixed(1)}` }, wifi));
+      const wdot = S('circle', { class: 'lleno', cx: WX, cy: WY - 12, r: 18 }, wifi);
+      const strike = S('path', { class: 'tacha', d: `M${WX - 180} ${WY - 250} L${WX + 180} ${WY + 6}` }, e2);
+      const LBL = YB + 60;                                 // borde superior del cartel; los rótulos comparten línea base
       const cartel = S('g', { class: 'cartel' }, e2);
-      S('rect', { x: WX - 190, y: WY + 88, width: 380, height: 80 }, cartel);
-      const ct = S('text', { x: WX, y: WY + 143 }, cartel); ct.textContent = 'NO INTERNET';
-      // señal débil con tilde (barras de 1543 a 1733)
-      const BX = 1543, BY = 644;
+      S('rect', { x: WX - 175, y: LBL, width: 350, height: 76 }, cartel);
+      const ct = S('text', { x: WX, y: LBL + 53 }, cartel); ct.textContent = 'NO INTERNET';
+      // panel 3 (1420 a 1800): cuatro barras del mismo alto que el wifi, sin tilde
+      const BXc = 1610, BW4 = 58, BG = 30, BX = BXc - (4 * BW4 + 3 * BG) / 2, BY = YB;
       const senal = S('g', { class: 'senal' }, e2);
-      [40, 76, 112, 148].forEach((hh, i) => S('rect', { class: i < 2 ? 'lleno' : 'vacio', x: BX + i * 52, y: BY - hh, width: 34, height: hh }, senal));
-      const tilde = S('path', { class: 'tilde', d: `M${BX + 18} ${BY - 260} L${BX + 65} ${BY - 216} L${BX + 166} ${BY - 328}` }, e2);
-      const slab = S('text', { class: 'rlab', x: BX + 95, y: BY + 66 }, e2); slab.textContent = 'SEÑAL DÉBIL';
+      [62, 120, 178, 236].forEach((hh, i) => S('rect', { class: i < 2 ? 'lleno' : 'vacio', x: BX + i * (BW4 + BG), y: BY - hh, width: BW4, height: hh }, senal));
+      const tilde = S('g', null, e2);
+      const slab = S('text', { class: 'rlab', x: BXc, y: LBL + 53 }, e2); slab.textContent = 'SEÑAL DÉBIL';
       const trazosTel = [marcoTel, pantTel];
       piezas.push((t) => {
         draw(anillo, mv(t, M.anillo, M.anilloDur * .5));
@@ -488,7 +486,6 @@
         op(cartel, pr(t, M.wifi + M.wifiDur * .75, .4) * wv);
         op(senal, pr(t, M.senal, .5));
         op(slab, pr(t, M.senal + .3, .5));
-        op(tilde, t >= M.senal + M.senalDur * .55 ? 1 : 0); draw(tilde, mv(t, M.senal + M.senalDur * .55, M.senalDur * .3));
       });
     }
 
@@ -544,7 +541,7 @@
     // --- 11: maqueta en vivo (bucle) y los tres beneficios ---
     if (id === 'pe-maqueta') {
       const e4 = S('g', { class: 'pe-maq' }, svg);
-      const MX = 560, MY = 156, MW = 800, TIER = 180, MC = 4;
+      const MX = 560, MY = 270, MW = 800, TIER = 180, MC = 4;     // bloque (maqueta + LEDs) centrado: 144 px de aire arriba y abajo
       S('rect', { class: 'mueble', x: MX, y: MY, width: MW, height: TIER * 3 + 10 }, e4);
       const mseg = [], mcaj = [];
       for (let r = 0; r < 3; r++) {
@@ -603,7 +600,6 @@
     return {
       render(t) {
         subs(t);
-        op(kick, id === 'pe-diferencia' ? pr(t, M.titulo, .6) : 1);
         if (tit) op(tit, pr(t, M.titulo, M.tituloDur * .5));
         piezas.forEach((f) => f(t));
       }
