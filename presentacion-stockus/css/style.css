@@ -17,6 +17,12 @@
   --neg: #0A0A0A;
   --ease-in: cubic-bezier(.2, .7, .2, 1);
   --ease: cubic-bezier(.4, 0, .2, 1);
+  /* Grilla común de 1920x1080: todo se apoya en estos márgenes */
+  --mx: 120px;                 /* márgenes laterales: el texto arranca en x = 120 y termina en x = 1800 */
+  --mt: 96px;                  /* margen superior */
+  --mb: 160px;                 /* banda inferior: subtítulos y barra de LEDs (y = 920 a 1080) */
+  --ancho: 1680px;             /* 1920 - 2 × 120 */
+  --piso: 920px;               /* 1080 - 160: nada del contenido baja de acá */
 }
 
 * { box-sizing: border-box; }
@@ -49,7 +55,7 @@ body.show-cursor { cursor: default; }
 
 /* ---------- Tipografía ---------- */
 .title {
-  position: absolute; left: 72px; top: 72px; margin: 0;
+  position: absolute; left: var(--mx); top: var(--mt); margin: 0;
   font: 600 88px/1.05 'Plex Sans', sans-serif; letter-spacing: -.01em; color: #fff;
   white-space: nowrap;
 }
@@ -109,7 +115,7 @@ body.show-cursor { cursor: default; }
   opacity: 0; transition: opacity .3s var(--ease);
 }
 #foot.on { opacity: 1; }
-#foot .bar { position: absolute; left: 50%; bottom: 42px; transform: translateX(-50%); display: flex; gap: 8px; }
+#foot .bar { position: absolute; left: 50%; bottom: 24px; transform: translateX(-50%); display: flex; gap: 8px; }
 #foot .bar i { width: 18px; height: 6px; background: rgba(79,179,206,.15); display: block; }
 #foot .bar i.on { background: var(--cel); box-shadow: 0 0 8px rgba(79,179,206,.6); }
 .lite #foot .bar i.on { box-shadow: none; }
@@ -125,6 +131,15 @@ body.show-cursor { cursor: default; }
   position: absolute; left: 0; top: 0; width: 120px; height: 120px; margin: -60px 0 0 -60px; border-radius: 50%;
   border: 2px solid var(--cel); opacity: 0;
 }
+
+/* ---------- Guía de la grilla (tecla G, solo para ensayar) ---------- */
+#guia { position: absolute; inset: 0; z-index: 70; pointer-events: none; display: none; }
+#stage.guia #guia { display: block; }
+#guia i { position: absolute; display: block; }
+#guia .v { top: 0; bottom: 0; width: 0; border-left: 1px dashed rgba(255,255,255,.7); }
+#guia .l { left: var(--mx); } #guia .c { left: 960px; border-left-color: rgba(79,179,206,.9); } #guia .r { left: calc(1920px - var(--mx)); }
+#guia .h { left: 0; right: 0; height: 0; border-top: 1px dashed rgba(255,255,255,.7); }
+#guia .t { top: var(--mt); } #guia .b { top: var(--piso); }
 
 /* ---------- Superposiciones ---------- */
 #blackout { position: absolute; inset: 0; background: #000; z-index: 100; display: none; }
@@ -146,8 +161,8 @@ img.logo, img.iso { display: block; height: auto; object-fit: contain; max-width
 #cierre canvas { position: absolute; inset: 0; width: 1920px; height: 1080px; }
 
 /* ---------- equipo (seis tarjetas iguales) ---------- */
-#equipo .logo { position: absolute; right: 64px; top: 46px; width: 360px; }
-#equipo .grid { position: absolute; left: 72px; top: 248px; width: 1776px; display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: 300px; gap: 32px; }
+#equipo .logo { position: absolute; right: 89px; top: 80px; width: 360px; }   /* el PNG trae 31 px de margen de seguridad: el logo visible termina en x = 1800 */
+#equipo .grid { position: absolute; left: var(--mx); top: 248px; width: var(--ancho); display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: 320px; gap: 32px; }
 #equipo .card { position: relative; padding: 34px 40px; background: rgba(10,10,10,.18); }
 #equipo .card .num { font: 500 32px/1 'Plex Mono', monospace; color: var(--cel); letter-spacing: .1em; }
 #equipo .card .who { position: absolute; left: 40px; right: 30px; bottom: 34px; }
@@ -156,32 +171,25 @@ img.logo, img.iso { display: block; height: auto; object-fit: contain; max-width
 #equipo .card .sub { margin-top: 10px; font: 400 26px/1.2 'Plex Sans', sans-serif; color: rgba(255,255,255,.72); white-space: nowrap; }
 #equipo .card .dw { position: absolute; right: 34px; top: 30px; width: 56px; height: 40px; border: 1.5px solid rgba(79,179,206,.6); }
 #equipo .card .dw b { position: absolute; inset: 3px; background: var(--cel); box-shadow: 0 0 18px rgba(79,179,206,.6); }
-#equipo .beneficios { position: absolute; left: 72px; top: 918px; width: 1776px; display: flex; justify-content: center; align-items: center; gap: 30px;
-  font: 500 26px/1 'Plex Mono', monospace; letter-spacing: .16em; text-transform: uppercase; color: rgba(255,255,255,.82); }
-#equipo .beneficios span { display: inline-flex; align-items: center; gap: 16px; }
-#equipo .beneficios i { display: block; width: 24px; height: 8px; background: var(--cel); box-shadow: 0 0 12px 2px rgba(79,179,206,.6); opacity: 0; }
-#equipo .beneficios i.on { opacity: 1; }
-#equipo .beneficios b { color: rgba(79,179,206,.6); font-weight: 400; }
-.lite #equipo .beneficios i { box-shadow: none; }
 #equipo .card .dw::after { content: ''; position: absolute; left: 50%; bottom: 8px; width: 16px; height: 2px; margin-left: -8px; background: var(--pet); }
 .lite #equipo .card .dw b { box-shadow: none; }
 
 /* ---------- identidad ---------- */
-#identidad .bars { position: absolute; left: 1040px; top: 236px; display: flex; gap: 26px; }
-#identidad .bar { width: 180px; }
-#identidad .bar .sw { height: 450px; transform-origin: bottom; border: 1px solid rgba(255,255,255,.25); }
+#identidad .bars { position: absolute; left: 1048px; top: 326px; display: flex; gap: 24px; }
+#identidad .bar { width: 170px; }
+#identidad .bar .sw { height: 360px; transform-origin: bottom; border: 1px solid rgba(255,255,255,.25); }
 #identidad .bar .nm { margin-top: 16px; font: 600 30px/1.1 'Plex Sans', sans-serif; }
 #identidad .bar .hx { margin-top: 8px; font: 500 22px/1 'Plex Mono', monospace; color: var(--cel); letter-spacing: .08em; }
-#identidad .samples { position: absolute; left: 1040px; top: 820px; display: flex; gap: 90px; align-items: baseline; }
+#identidad .samples { position: absolute; left: 1048px; top: 790px; display: flex; gap: 90px; align-items: baseline; }
 #identidad .samples .aa { font: 700 110px/1 'Plex Sans', sans-serif; }
 #identidad .samples .mm { font: 500 110px/1 'Plex Mono', monospace; }
 #identidad .samples .sn { font: 500 20px/1 'Plex Mono', monospace; color: var(--cel); letter-spacing: .12em; margin-top: 8px; }
 
 /* ---------- Vento ---------- */
-#vento .def { position: absolute; left: 72px; top: 184px; margin: 0; width: 1776px; white-space: nowrap; font: 400 34px/1.2 'Plex Sans', sans-serif; color: rgba(255,255,255,.9); }
+#vento .def { position: absolute; left: var(--mx); top: 196px; margin: 0; width: var(--ancho); white-space: nowrap; font: 400 34px/1.2 'Plex Sans', sans-serif; color: rgba(255,255,255,.9); }
 #vento .def b { font-weight: 600; color: var(--cel); }
-#vento .frame { position: absolute; left: 160px; top: 260px; width: 1600px; height: 740px; border: 1px solid rgba(79,179,206,.5); overflow: hidden; background: #111; }
-#vento .inner { position: absolute; left: 0; top: 0; width: 1902px; height: 880px; transform: scale(.84122); transform-origin: 0 0; }
+#vento .frame { position: absolute; left: var(--mx); top: 260px; width: 1427px; height: 660px; border: 1px solid rgba(79,179,206,.5); overflow: hidden; background: #111; }
+#vento .inner { position: absolute; left: 0; top: 0; width: 1902px; height: 880px; transform: scale(.75); transform-origin: 0 0; }
 #vento .shot { position: absolute; left: 0; top: 0; width: 1902px; height: 880px; display: block; z-index: 0; }
 #vento .halo.hub { left: 609px; top: 248px; width: 700px; height: 420px; z-index: 1; opacity: .5; }
 #vento svg.over { position: absolute; left: 0; top: 0; width: 1902px; height: 880px; overflow: visible; z-index: 2; }
@@ -196,10 +204,10 @@ img.logo, img.iso { display: block; height: auto; object-fit: contain; max-width
 
 /* ---------- metodología ---------- */
 #metodologia .ghost.word { left: 1090px; top: 150px; }
-#metodologia .big { position: absolute; left: 56px; top: 176px; font: 600 420px/1 'Plex Mono', monospace; letter-spacing: -.04em; color: #fff; }
-#metodologia .bigl { position: absolute; left: 380px; top: 300px; font: 500 116px/1 'Plex Mono', monospace; letter-spacing: .1em; color: var(--cel); }
-#metodologia .bigl2 { position: absolute; left: 386px; top: 450px; white-space: nowrap; font: 400 30px/1 'Plex Mono', monospace; letter-spacing: .16em; color: rgba(79,179,206,.75); }
-#metodologia .tl { position: absolute; left: 72px; top: 640px; width: 1776px; height: 320px; }
+#metodologia .big { position: absolute; left: 104px; top: 176px; font: 600 420px/1 'Plex Mono', monospace; letter-spacing: -.04em; color: #fff; }
+#metodologia .bigl { position: absolute; left: 428px; top: 300px; font: 500 116px/1 'Plex Mono', monospace; letter-spacing: .1em; color: var(--cel); }
+#metodologia .bigl2 { position: absolute; left: 434px; top: 450px; white-space: nowrap; font: 400 30px/1 'Plex Mono', monospace; letter-spacing: .16em; color: rgba(79,179,206,.75); }
+#metodologia .tl { position: absolute; left: var(--mx); top: 640px; width: var(--ancho); height: 320px; }
 #metodologia .tl .line { position: absolute; left: 0; top: 35px; height: 2px; width: 1312px; background: rgba(79,179,206,.2); }
 #metodologia .tl .fill { position: absolute; left: 0; top: 35px; height: 2px; width: 1312px; background: var(--cel); transform-origin: left; }
 #metodologia .tl .nd { position: absolute; top: 0; width: 520px; }
@@ -214,15 +222,15 @@ img.logo, img.iso { display: block; height: auto; object-fit: contain; max-width
 
 /* ---------- escala ---------- */
 #escala .caps { position: absolute; font: 500 24px/1.1 'Plex Mono', monospace; letter-spacing: .14em; color: var(--cel); white-space: nowrap; }
-#escala .keys { position: absolute; left: 1336px; top: 236px; width: 512px; display: flex; flex-direction: column; gap: 44px; }
+#escala .keys { position: absolute; left: 1320px; top: 320px; width: 480px; display: flex; flex-direction: column; gap: 44px; }
 #escala .k { padding-left: 24px; border-left: 3px solid rgba(79,179,206,.5); }
 #escala .k .w { font: 600 44px/1 'Plex Sans', sans-serif; letter-spacing: .02em; white-space: nowrap; color: rgba(255,255,255,.85); }
 #escala .k .s { margin-top: 10px; font: 400 28px/1.2 'Plex Sans', sans-serif; color: rgba(255,255,255,.7); white-space: nowrap; }
 #escala .k.main { border-left: 4px solid var(--cel); margin-bottom: 18px; }
-#escala .k.main .w { font-size: 92px; line-height: 1; letter-spacing: 0; color: var(--cel); text-shadow: 0 0 34px rgba(79,179,206,.55); }
+#escala .k.main .w { font-size: 84px; line-height: 1; letter-spacing: 0; color: var(--cel); text-shadow: 0 0 34px rgba(79,179,206,.55); }
 #escala .k.main .s { font-size: 32px; color: #fff; margin-top: 14px; }
 .lite #escala .k.main .w { text-shadow: none; }
-#escala .steps { position: absolute; left: 72px; top: 800px; width: 1776px; height: 160px; }
+#escala .steps { position: absolute; left: var(--mx); top: 790px; width: var(--ancho); height: 160px; }
 #escala .steps .st { position: absolute; top: 40px; font: 500 36px/1.1 'Plex Mono', monospace; letter-spacing: .1em; }
 #escala .steps .st small { display: block; font-size: 26px; color: var(--cel); margin-bottom: 10px; }
 #escala .steps .strip { top: 14px; left: 0; gap: 9px; }
@@ -231,19 +239,19 @@ img.logo, img.iso { display: block; height: auto; object-fit: contain; max-width
 /* ---------- Identidad: las flechas se dibujan ---------- */
 /* PNG horizontal (2400x829, con su área de seguridad) a 880 px: escala .36667, margen 76 px.
    El isotipo vectorial (manual, pág. 5) se superpone exacto sobre el isotipo del PNG. */
-#identidad .lockup { position: absolute; left: -4px; top: 250px; width: 880px; height: 304px; }
+#identidad .lockup { position: absolute; left: 44px; top: 250px; width: 880px; height: 304px; }
 #identidad .lockup .word { position: absolute; left: 0; top: 0; width: 880px; height: auto; display: block; object-fit: contain;
   clip-path: inset(-10% -10% -10% 30.4%); }       /* solo la palabra SOLVUS: el isotipo lo pone el SVG */
 #identidad .iso { position: absolute; left: 76.02px; top: 76.02px; width: 145.9px; height: 152.04px; overflow: visible; }
 #identidad .iso .st { fill: none; stroke: #fff; stroke-width: 7.5; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 4; }
 #identidad .iso .tri { fill: #fff; }
 #identidad .iso .glow circle { fill: url(#isoGlow); opacity: 0; }
-#identidad .isoline { position: absolute; left: 72px; top: 554px; margin: 0; font: 400 42px/1 'Plex Sans', sans-serif; letter-spacing: 0; color: var(--cel); white-space: nowrap; }
+#identidad .isoline { position: absolute; left: var(--mx); top: 554px; margin: 0; font: 400 42px/1 'Plex Sans', sans-serif; letter-spacing: 0; color: var(--cel); white-space: nowrap; }
 
 
 /* ---------- Presupuesto: dos piezas + punto de equilibrio de fondo ---------- */
-#presupuesto .row { position: absolute; left: 72px; top: 236px; width: 1776px; height: 540px; display: flex; align-items: stretch; }
-#presupuesto .pc { position: relative; padding: 48px 52px; width: 820px; }
+#presupuesto .row { position: absolute; left: var(--mx); top: 248px; width: var(--ancho); height: 528px; display: flex; align-items: stretch; }
+#presupuesto .pc { position: relative; padding: 48px 52px; width: 780px; }
 #presupuesto .pc h3 { margin: 20px 0 0; font: 600 54px/1.15 'Plex Sans', sans-serif; }
 #presupuesto .pc ul { list-style: none; margin: 34px 0 0; padding: 0; }
 #presupuesto .pc li { font: 400 42px/1.3 'Plex Sans', sans-serif; padding: 10px 0 10px 26px; border-left: 3px solid rgba(79,179,206,.6); margin-bottom: 18px; }
@@ -251,10 +259,10 @@ img.logo, img.iso { display: block; height: auto; object-fit: contain; max-width
 #presupuesto .a .tag { color: #fff; }
 #presupuesto .a li { border-left-color: rgba(255,255,255,.7); }
 #presupuesto .b { border: 1px solid rgba(79,179,206,.7); background: var(--pet); }
-#presupuesto .plus { width: 136px; display: flex; align-items: center; justify-content: center; }
+#presupuesto .plus { width: 120px; display: flex; align-items: center; justify-content: center; }
 #presupuesto .plus svg { width: 64px; height: 64px; }
 #presupuesto .plus path { stroke: var(--cel); stroke-width: 3; fill: none; }
-#presupuesto .equil { position: absolute; left: 72px; top: 846px; width: 1776px; padding-top: 22px; border-top: 1px solid rgba(79,179,206,.22); opacity: .62; }
+#presupuesto .equil { position: absolute; left: var(--mx); top: 826px; width: var(--ancho); padding-top: 22px; border-top: 1px solid rgba(79,179,206,.22); opacity: .62; }
 #presupuesto .eq1 { display: flex; align-items: baseline; gap: 22px; white-space: nowrap; }
 #presupuesto .eq1 .k { font: 500 22px/1 'Plex Mono', monospace; letter-spacing: .16em; text-transform: uppercase; color: var(--cel); }
 #presupuesto .eq1 .v { font: 600 34px/1 'Plex Sans', sans-serif; color: rgba(255,255,255,.9); }
@@ -262,27 +270,28 @@ img.logo, img.iso { display: block; height: auto; object-fit: contain; max-width
 #presupuesto .eq2 { margin-top: 14px; font: 400 20px/1 'Plex Mono', monospace; letter-spacing: .14em; text-transform: uppercase; color: rgba(79,179,206,.8); }
 
 /* ---------- Caso HDS (chico, a la izquierda) y plan de pago (protagonista) ---------- */
-#pago .hds { position: absolute; left: 72px; top: 236px; width: 440px; padding: 36px 40px 34px; background: rgba(10,10,10,.22); }
+#pago .hds { position: absolute; left: var(--mx); top: 248px; width: 400px; padding: 36px 40px 34px; background: rgba(10,10,10,.22); }
+#pago .hds .tg2 { margin-top: 8px; color: rgba(255,255,255,.75); }
 #pago .hds .big { margin-top: 18px; font: 600 140px/1 'Plex Mono', monospace; letter-spacing: -.04em; white-space: nowrap; }
 #pago .hds .mes { margin-top: 4px; font: 500 40px/1 'Plex Mono', monospace; color: var(--cel); }
 #pago .hds .lb { margin-top: 24px; font: 500 22px/1.4 'Plex Mono', monospace; letter-spacing: .12em; text-transform: uppercase; color: #fff; }
 #pago .hds .fichas { margin-top: 22px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 #pago .hds .fichas span { border: 1px solid rgba(79,179,206,.6); padding: 12px 0; text-align: center; font: 500 22px/1 'Plex Mono', monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--cel); }
 #pago .hds .fases { margin-top: 26px; padding-top: 22px; border-top: 1px solid rgba(79,179,206,.4); font: 600 34px/1 'Plex Sans', sans-serif; }
-#pago .pay { position: absolute; left: 584px; top: 236px; width: 1264px; height: 700px; }
+#pago .pay { position: absolute; left: 580px; top: 248px; width: 1220px; height: 672px; }
 #pago .pay .head { position: absolute; left: 0; top: 0; font: 600 52px/1.1 'Plex Sans', sans-serif; white-space: nowrap; }
-#pago .pay .pcs { position: absolute; left: 0; top: 104px; width: 1258px; height: 200px; }
-#pago .pay .pc { position: absolute; top: 0; font: 600 200px/1 'Plex Mono', monospace; letter-spacing: -.04em; white-space: nowrap; }
-#pago .pay .pc i { font: 500 80px/1 'Plex Mono', monospace; font-style: normal; color: var(--cel); margin-left: 6px; letter-spacing: 0; }
-#pago .pay .p1 { left: 0; } #pago .pay .p2 { left: 632px; } #pago .pay .p3 { right: 0; }
+#pago .pay .pcs { position: absolute; left: 0; top: 104px; width: 1218px; height: 200px; }
+#pago .pay .pc { position: absolute; top: 0; font: 600 200px/1 'Plex Mono', monospace; letter-spacing: -.07em; white-space: nowrap; }
+#pago .pay .pc i { font: 500 60px/1 'Plex Mono', monospace; font-style: normal; color: var(--cel); margin-left: 10px; letter-spacing: 0; }
+#pago .pay .p1 { left: 0; } #pago .pay .p2 { left: 612px; } #pago .pay .p3 { right: 0; }
 #pago .pay .strip { position: absolute; left: 0; top: 330px; gap: 6px; }
 #pago .pay .seg { height: 40px; }
 #pago .pay .seg.sp { margin-left: 12px; }
-#pago .pay .labs { position: absolute; left: 0; top: 400px; width: 1258px; }
+#pago .pay .labs { position: absolute; left: 0; top: 400px; width: 1218px; }
 #pago .pay .lb { position: absolute; top: 0; white-space: nowrap; }
 #pago .pay .lb b { display: block; font: 600 30px/1.2 'Plex Sans', sans-serif; text-transform: uppercase; letter-spacing: .03em; }
 #pago .pay .lb span { display: block; margin-top: 8px; font: 500 22px/1.3 'Plex Mono', monospace; letter-spacing: .06em; color: var(--cel); }
-#pago .pay .l1 { left: 0; } #pago .pay .l2 { left: 632px; } #pago .pay .l3 { right: 0; text-align: right; }
+#pago .pay .l1 { left: 0; } #pago .pay .l2 { left: 612px; } #pago .pay .l3 { right: 0; text-align: right; }
 #pago .pay .foot2 { position: absolute; left: 0; top: 590px; font: 400 44px/1.1 'Plex Sans', sans-serif; color: var(--cel); white-space: nowrap; }
 
 /* ---------- Cajonera tenue de fondo ---------- */
@@ -290,101 +299,108 @@ img.logo, img.iso { display: block; height: auto; object-fit: contain; max-width
 .cajonera.tenue .hand { opacity: .06; }
 
 /* ---------- Animaciones guiadas (2 y 3): dibujo SVG + subtítulos ---------- */
-.beat svg.dib { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; }
-.beat svg text { font-family: 'Plex Sans', sans-serif; }
-.subband { position: absolute; left: 0; right: 0; top: 832px; height: 172px; z-index: 5; opacity: 0;
+.guiada svg.dib { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; }
+.guiada svg text { font-family: 'Plex Sans', sans-serif; }
+/* subtítulos: en la banda inferior de la grilla (y = 920 a 1080), sobre la barra de LEDs, centrados en x = 960 */
+.subband { position: absolute; left: 0; right: 0; top: var(--piso); height: var(--mb); z-index: 5;
   background: rgba(10,10,10,.24); border-top: 1px solid rgba(79,179,206,.2); }
-.subs { position: absolute; left: 0; right: 0; top: 20px; text-align: center; opacity: 0; }
-.subs .en { margin: 0; font: 600 60px/1.12 'Plex Sans', sans-serif; color: #fff; white-space: nowrap; }
-.subs .es { margin: 10px 0 0; font: 400 38px/1.2 'Plex Sans', sans-serif; color: var(--cel); white-space: nowrap; }
+.subs { position: absolute; left: 0; right: 0; top: 10px; text-align: center; opacity: 0; }
+.subs .en { margin: 0; font: 600 56px/62px 'Plex Sans', sans-serif; color: #fff; white-space: nowrap; }
+.subs .es { margin: 4px 0 0; font: 400 36px/44px 'Plex Sans', sans-serif; color: var(--cel); white-space: nowrap; }
 
 /* Thomas: depósito isométrico */
-#thomas .piso polyline { fill: none; stroke: var(--cel); stroke-width: 1; }
-#thomas .rack .cara { fill: var(--pet); stroke: var(--cel); stroke-width: 1.5; stroke-opacity: .75; stroke-linejoin: round; }
-#thomas .rack .cara.top { fill: color-mix(in srgb, #0B2C40 90%, #4FB3CE); }
-#thomas .rack .cara.lado { fill: color-mix(in srgb, #0B2C40 95%, #4FB3CE); stroke-opacity: .5; }
-#thomas .cajon polygon { fill: none; stroke: var(--cel); stroke-width: 1.2; stroke-opacity: .65; }
-#thomas .cajon .manija, .manija { fill: none; stroke: var(--cel); stroke-width: 1.5; stroke-opacity: .7; }
-#thomas text.preg { font: 600 34px 'Plex Sans', sans-serif; fill: #fff; text-anchor: middle; }
+.th .piso polyline { fill: none; stroke: var(--cel); stroke-width: 1; }
+.th .rack .cara { fill: var(--pet); stroke: var(--cel); stroke-width: 1.5; stroke-opacity: .75; stroke-linejoin: round; }
+.th .rack .cara.top { fill: color-mix(in srgb, #0B2C40 90%, #4FB3CE); }
+.th .rack .cara.lado { fill: color-mix(in srgb, #0B2C40 95%, #4FB3CE); stroke-opacity: .5; }
+.th .cajon polygon { fill: none; stroke: var(--cel); stroke-width: 1.2; stroke-opacity: .65; }
+.th .cajon .manija, .manija { fill: none; stroke: var(--cel); stroke-width: 1.5; stroke-opacity: .7; }
+.th text.preg { font: 600 34px 'Plex Sans', sans-serif; fill: #fff; text-anchor: middle; }
 .cruz path { fill: none; stroke: #fff; stroke-width: 4.5; stroke-linecap: square; }
 .cruz.grande path { stroke-width: 9; }
 .per circle { fill: var(--pet); stroke: #fff; stroke-width: 1.3; }
 .per path { fill: none; stroke: #fff; stroke-width: 1.3; stroke-linecap: square; }
-#thomas .globo rect, #thomas .globo path { fill: var(--pet); stroke: var(--cel); stroke-width: 1.5; }
-#thomas .globo text { font: 600 40px 'Plex Sans', sans-serif; fill: #fff; text-anchor: middle; }
-#thomas .rastro circle { fill: var(--cel); }
-#thomas .reloj circle { fill: none; stroke: var(--cel); stroke-width: 2; }
-#thomas .reloj line { stroke: var(--cel); stroke-width: 2; }
-#thomas .reloj .aguja { stroke: #fff; stroke-width: 6; stroke-linecap: square; }
-#thomas .reloj .aguja.m { stroke-width: 4; }
-#thomas .reloj .eje { fill: #fff; stroke: none; }
-#thomas .th-rot { position: absolute; left: 120px; top: 250px; opacity: 0; }
-#thomas .th-rot .k { font: 500 26px/1 'Plex Mono', monospace; letter-spacing: .18em; text-transform: uppercase; color: var(--cel); }
-#thomas .th-rot .n { margin-top: 22px; font: 600 84px/1 'Plex Sans', sans-serif; letter-spacing: .01em; white-space: nowrap; }
-#thomas .th-rot .d { margin-top: 20px; font: 500 30px/1 'Plex Mono', monospace; letter-spacing: .16em; text-transform: uppercase; color: var(--cel); }
-#thomas .th-nost { position: absolute; left: 112px; top: 226px; font: 600 132px/1.04 'Plex Sans', sans-serif; letter-spacing: .02em; color: #fff; white-space: nowrap; opacity: 0; }
-#thomas .th-rev { position: absolute; inset: 0; opacity: 0; pointer-events: none; }
-#thomas .th-rev .halo { width: 1500px; height: 900px; left: 210px; top: -70px; opacity: 0; }
-#thomas .th-rev .dot { position: absolute; left: 947px; top: 367px; width: 26px; height: 26px; border-radius: 50%; opacity: 0;
+.th .globo rect, .th .globo path { fill: var(--pet); stroke: var(--cel); stroke-width: 1.5; }
+.th .globo text { font: 600 40px 'Plex Sans', sans-serif; fill: #fff; text-anchor: middle; }
+.th .rastro circle { fill: var(--cel); }
+.th .reloj circle { fill: none; stroke: var(--cel); stroke-width: 2; }
+.th .reloj line { stroke: var(--cel); stroke-width: 2; }
+.th .reloj .aguja { stroke: #fff; stroke-width: 6; stroke-linecap: square; }
+.th .reloj .aguja.m { stroke-width: 4; }
+.th .reloj .eje { fill: #fff; stroke: none; }
+.th .th-rot { position: absolute; left: var(--mx); top: 250px; opacity: 0; }
+.th .th-rot .k { font: 500 26px/1 'Plex Mono', monospace; letter-spacing: .18em; text-transform: uppercase; color: var(--cel); }
+.th .th-rot .n { margin-top: 22px; font: 600 84px/1 'Plex Sans', sans-serif; letter-spacing: .01em; white-space: nowrap; }
+.th .th-rot .d { margin-top: 20px; font: 500 30px/1 'Plex Mono', monospace; letter-spacing: .16em; text-transform: uppercase; color: var(--cel); }
+.th .th-nost { position: absolute; left: var(--mx); top: 230px; font: 600 132px/1.04 'Plex Sans', sans-serif; letter-spacing: .02em; color: #fff; white-space: nowrap; opacity: 0; }
+.th .th-rev { position: absolute; inset: 0; opacity: 0; pointer-events: none; }
+.th .th-rev .halo { width: 1500px; height: 900px; left: 210px; top: -10px; opacity: 0; }
+.th .th-rev .dot { position: absolute; left: 947px; top: 427px; width: 26px; height: 26px; border-radius: 50%; opacity: 0;
   background: radial-gradient(closest-side, #fff, #4FB3CE 55%, rgba(79,179,206,0)); }
-#thomas .th-rev .word { position: absolute; left: 960px; top: 380px; transform: translate(-50%, -50%); transform-origin: 50% 50%; opacity: 0;
+.th .th-rev .word { position: absolute; left: 0; top: 0; transform-origin: 0 0; opacity: 0;
   font: 600 200px/1.2 'Plex Sans', sans-serif; letter-spacing: .26em; padding: 0 .1em 0 .36em; color: #fff; white-space: nowrap;
   text-shadow: 0 0 40px rgba(79,179,206,.45); }
-.lite #thomas .th-rev .word { text-shadow: none; }
-#thomas .th-strip { left: 960px; top: 560px; transform: translateX(-50%); gap: 12px; opacity: 0; }
-#thomas .th-strip .seg { width: 30px; height: 9px; }
-#thomas .pasos .pfr { fill: rgba(10,10,10,.16); stroke: var(--cel); stroke-width: 2; }
-#thomas .pasos .pled { fill: var(--cel); }
-#thomas .pasos .pnum { font: 500 26px 'Plex Mono', monospace; fill: var(--cel); letter-spacing: .1em; }
-#thomas .pasos .esq * { fill: none; stroke: #fff; stroke-width: 2.4; }
-#thomas .pasos .esq .lleno { fill: var(--cel); stroke: none; }
-#thomas .pasos .esq .lapiz { stroke: var(--cel); }
-#thomas .pasos .esq .tenue { stroke-opacity: .4; }
-#thomas .pasos .esq .tnum { font: 600 40px 'Plex Mono', monospace; fill: #fff; stroke: none; }
-#thomas .pasos .plab { font: 500 26px 'Plex Mono', monospace; fill: #fff; letter-spacing: .12em; }
+.lite .th .th-rev .word { text-shadow: none; }
+.th .th-strip { left: 960px; top: 610px; transform: translateX(-50%); gap: 12px; opacity: 0; }
+.th .th-strip .seg { width: 30px; height: 9px; }
+.th .pasos .pfr { fill: rgba(10,10,10,.16); stroke: var(--cel); stroke-width: 2; }
+.th .pasos .pled { fill: var(--cel); }
+.th .pasos .pnum { font: 500 26px 'Plex Mono', monospace; fill: var(--cel); letter-spacing: .1em; }
+.th .pasos .esq * { fill: none; stroke: #fff; stroke-width: 2.4; }
+.th .pasos .esq .lleno { fill: var(--cel); stroke: none; }
+.th .pasos .esq .lapiz { stroke: var(--cel); }
+.th .pasos .esq .tenue { stroke-opacity: .4; }
+.th .pasos .esq .tnum { font: 600 40px 'Plex Mono', monospace; fill: #fff; stroke: none; }
+.th .pasos .plab { font: 500 26px 'Plex Mono', monospace; fill: #fff; letter-spacing: .12em; }
 
 /* Pedro */
-#pedro .pe-tit { position: absolute; left: 120px; top: 92px; font: 500 30px/1 'Plex Mono', monospace; letter-spacing: .16em; text-transform: uppercase; color: var(--cel); opacity: 0; }
-#pedro .pe-caj rect { fill: none; stroke: var(--cel); stroke-width: 1.5; stroke-opacity: .55; }
-#pedro .base { fill: rgba(79,179,206,.15); stroke: none; }
-#pedro .luz { fill: var(--cel); stroke: none; opacity: 0; }
-#pedro .obj { fill: var(--cel); opacity: 0; }
-#pedro .pe-snake circle { fill: #fff; }
-#pedro .pe-chat { position: absolute; left: 120px; top: 300px; width: 860px; opacity: 0; }
-#pedro .pe-chat .lab { font: 500 24px/1 'Plex Mono', monospace; letter-spacing: .16em; text-transform: uppercase; color: var(--cel); margin-bottom: 16px; }
-#pedro .pe-chat .campo { height: 124px; border: 1.5px solid var(--cel); border-radius: 2px; display: flex; align-items: center; padding: 0 36px;
+.pe .pe-kick { position: absolute; left: var(--mx); top: var(--mt); font: 500 30px/1 'Plex Mono', monospace; letter-spacing: .16em; text-transform: uppercase; color: var(--cel); opacity: 0; }
+.pe .pe-caj rect { fill: none; stroke: var(--cel); stroke-width: 1.5; stroke-opacity: .55; }
+.pe .base { fill: rgba(79,179,206,.15); stroke: none; }
+.pe .luz { fill: var(--cel); stroke: none; opacity: 0; }
+.pe .obj { fill: var(--cel); opacity: 0; }
+.pe .pe-snake circle { fill: #fff; }
+.pe .pe-title { top: 148px; }
+.pe .pe-chat { position: absolute; left: var(--mx); top: 392px; width: 860px; opacity: 0; }
+.pe .pe-chat .lab { font: 500 24px/1 'Plex Mono', monospace; letter-spacing: .16em; text-transform: uppercase; color: var(--cel); margin-bottom: 16px; }
+.pe .pe-chat .campo { height: 124px; border: 1.5px solid var(--cel); border-radius: 2px; display: flex; align-items: center; padding: 0 36px;
   font: 500 56px/1 'Plex Mono', monospace; color: #fff; white-space: nowrap; background: rgba(10,10,10,.2); }
-#pedro .pe-chat .caret { display: inline-block; width: 4px; height: 60px; margin-left: 8px; background: var(--cel); }
-#pedro .anillo { fill: none; stroke: var(--cel); stroke-width: 2.5; }
-#pedro .rlab { font: 500 28px 'Plex Mono', monospace; fill: var(--cel); text-anchor: middle; letter-spacing: .16em; }
-#pedro .disp rect, #pedro .disp path { fill: none; stroke: #fff; stroke-width: 2; }
-#pedro .pins { stroke: var(--cel) !important; }
-#pedro .dlab { font: 500 22px 'Plex Mono', monospace; fill: var(--cel); text-anchor: middle; letter-spacing: .08em; stroke: none; }
-#pedro .enl line { stroke: var(--cel); stroke-width: 1.5; stroke-dasharray: 4 8; }
-#pedro .wifi path { fill: none; stroke: var(--cel); stroke-width: 10; stroke-linecap: butt; }
-#pedro .lleno { fill: var(--cel); stroke: none; }
-#pedro .tacha { fill: none; stroke: #fff; stroke-width: 9; stroke-linecap: square; }
-#pedro .cartel rect { fill: var(--pet); stroke: #fff; stroke-width: 2.5; }
-#pedro .cartel text { font: 600 44px 'Plex Mono', monospace; fill: #fff; text-anchor: middle; letter-spacing: .1em; }
-#pedro .senal .vacio { fill: none; stroke: var(--cel); stroke-width: 2; stroke-opacity: .55; }
-#pedro .tilde { fill: none; stroke: #fff; stroke-width: 10; stroke-linecap: square; stroke-linejoin: miter; }
-#pedro .nfr { fill: rgba(10,10,10,.18); stroke: var(--cel); stroke-width: 2; }
-#pedro .ntit { font: 600 36px 'Plex Mono', monospace; fill: #fff; letter-spacing: .04em; }
-#pedro .nsub { font: 500 22px 'Plex Mono', monospace; fill: var(--cel); letter-spacing: .12em; }
-#pedro .ndib rect, #pedro .ndib path { fill: none; stroke: #fff; stroke-width: 2; }
-#pedro .ndib rect.base { fill: rgba(79,179,206,.15); stroke: none; }
-#pedro .ndib rect.luz { fill: var(--cel); stroke: none; }
-#pedro .flecha { fill: none; stroke: var(--cel); stroke-width: 3; }
-#pedro .mueble { fill: none; stroke: var(--cel); stroke-width: 2.5; }
-#pedro .estante { stroke: var(--cel); stroke-width: 3; }
-#pedro .mc { fill: none; stroke: var(--cel); stroke-width: 1.5; stroke-opacity: .6; }
-#pedro .pe-maqlab { position: absolute; left: 1410px; top: 170px; display: flex; align-items: center; gap: 16px; opacity: 0;
+.pe .pe-chat .caret { display: inline-block; width: 4px; height: 60px; margin-left: 8px; background: var(--cel); }
+.pe .anillo { fill: none; stroke: var(--cel); stroke-width: 2.5; }
+.pe .rlab { font: 500 28px 'Plex Mono', monospace; fill: var(--cel); text-anchor: middle; letter-spacing: .16em; }
+.pe .disp rect, .pe .disp path { fill: none; stroke: #fff; stroke-width: 2; }
+.pe .pins { stroke: var(--cel) !important; }
+.pe .dlab { font: 500 22px 'Plex Mono', monospace; fill: var(--cel); text-anchor: middle; letter-spacing: .08em; stroke: none; }
+.pe .enl line { stroke: var(--cel); stroke-width: 1.5; stroke-dasharray: 4 8; }
+.pe .wifi path { fill: none; stroke: var(--cel); stroke-width: 10; stroke-linecap: butt; }
+.pe .lleno { fill: var(--cel); stroke: none; }
+.pe .tacha { fill: none; stroke: #fff; stroke-width: 9; stroke-linecap: square; }
+.pe .cartel rect { fill: var(--pet); stroke: #fff; stroke-width: 2.5; }
+.pe .cartel text { font: 600 44px 'Plex Mono', monospace; fill: #fff; text-anchor: middle; letter-spacing: .1em; }
+.pe .senal .vacio { fill: none; stroke: var(--cel); stroke-width: 2; stroke-opacity: .55; }
+.pe .tilde { fill: none; stroke: #fff; stroke-width: 10; stroke-linecap: square; stroke-linejoin: miter; }
+.pe .nfr { fill: rgba(10,10,10,.18); stroke: var(--cel); stroke-width: 2; }
+.pe .ntit { font: 600 36px 'Plex Mono', monospace; fill: #fff; letter-spacing: .04em; }
+.pe .nsub { font: 500 24px 'Plex Mono', monospace; fill: var(--cel); letter-spacing: .12em; }
+.pe .ndib rect, .pe .ndib path { fill: none; stroke: #fff; stroke-width: 2; }
+.pe .ndib rect.base { fill: rgba(79,179,206,.15); stroke: none; }
+.pe .ndib rect.luz { fill: var(--cel); stroke: none; }
+.pe .flecha { fill: none; stroke: var(--cel); stroke-width: 3; }
+.pe .mueble { fill: none; stroke: var(--cel); stroke-width: 2.5; }
+.pe .estante { stroke: var(--cel); stroke-width: 3; }
+.pe .mc { fill: none; stroke: var(--cel); stroke-width: 1.5; stroke-opacity: .6; }
+.pe .pe-maqlab { position: absolute; left: 1410px; top: 140px; display: flex; align-items: center; gap: 16px; opacity: 0;
   font: 500 30px/1 'Plex Mono', monospace; letter-spacing: .14em; text-transform: uppercase; color: #fff; }
-#pedro .pe-maqlab i { display: block; width: 22px; height: 22px; border-radius: 50%; background: var(--cel); box-shadow: 0 0 16px 4px rgba(79,179,206,.6); }
-.lite .beat .pe-maqlab i { box-shadow: none; }
+.pe .pe-maqlab i { display: block; width: 22px; height: 22px; border-radius: 50%; background: var(--cel); box-shadow: 0 0 16px 4px rgba(79,179,206,.6); }
+.lite .pe .pe-maqlab i, .lite .pe .pe-ben i { box-shadow: none; }
+.pe .pe-ben { position: absolute; left: var(--mx); top: 760px; width: var(--ancho); display: flex; justify-content: center; gap: 72px; opacity: 0; }
+.pe .pe-ben .b { display: flex; align-items: center; gap: 18px; }
+.pe .pe-ben i { display: block; width: 28px; height: 10px; background: var(--cel); box-shadow: 0 0 12px 2px rgba(79,179,206,.6); opacity: 0; }
+.pe .pe-ben .en { font: 500 28px/34px 'Plex Mono', monospace; letter-spacing: .12em; text-transform: uppercase; color: #fff; white-space: nowrap; }
+.pe .pe-ben .es { font: 400 22px/28px 'Plex Mono', monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--cel); white-space: nowrap; }
 
 /* ---------- Conversación con Stockus: chat de layout fijo ---------- */
-#conversacion .chat { position: absolute; left: 240px; top: 52px; width: 1440px; height: 944px; opacity: 0;
+#conversacion .chat { position: absolute; left: 240px; top: var(--mt); width: 1440px; height: 824px; opacity: 0;
   border: 1px solid var(--cel); border-radius: 2px; background: color-mix(in srgb, #0B2C40 93%, #ffffff); }
 #conversacion .chead { position: absolute; left: 0; right: 0; top: 0; height: 96px; display: flex; align-items: center; justify-content: space-between;
   padding: 0 64px; border-bottom: 1px solid rgba(79,179,206,.45); }

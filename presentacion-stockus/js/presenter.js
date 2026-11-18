@@ -26,7 +26,7 @@
   addEventListener('keydown', (e) => {
     if (e.ctrlKey || e.metaKey || e.altKey || e.repeat) return;
     if (['F5', 'F11', 'F12'].includes(e.key)) return;
-    if (['ArrowRight', 'ArrowDown', 'PageDown', ' ', 'Enter', 'ArrowLeft', 'ArrowUp', 'PageUp', 'Home', 'End', '.', 'b', 'B', 'r', 'R', 't', 'T', '[', ']', '0'].includes(e.key)) {
+    if (['ArrowRight', 'ArrowDown', 'PageDown', ' ', 'Enter', 'ArrowLeft', 'ArrowUp', 'PageUp', 'Home', 'End', '.', 'b', 'B', 'r', 'R', 't', 'T', 'g', 'G'].includes(e.key)) {
       e.preventDefault(); send({ type: 'key', key: e.key });
     }
   });
@@ -57,11 +57,8 @@
   }
   function tick() {
     const nota = NOTAS[st.idx] || NOTAS[0];
-    // velocidad de las animaciones y reloj de la animación guiada (solo se ven acá)
-    const sp = Math.round((st.speed || 1) * 100);
-    $('speed').textContent = sp + ' %';
-    $('speed').className = sp === 100 ? '' : 'mod';
-    $('anim').textContent = st.anim ? 'animación ' + mmss(st.anim.t) + ' / ' + mmss(st.anim.dur) + (st.anim.t >= st.anim.dur ? ' · terminada' : '') : 'sin animación guiada';
+    // estado de la animación de entrada de la diapositiva actual
+    $('anim').textContent = st.anim ? (st.anim.t >= st.anim.dur ? 'terminada: podés avanzar' : 'en curso · ' + mmss(st.anim.t) + ' / ' + mmss(st.anim.dur)) : '—';
     const clock = $('clock');
     if (!st.timerStart) {
       clock.textContent = '10:00'; clock.className = ''; $('elapsed').textContent = 'arranca al pasar de la 1 a la 2'; $('delta').textContent = '';

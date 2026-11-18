@@ -6,21 +6,64 @@ window.NOTAS = {
     { t0: 0, t1: 30, quien: 'Thomas', bloque: 'Entrada',
       ind: 'Sala a oscuras. Thomas junto al estante, con el micrófono abierto. El técnico mantiene las luces apagadas hasta que Thomas diga «Hello, everyone».',
       texto: '“Stockus, ¿dónde está el tornillo?”',
-      ind2: 'Se enciende un solo LED y Stockus responde por voz. Pausa de 2 segundos. Thomas se acerca y saca la caja con la imagen del tornillo. Al decir «Hello, everyone» → ENCENDER TODAS LAS LUCES y pasar a la 2 (corte directo).' }
+      ind2: 'Se enciende un solo LED y Stockus responde por voz. Pausa de 2 segundos. Thomas se acerca y saca la caja con la imagen del tornillo. Al decir «Hello, everyone» → ENCENDER TODAS LAS LUCES y AVANZAR → DIAPO 2.' }
   ] },
-  'thomas': { titulo: 'La historia: HDS y Stockus (animación guiada)', bloques: [
-    { t0: 30, t1: 100, quien: 'Thomas', bloque: 'Inglés 1: el problema y el sistema', en: true,
-      ind: 'La animación arranca sola (unos 70 s) con subtítulos. Si vas más rápido o más lento: [ y ] ajustan la velocidad; R la reinicia.',
-      texto: '“Hello, everyone. I\'m going to talk about our project, Stockus. All this started when we were doing an internship at HDS technology, a company related to logistics and warehouses.”\n\n“During the internship, we found a BIG PROBLEM: they didn\'t have a stock system. The stock was controlled verbally, and it was disorganized.”\n\n“Because of this, the employees lost time looking for tools, and mistakes in the warehouse were common.”\n\n“So we decided to create Stockus. Our solution is a stock control system for storage facilities.”\n\n“And using Stockus is fast and simple. Once you log in, you have full control over your warehouse: you can add or update products in seconds, record every stock movement, and track your inventory in real time.”\n\n“Now my partner will explain how the system works.”' }
+  'th-deposito': { titulo: 'Thomas · El depósito de HDS y el problema', bloques: [
+    { t0: 30, t1: 53, quien: 'Thomas', bloque: 'Inglés 1 · el depósito y el problema', en: true,
+      ind: 'La animación arranca sola (unos 20 s): primero el depósito y HDS, después los «?» y NO STOCK SYSTEM.',
+      texto: '“Hello, everyone. I\'m going to talk about our project, Stockus. All this started when we were doing an internship at HDS technology, a company related to logistics and warehouses.”\n\n“During the internship, we found a BIG PROBLEM: they didn\'t have a stock system.”',
+      ind2: 'AVANZAR → DIAPO 3 al decir: «The stock was controlled verbally…»' }
   ] },
-  'pedro': { titulo: 'Lo que diferencia a Stockus (animación guiada)', bloques: [
-    { t0: 100, t1: 166, quien: 'Pedro', bloque: 'Inglés 2: los LEDs y la tecnología', en: true,
-      ind: 'La animación arranca sola (unos 66 s) con subtítulos; al final la maqueta queda en bucle.',
-      texto: '“Thank you. Now I\'m going to talk about the feature that makes Stockus different.”\n\n“The user can ask the system where a product is. Then, the LEDs on the shelves turn on and show the exact location. This way, workers find products fast, without searching shelf by shelf.”\n\n“Now, about the technology. The system works on a local network, so it doesn\'t need internet. This is very useful for warehouses with a weak connection. It uses a Raspberry Pi as the main computer, and a small board called ESP8266 to control the LED strip.”\n\n“We also built a small model with shelves and LEDs. It works live with our software, so you can see it in action.”\n\n“Thank you.”' }
+  'th-palabra': { titulo: 'Thomas · Stock controlado de palabra', bloques: [
+    { t0: 53, t1: 58, quien: 'Thomas', bloque: 'Inglés 1 · de palabra', en: true,
+      texto: '“The stock was controlled verbally, and it was disorganized.”',
+      ind2: 'AVANZAR → DIAPO 4 al decir: «Because of this, the employees lost time…»' }
+  ] },
+  'th-tiempo': { titulo: 'Thomas · Tiempo perdido y errores', bloques: [
+    { t0: 58, t1: 66, quien: 'Thomas', bloque: 'Inglés 1 · tiempo y errores', en: true,
+      texto: '“Because of this, the employees lost time looking for tools, and mistakes in the warehouse were common.”',
+      ind2: 'AVANZAR → DIAPO 5 al decir: «So we decided to create Stockus…»' }
+  ] },
+  'th-stockus': { titulo: 'Thomas · Aparece STOCKUS', bloques: [
+    { t0: 66, t1: 74, quien: 'Thomas', bloque: 'Inglés 1 · la solución', en: true,
+      texto: '“So we decided to create Stockus. Our solution is a stock control system for storage facilities.”',
+      ind2: 'AVANZAR → DIAPO 6 al decir: «And using Stockus is fast and simple…»' }
+  ] },
+  'th-pasos': { titulo: 'Thomas · Los cuatro pasos', bloques: [
+    { t0: 74, t1: 100, quien: 'Thomas', bloque: 'Inglés 1 · cómo se usa', en: true,
+      ind: 'Los cuatro pasos entran solos, uno cada 5 s, con su subtítulo.',
+      texto: '“And using Stockus is fast and simple. Once you log in, you have full control over your warehouse: you can add or update products in seconds, record every stock movement, and track your inventory in real time.”\n\n“Now my partner will explain how the system works.”',
+      ind2: 'AVANZAR → DIAPO 7 (Pedro) al decir: «Thank you. Now I\'m going to talk about…»' }
+  ] },
+  'pe-diferencia': { titulo: 'Pedro · Lo que diferencia a Stockus', bloques: [
+    { t0: 100, t1: 112, quien: 'Pedro', bloque: 'Inglés 2 · lo que lo hace diferente', en: true,
+      texto: '“Thank you. Now I\'m going to talk about the feature that makes Stockus different.”\n\n“The user can ask the system where a product is.”',
+      ind2: 'AVANZAR → DIAPO 8 al decir: «Then, the LEDs on the shelves turn on…»' }
+  ] },
+  'pe-leds': { titulo: 'Pedro · Los LEDs marcan el lugar', bloques: [
+    { t0: 112, t1: 123, quien: 'Pedro', bloque: 'Inglés 2 · los LEDs', en: true,
+      texto: '“Then, the LEDs on the shelves turn on and show the exact location. This way, workers find products fast, without searching shelf by shelf.”',
+      ind2: 'AVANZAR → DIAPO 9 al decir: «Now, about the technology…»' }
+  ] },
+  'pe-red': { titulo: 'Pedro · Red local, sin internet', bloques: [
+    { t0: 123, t1: 137, quien: 'Pedro', bloque: 'Inglés 2 · red local', en: true,
+      texto: '“Now, about the technology. The system works on a local network, so it doesn\'t need internet. This is very useful for warehouses with a weak connection.”',
+      ind2: 'AVANZAR → DIAPO 10 al decir: «It uses a Raspberry Pi…»' }
+  ] },
+  'pe-hardware': { titulo: 'Pedro · Raspberry Pi y ESP8266', bloques: [
+    { t0: 137, t1: 147, quien: 'Pedro', bloque: 'Inglés 2 · el hardware', en: true,
+      texto: '“It uses a Raspberry Pi as the main computer, and a small board called ESP8266 to control the LED strip.”',
+      ind2: 'AVANZAR → DIAPO 11 al decir: «We also built a small model…»' }
+  ] },
+  'pe-maqueta': { titulo: 'Pedro · La maqueta en vivo', bloques: [
+    { t0: 147, t1: 166, quien: 'Pedro', bloque: 'Inglés 2 · la maqueta', en: true,
+      ind: 'La maqueta queda en bucle; los tres LEDs de abajo se encienden a los 8, 11 y 14 s.',
+      texto: '“We also built a small model with shelves and LEDs. It works live with our software, so you can see it in action.”\n\n“In short, Stockus saves time, reduces mistakes, and keeps the stock organized.”\n\n“Thank you.”',
+      ind2: 'AVANZAR → DIAPO 12 (Gonzalo).' }
   ] },
   'equipo': { titulo: 'Somos Solvus (equipo)', bloques: [
     { t0: 166, t1: 206, quien: 'Gonzalo', bloque: 'Equipo y producto',
-      texto: '“Gracias, Pedro. En resumen, Stockus ahorra tiempo, reduce errores y mantiene el stock organizado. Como vieron al empezar, le preguntamos por un tornillo y nos mostró dónde estaba: puede buscar cualquier cosa, en segundos.”\n\n“Nosotros somos Solvus, la empresa que lo desarrolló. Yo soy Gonzalo, Scrum Master y coordinador. Francisco es Product Owner y responsable de comunicación; Luana, gestora de documentación; y Pedro, Luciano y Thomas, desarrolladores e investigadores. Luciano les muestra nuestra identidad.”' }
+      texto: '“Gracias, Pedro. Como vieron al empezar, le preguntamos por un tornillo y nos mostró dónde estaba: puede buscar cualquier cosa, en segundos.”\n\n“Nosotros somos Solvus, la empresa que lo desarrolló. Yo soy Gonzalo, Scrum Master y coordinador. Francisco es Product Owner y responsable de comunicación; Luana, gestora de documentación; y Pedro, Luciano y Thomas, desarrolladores e investigadores. Luciano les muestra nuestra identidad.”' }
   ] },
   'identidad': { titulo: 'Una marca clara y sobria (identidad)', bloques: [
     { t0: 206, t1: 226, quien: 'Luciano', bloque: 'Identidad de marca',

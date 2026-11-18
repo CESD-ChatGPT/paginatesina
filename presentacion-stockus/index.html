@@ -12,11 +12,17 @@
   <!-- Sala a oscuras -->
   <section class="slide bg-black" id="negro" data-title="Sala a oscuras"></section>
 
-  <!-- Historia de Thomas: animación guiada con subtítulos (js/beats.js + js/escenas.js) -->
-  <section class="slide bg-pet beat" id="thomas" data-title="La historia: HDS y Stockus"></section>
-
-  <!-- Explicación de Pedro: animación guiada con subtítulos -->
-  <section class="slide bg-pet beat" id="pedro" data-title="Lo que diferencia a Stockus"></section>
+  <!-- Thomas (2 a 6) y Pedro (7 a 11): una idea por diapositiva; animación de entrada en js/escenas.js, tiempos en js/animaciones.js -->
+  <section class="slide bg-pet guiada th" id="th-deposito" data-title="Thomas · El depósito de HDS y el problema"></section>
+  <section class="slide bg-pet guiada th" id="th-palabra" data-title="Thomas · Stock controlado de palabra"></section>
+  <section class="slide bg-pet guiada th" id="th-tiempo" data-title="Thomas · Tiempo perdido y errores"></section>
+  <section class="slide bg-pet guiada th" id="th-stockus" data-title="Thomas · Aparece STOCKUS"></section>
+  <section class="slide bg-pet guiada th" id="th-pasos" data-title="Thomas · Los cuatro pasos"></section>
+  <section class="slide bg-pet guiada pe" id="pe-diferencia" data-title="Pedro · Lo que diferencia a Stockus"></section>
+  <section class="slide bg-pet guiada pe" id="pe-leds" data-title="Pedro · Los LEDs marcan el lugar"></section>
+  <section class="slide bg-pet guiada pe" id="pe-red" data-title="Pedro · Red local, sin internet"></section>
+  <section class="slide bg-pet guiada pe" id="pe-hardware" data-title="Pedro · Raspberry Pi y ESP8266"></section>
+  <section class="slide bg-pet guiada pe" id="pe-maqueta" data-title="Pedro · La maqueta en vivo"></section>
 
   <!-- Equipo -->
   <section class="slide bg-pet" id="equipo" data-title="Somos Solvus">
@@ -30,7 +36,6 @@
       <div class="card box"><i class="dw"></i><div class="num">05</div><div class="who"><div class="name">Luciano Albarracin</div><div class="role">Desarrollador / Investigador</div><div class="sub">&nbsp;</div></div></div>
       <div class="card box"><i class="dw" data-key-out></i><div class="num">06</div><div class="who"><div class="name">Thomas Spalletti</div><div class="role">Desarrollador / Investigador</div><div class="sub">&nbsp;</div></div></div>
     </div>
-    <div class="beneficios"><span><i></i>Ahorra tiempo</span><b>·</b><span><i></i>Reduce errores</span><b>·</b><span><i></i>Stock organizado</span></div>
   </section>
 
   <!-- Identidad -->
@@ -115,19 +120,19 @@
   <!-- Escala -->
   <section class="slide bg-pet" id="escala" data-title="Crece con cada empresa">
     <h2 class="title">Crece con cada empresa</h2>
-    <div class="cajonera cj1" data-x="72" data-y="470" data-cell="110,110" data-grid="2,2" data-lit="1:0"></div>
-    <div class="cajonera cj2" data-x="352" data-y="360" data-cell="110,110" data-grid="3,3" data-lit="1:1,1:2,2:0,2:2"></div>
-    <div class="cajonera cj3" data-key data-x="742" data-y="250" data-cell="110,110" data-grid="5,4" data-lit="1:1,1:2,1:3,2:0,2:1,2:2,2:4,3:0,3:2,3:3,3:4,0:3"></div>
-    <div class="caps" style="left:72px;top:712px">UNA ZONA</div>
-    <div class="caps" style="left:352px;top:712px">VARIAS ZONAS</div>
-    <div class="caps" style="left:742px;top:712px">TODO EL DEPÓSITO</div>
+    <div class="cajonera cj1" data-x="120" data-y="520" data-cell="100,100" data-grid="2,2" data-lit="1:0"></div>
+    <div class="cajonera cj2" data-x="380" data-y="420" data-cell="100,100" data-grid="3,3" data-lit="1:1,1:2,2:0,2:2"></div>
+    <div class="cajonera cj3" data-key data-x="740" data-y="320" data-cell="100,100" data-grid="5,4" data-lit="1:1,1:2,1:3,2:0,2:1,2:2,2:4,3:0,3:2,3:3,3:4,0:3"></div>
+    <div class="caps" style="left:120px;top:742px">UNA ZONA</div>
+    <div class="caps" style="left:380px;top:742px">VARIAS ZONAS</div>
+    <div class="caps" style="left:740px;top:742px">TODO EL DEPÓSITO</div>
     <div class="keys">
       <div class="k main"><div class="w">A MEDIDA</div><div class="s">Lo que cada cliente necesita</div></div>
       <div class="k"><div class="w">ESCALABLE</div><div class="s">De una zona a todo el depósito</div></div>
       <div class="k"><div class="w">SIN PRECIO ÚNICO</div><div class="s">Y esa es su ventaja</div></div>
     </div>
     <div class="steps">
-      <div class="strip" data-n="57" data-w="22"></div>
+      <div class="strip" data-n="54" data-w="22"></div>
       <div class="st" style="left:0"><small>01</small>RELEVAMIENTO</div>
       <div class="st" style="left:600px"><small>02</small>DIAGNÓSTICO</div>
       <div class="st" style="left:1200px"><small>03</small>PROPUESTA A MEDIDA</div>
@@ -153,7 +158,7 @@
   <section class="slide bg-pet" id="pago" data-title="Un caso real y cómo se paga">
     <h2 class="title">Un caso real y cómo se paga</h2>
     <div class="hds box">
-      <div class="tag">HDS · Empresa mediana</div>
+      <div class="tag">HDS</div><div class="tag tg2">Empresa mediana</div>
       <div class="big"><span class="a">2</span>–<span class="b">3</span></div>
       <div class="mes">meses</div>
       <div class="lb">Hasta tener el sistema funcionando</div>
@@ -194,6 +199,7 @@
   </section>
 
   <div id="foot"><span class="bar"></span></div>
+  <div id="guia" aria-hidden="true"><i class="v l"></i><i class="v c"></i><i class="v r"></i><i class="h t"></i><i class="h b"></i></div>
   <div id="travel"><div class="d"></div></div>
   <div class="grain"></div>
   <div id="blackout"></div>
@@ -201,7 +207,7 @@
 <button id="fsbtn" type="button" aria-label="Pantalla completa (F)"><svg viewBox="0 0 20 20"><path d="M3 7V3h4M13 3h4v4M17 13v4h-4M7 17H3v-4"/></svg></button>
 <script src="js/orden.js"></script>
 <script src="js/notas.js"></script>
-<script src="js/beats.js"></script>
+<script src="js/animaciones.js"></script>
 <script src="js/escenas.js"></script>
 <script src="js/app.js"></script>
 </body>

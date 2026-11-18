@@ -9,22 +9,22 @@ Thomas y Pedro dicen sus partes en inglés. Todo lo demás es en español.
 | Tiempo | Bloque | Quién | Diapositiva |
 |---|---|---|---|
 | 0:00 – 0:30 | Entrada | Thomas | DIAPO 1 (negra) |
-| 0:30 – 1:40 | Inglés 1: el problema y el sistema | Thomas | DIAPO 2 (animación explicativa, con subtítulos en español) |
-| 1:40 – 2:46 | Inglés 2: los LEDs y la tecnología | Pedro | DIAPO 3 (animación explicativa, con subtítulos en español) |
-| 2:46 – 3:26 | Equipo y producto | Gonzalo | DIAPO 4 (equipo) |
-| 3:26 – 3:46 | Identidad de marca | Luciano | DIAPO 5 (identidad) |
-| 3:46 – 4:16 | Con qué lo construimos: Vento | Pedro | DIAPO 6 (Vento) |
-| 4:16 – 5:46 | Demo: el chatbot funcionando | Luciano | DIAPO 7 (video del chatbot, sin audio, 1:14) |
-| 5:46 – 6:11 | Metodología | Luana | DIAPO 8 (sprints) |
-| 6:11 – 6:36 | Metas de los sprints (Sprint Goal) | Francisco | DIAPO 8 (sigue) |
-| 6:36 – 7:00 | Video: así cambia un depósito | Francisco | DIAPO 9 (video, sin audio, 22 s) |
-| 7:00 – 7:20 | Lo económico: a medida, no hay un precio único | Luana | DIAPO 10 (Stockus escala) |
-| 7:20 – 7:44 | Costo fijo y parte variable | Francisco | DIAPO 11 (presupuesto; punto de equilibrio de fondo) |
-| 7:44 – 8:06 | Caso de referencia: HDS | Luana | DIAPO 12 (ejemplo y pago) |
-| 8:06 – 8:30 | Plan de pago 1: el 50 % | Francisco | DIAPO 12 (sigue) |
-| 8:30 – 8:56 | Plan de pago 2: el 30 % y el 20 % | Luana | DIAPO 12 (sigue) |
-| 8:56 – 9:46 | Conclusiones: la conversación con Stockus | Gonzalo | DIAPO 13 (conversación con Stockus) |
-| 9:46 – 10:00 | Cierre | Gonzalo | DIAPO 14 (frase clave, gracias y preguntas) |
+| 0:30 – 1:40 | Inglés 1: el problema y el sistema | Thomas | DIAPOS 2 a 6 (una idea por diapositiva, las avanza Thomas con el control) |
+| 1:40 – 2:46 | Inglés 2: los LEDs y la tecnología | Pedro | DIAPOS 7 a 11 (una idea por diapositiva, las avanza Pedro con el control) |
+| 2:46 – 3:26 | Equipo y producto | Gonzalo | DIAPO 12 (equipo) |
+| 3:26 – 3:46 | Identidad de marca | Luciano | DIAPO 13 (identidad) |
+| 3:46 – 4:16 | Con qué lo construimos: Vento | Pedro | DIAPO 14 (Vento) |
+| 4:16 – 5:46 | Demo: el chatbot funcionando | Luciano | DIAPO 15 (video del chatbot, sin audio, 1:14) |
+| 5:46 – 6:11 | Metodología | Luana | DIAPO 16 (sprints) |
+| 6:11 – 6:36 | Metas de los sprints (Sprint Goal) | Francisco | DIAPO 16 (sigue) |
+| 6:36 – 7:00 | Video: así cambia un depósito | Francisco | DIAPO 17 (video, sin audio, 22 s) |
+| 7:00 – 7:20 | Lo económico: a medida, no hay un precio único | Luana | DIAPO 18 (Stockus escala) |
+| 7:20 – 7:44 | Costo fijo y parte variable | Francisco | DIAPO 19 (presupuesto; punto de equilibrio de fondo) |
+| 7:44 – 8:06 | Caso de referencia: HDS | Luana | DIAPO 20 (ejemplo y pago) |
+| 8:06 – 8:30 | Plan de pago 1: el 50 % | Francisco | DIAPO 20 (sigue) |
+| 8:30 – 8:56 | Plan de pago 2: el 30 % y el 20 % | Luana | DIAPO 20 (sigue) |
+| 8:56 – 9:46 | Conclusiones: la conversación con Stockus | Gonzalo | DIAPO 21 (conversación con Stockus) |
+| 9:46 – 10:00 | Cierre | Gonzalo | DIAPO 22 (frase clave, gracias y preguntas) |
 
 ## Quién habla y cuánto
 
@@ -47,52 +47,80 @@ Thomas y Pedro dicen sus partes en inglés. Todo lo demás es en español.
 *[Se enciende un solo LED y Stockus responde por voz. Pausa de 2 segundos. Thomas se acerca y saca la caja, que tiene pegada la imagen de un tornillo. La caja es representativa: se puede buscar cualquier cosa.]*
 
 ## 0:30 – 1:40 | Inglés 1: el problema y el sistema (Thomas)
-*DIAPO 2 (animación explicativa, con subtítulos en español)*
+*DIAPOS 2 a 6 (una idea por diapositiva, las avanza Thomas con el control)*
+
+*[DIAPO 2 · el depósito de HDS y el problema (NO STOCK SYSTEM)]*
 
 **(EN)** "Hello, everyone. I'm going to talk about our project, Stockus. All this started when we were doing an internship at HDS technology, a company related to logistics and warehouses."
 
-**(EN)** "During the internship, we found a BIG PROBLEM: they didn't have a stock system. The stock was controlled verbally, and it was disorganized."
+**(EN)** "During the internship, we found a BIG PROBLEM: they didn't have a stock system."
+
+*[AVANZAR → DIAPO 3 · stock controlado de palabra]*
+
+**(EN)** "The stock was controlled verbally, and it was disorganized."
+
+*[AVANZAR → DIAPO 4 · tiempo perdido y errores]*
 
 **(EN)** "Because of this, the employees lost time looking for tools, and mistakes in the warehouse were common."
 
+*[AVANZAR → DIAPO 5 · aparece STOCKUS]*
+
 **(EN)** "So we decided to create Stockus. Our solution is a stock control system for storage facilities."
+
+*[AVANZAR → DIAPO 6 · los cuatro pasos]*
 
 **(EN)** "And using Stockus is fast and simple. Once you log in, you have full control over your warehouse: you can add or update products in seconds, record every stock movement, and track your inventory in real time."
 
 **(EN)** "Now my partner will explain how the system works."
 
 ## 1:40 – 2:46 | Inglés 2: los LEDs y la tecnología (Pedro)
-*DIAPO 3 (animación explicativa, con subtítulos en español)*
+*DIAPOS 7 a 11 (una idea por diapositiva, las avanza Pedro con el control)*
+
+*[AVANZAR → DIAPO 7 · lo que diferencia al sistema]*
 
 **(EN)** "Thank you. Now I'm going to talk about the feature that makes Stockus different."
 
-**(EN)** "The user can ask the system where a product is. Then, the LEDs on the shelves turn on and show the exact location. This way, workers find products fast, without searching shelf by shelf."
+**(EN)** "The user can ask the system where a product is."
 
-**(EN)** "Now, about the technology. The system works on a local network, so it doesn't need internet. This is very useful for warehouses with a weak connection. It uses a Raspberry Pi as the main computer, and a small board called ESP8266 to control the LED strip."
+*[AVANZAR → DIAPO 8 · los LEDs marcan el lugar]*
+
+**(EN)** "Then, the LEDs on the shelves turn on and show the exact location. This way, workers find products fast, without searching shelf by shelf."
+
+*[AVANZAR → DIAPO 9 · red local, sin internet]*
+
+**(EN)** "Now, about the technology. The system works on a local network, so it doesn't need internet. This is very useful for warehouses with a weak connection."
+
+*[AVANZAR → DIAPO 10 · Raspberry Pi y ESP8266]*
+
+**(EN)** "It uses a Raspberry Pi as the main computer, and a small board called ESP8266 to control the LED strip."
+
+*[AVANZAR → DIAPO 11 · la maqueta en vivo]*
 
 **(EN)** "We also built a small model with shelves and LEDs. It works live with our software, so you can see it in action."
+
+**(EN)** "In short, Stockus saves time, reduces mistakes, and keeps the stock organized."
 
 **(EN)** "Thank you."
 
 ## 2:46 – 3:26 | Equipo y producto (Gonzalo)
-*DIAPO 4 (equipo)*
+*DIAPO 12 (equipo)*
 
-"Gracias, Pedro. En resumen, Stockus ahorra tiempo, reduce errores y mantiene el stock organizado. Como vieron al empezar, le preguntamos por un tornillo y nos mostró dónde estaba: puede buscar cualquier cosa, en segundos."
+"Gracias, Pedro. Como vieron al empezar, le preguntamos por un tornillo y nos mostró dónde estaba: puede buscar cualquier cosa, en segundos."
 
 "Nosotros somos Solvus, la empresa que lo desarrolló. Yo soy Gonzalo, Scrum Master y coordinador. Francisco es Product Owner y responsable de comunicación; Luana, gestora de documentación; y Pedro, Luciano y Thomas, desarrolladores e investigadores. Luciano les muestra nuestra identidad."
 
 ## 3:26 – 3:46 | Identidad de marca (Luciano)
-*DIAPO 5 (identidad)*
+*DIAPO 13 (identidad)*
 
 "Gracias, Gonzalo. Esta es la identidad de Solvus, que creé yo: una marca clara y sobria, con una paleta de cuatro colores. Su isotipo es una S formada por dos flechas, que representan la entrada y la salida de mercadería."
 
 ## 3:46 – 4:16 | Con qué lo construimos: Vento (Pedro)
-*DIAPO 6 (Vento)*
+*DIAPO 14 (Vento)*
 
 "Gracias, Luciano. Todo Stockus lo construimos con Vento, una plataforma de inteligencia artificial para crear proyectos de hardware, robótica, IoT y automatizaciones usando lenguaje natural. Este es nuestro espacio de trabajo: las bases de datos, la Raspberry Pi, las páginas del sistema y los agentes de IA, todo conectado en un solo lugar."
 
 ## 4:16 – 5:46 | Demo: el chatbot funcionando (Luciano)
-*DIAPO 7 (video del chatbot, sin audio, 1:14)*
+*DIAPO 15 (video del chatbot, sin audio, 1:14)*
 
 *[El video arranca solo al entrar a la diapositiva y dura 1:14. Luciano lo explica de principio a fin, sin silencios. Los tiempos son aproximados: ajustarlos mirando el video.]*
 
@@ -117,17 +145,17 @@ Thomas y Pedro dicen sus partes en inglés. Todo lo demás es en español.
 > El video termina con una placa "Pedí tu demo" con el WhatsApp: se corta para el escenario. Ensayar el en vivo con ruido de fondo.
 
 ## 5:46 – 6:11 | Metodología (Luana)
-*DIAPO 8 (sprints)*
+*DIAPO 16 (sprints)*
 
 "Gracias, Luciano. Ahora les contamos cómo lo construimos. Todo empezó en la pasantía en HDS, donde descubrimos el problema. Trabajamos con Scrum: dividimos el proyecto en sprints, ciclos cortos con un objetivo claro, el Sprint Goal, y anotamos las tareas en Trello. Yo me encargué de la documentación, en especial del manual de usuario. Francisco les cuenta la meta de cada sprint."
 
 ## 6:11 – 6:36 | Metas de los sprints (Sprint Goal) (Francisco)
-*DIAPO 8 (sigue)*
+*DIAPO 16 (sigue)*
 
 "Gracias, Luana. Cada sprint tuvo su meta. El Sprint Goal del primero: investigar y definir los límites del proyecto. El del segundo: desarrollar el software. Y el del tercero: integrar el software con el hardware. Eso es lo que acaban de ver."
 
 ## 6:36 – 7:00 | Video: así cambia un depósito (Francisco)
-*DIAPO 9 (video, sin audio, 22 s)*
+*DIAPO 17 (video, sin audio, 22 s)*
 
 *[El video arranca solo, sin audio, y dura 22 segundos. Francisco lo describe mientras corre. Tiempos aproximados del video: 0–1,5 s el problema; 1,5–5,5 s las consecuencias; 5,5–7 s entra Stockus; 7–13 s ingresos y egresos; 13–17 s búsqueda con LED; 17–22 s el resultado.]*
 
@@ -136,32 +164,32 @@ Thomas y Pedro dicen sus partes en inglés. Todo lo demás es en español.
 > No decir "animación" ni "página web": describir lo que se ve. El video usa la leche como producto de ejemplo: no nombrar a ninguna empresa. Ajustar al video.
 
 ## 7:00 – 7:20 | Lo económico: a medida, no hay un precio único (Luana)
-*DIAPO 10 (Stockus escala)*
+*DIAPO 18 (Stockus escala)*
 
 "Gracias, Francisco. Ahora, lo económico. Stockus crece con cada empresa, desde una sola zona hasta todo el depósito: por eso no hay un precio único. Cada propuesta es a medida, y eso es justamente su ventaja. Siempre empezamos con un relevamiento."
 
 ## 7:20 – 7:44 | Costo fijo y parte variable (Francisco)
-*DIAPO 11 (presupuesto; punto de equilibrio de fondo)*
+*DIAPO 19 (presupuesto; punto de equilibrio de fondo)*
 
 "Gracias, Luana. El presupuesto tiene un costo fijo, igual para todos: el software y el hardware base. Y una parte variable que depende de cada empresa: los metros de LEDs inteligentes, el tamaño del depósito y lo que quiere automatizar. Atrás pueden ver nuestro punto de equilibrio: entre 2 y 3 sistemas por mes con jornada completa."
 
 ## 7:44 – 8:06 | Caso de referencia: HDS (Luana)
-*DIAPO 12 (ejemplo y pago)*
+*DIAPO 20 (ejemplo y pago)*
 
 "Gracias, Francisco. Como ejemplo, HDS, una empresa mediana que partía sin sistema de stock. Tener el trabajo terminado, con el sistema funcionando, llevaría como máximo entre 2 y 3 meses: contar el stock, armar el sistema, capacitar al personal y hacer los ajustes finales, siempre por fases."
 
 ## 8:06 – 8:30 | Plan de pago 1: el 50 % (Francisco)
-*DIAPO 12 (sigue)*
+*DIAPO 20 (sigue)*
 
 "Gracias, Luana. Y lo más importante: cada empresa tiene su propia propuesta y su propia forma de pago. Se paga por etapas, según el avance. Un 50% al firmar, que cubre el hardware, así lo compramos todo desde el principio."
 
 ## 8:30 – 8:56 | Plan de pago 2: el 30 % y el 20 % (Luana)
-*DIAPO 12 (sigue)*
+*DIAPO 20 (sigue)*
 
 "Gracias, Francisco. Después, un 30% al terminar la instalación, y el 20% restante al finalizar la capacitación, con la conformidad del cliente. Así el último pago llega solo cuando todo funciona. El monto de cada empresa se define en la propuesta, después del relevamiento."
 
 ## 8:56 – 9:46 | Conclusiones: la conversación con Stockus (Gonzalo)
-*DIAPO 13 (conversación con Stockus)*
+*DIAPO 21 (conversación con Stockus)*
 
 *[La diapositiva escribe sola la pregunta y la respuesta de Stockus (unos 9 segundos). Gonzalo la acompaña sin leerla.]*
 
@@ -174,7 +202,7 @@ Thomas y Pedro dicen sus partes en inglés. Todo lo demás es en español.
 "¿Y ahora? Esto recién empieza. Nuestro próximo paso son los primeros clientes, siempre empezando con un relevamiento para entender cómo trabaja cada uno, y acompañarlos después con soporte y mantenimiento."
 
 ## 9:46 – 10:00 | Cierre (Gonzalo)
-*DIAPO 14 (frase clave, gracias y preguntas)*
+*DIAPO 22 (frase clave, gracias y preguntas)*
 
 "Y si hay que quedarse con una sola idea, es esta: cada producto, a un LED de distancia. Gracias por su atención. Quedamos a disposición para sus preguntas."
 
@@ -189,8 +217,7 @@ Thomas y Pedro dicen sus partes en inglés. Todo lo demás es en español.
 
 ## Pendientes
 
-- Inglés: en el texto de Pedro corregí "Solvus" por "Stockus" (el producto es Stockus; Solvus es la empresa). Se sacó "In short, ... saves time..." del inglés: ahora lo dice Gonzalo en español.
-- Las diapositivas 2 y 3 son animaciones con subtítulos en español sincronizadas con el inglés. Ensayar para que el ritmo de Thomas y de Pedro coincida con la animación (el prompt incluye ajuste de velocidad).
+- Las diapositivas 2 a 12 son una idea por diapositiva, con subtítulos en español: Thomas y Pedro las avanzan con el control en las frases marcadas. Ensayar los cambios.
 - Demo en vivo: la caja con la imagen del tornillo; probar que Stockus la reconozca con ruido de fondo.
 - Corregido: los 2 a 3 meses son para tener el trabajo terminado con el sistema funcionando, no solo para contar.
 - Ajustar la narración de Luciano (video del chatbot, 1:14) y la de Francisco (video de la landing, 22 s) mirando los videos.
