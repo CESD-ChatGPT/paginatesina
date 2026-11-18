@@ -1,4 +1,4 @@
-/* ESCENAS ANIMADAS DE ENTRADA (diapositivas 2 a 11 y 21)
+/* ESCENAS ANIMADAS DE ENTRADA (diapositivas 2 a 11 y 21 a 24)
    Cada diapositiva arma su propia escena y la dibuja como función del tiempo t desde que se llegó a ella.
    Los momentos y las duraciones salen de js/animaciones.js. Lo que ya pasó en diapositivas anteriores
    se muestra completo y quieto (para que el paso de una a otra sea continuo); lo que viene después no aparece.
@@ -102,7 +102,7 @@
     const subs = subtitulos(slide, cfg);
 
     // --- Depósito isométrico ---
-    const K = .777, X0 = 1098, Y0 = 342, C = .866;
+    const K = .596, X0 = 805, Y0 = 519, C = .866;      // depósito centrado en x = 960, entre y = 340 y y = 900
     const P = (x, y, z) => [X0 + (x - y) * C * K, Y0 + ((x + y) * .5 - z) * K];
     const pts = (a) => a.map((q) => P(q[0], q[1], q[2]).map((n) => n.toFixed(1)).join(',')).join(' ');
     const wh = S('g', { class: 'wh' }, svg);
@@ -131,14 +131,14 @@
     }
     cajones.forEach((c, n) => { c.jx = ((n * 37) % 11) - 5; c.jy = ((n * 23) % 9) - 4; c.jr = ((n * 17) % 7) - 3; });
     const marcas = S('g', null, wh);
-    const preg = cajones.map((c) => { const e = S('text', { class: 'preg', x: c.cx, y: c.cy + 11 }, marcas); e.textContent = '?'; return e; });
-    const errores = [4, 15, 19, 28, 33].map((n) => cruz(marcas, cajones[n].cx, cajones[n].cy, 15));
+    const preg = cajones.map((c) => { const e = S('text', { class: 'preg', x: c.cx, y: c.cy + 9 }, marcas); e.textContent = '?'; return e; });
+    const errores = [4, 15, 19, 28, 33].map((n) => cruz(marcas, cajones[n].cx, cajones[n].cy, 12));
 
     // --- Personas y globos ---
     const gente = S('g', null, wh);
     const pa = P(110, 225, 0), pb = P(560, 270, 0);
-    const perA = persona(gente, pa[0], pa[1], 2);
-    const perB = persona(gente, pb[0], pb[1], 2);
+    const perA = persona(gente, pa[0], pa[1], 1.55);
+    const perB = persona(gente, pb[0], pb[1], 1.55);
     function globo(x, y, w, haciaIzq) {
       const g = S('g', { class: 'globo' }, gente);
       S('rect', { x: x - w / 2, y: y - 40, width: w, height: 80, rx: 2 }, g);
@@ -147,8 +147,8 @@
       g._t = S('text', { x, y: y + 15 }, g);
       return g;
     }
-    const gA = globo(pa[0] - 40, pa[1] - 230, 230, true);
-    const gB = globo(pb[0] + 70, pb[1] - 230, 300, false);
+    const gA = globo(pa[0] - 40, pa[1] - 176, 230, true);
+    const gB = globo(pb[0] + 70, pb[1] - 176, 300, false);
     const decA = ['4?', '6?', '5?'], decB = ['7?', '4?', 'creo que 3…'];     // el último queda fijo
 
     // --- Zigzag con rastro punteado ---
@@ -166,7 +166,7 @@
     const rastro = S('g', { class: 'rastro' }, wh);
     const puntos = [];
     for (let s = 0; s <= tot; s += 16) { const q = enRuta(s); puntos.push({ s, e: S('circle', { cx: q[0].toFixed(1), cy: q[1].toFixed(1), r: 3 }, rastro) }); }
-    const walker = persona(wh, 0, 0, 2);
+    const walker = persona(wh, 0, 0, 1.55);
 
     // --- Columna izquierda: rótulos y reloj ---
     const rot = H('div', 'th-rot', slide);
@@ -174,16 +174,16 @@
     H('div', 'n', rot, 'HDS TECHNOLOGY');
     H('div', 'd', rot, 'Logística y depósitos');
     const nost = H('div', 'th-nost', slide);
-    nost.innerHTML = 'NO STOCK<br>SYSTEM';
+    nost.textContent = 'NO STOCK SYSTEM';
     const reloj = S('g', { class: 'reloj' }, svg);
-    const RC = [430, 500];
-    S('circle', { cx: RC[0], cy: RC[1], r: 160 }, reloj);
+    const RC = [960, 218], RR = 110;                    // reloj centrado arriba del depósito
+    S('circle', { cx: RC[0], cy: RC[1], r: RR }, reloj);
     for (let i = 0; i < 12; i++) {
-      const a = i * Math.PI / 6, r1 = i % 3 ? 140 : 128;
-      S('line', { x1: RC[0] + Math.sin(a) * r1, y1: RC[1] - Math.cos(a) * r1, x2: RC[0] + Math.sin(a) * 152, y2: RC[1] - Math.cos(a) * 152 }, reloj);
+      const a = i * Math.PI / 6, r1 = i % 3 ? RR * .88 : RR * .8;
+      S('line', { x1: RC[0] + Math.sin(a) * r1, y1: RC[1] - Math.cos(a) * r1, x2: RC[0] + Math.sin(a) * RR * .95, y2: RC[1] - Math.cos(a) * RR * .95 }, reloj);
     }
-    const hHora = S('line', { class: 'aguja h', x1: RC[0], y1: RC[1], x2: RC[0], y2: RC[1] - 78 }, reloj);
-    const hMin = S('line', { class: 'aguja m', x1: RC[0], y1: RC[1], x2: RC[0], y2: RC[1] - 122 }, reloj);
+    const hHora = S('line', { class: 'aguja h', x1: RC[0], y1: RC[1], x2: RC[0], y2: RC[1] - RR * .5 }, reloj);
+    const hMin = S('line', { class: 'aguja m', x1: RC[0], y1: RC[1], x2: RC[0], y2: RC[1] - RR * .78 }, reloj);
     S('circle', { class: 'eje', cx: RC[0], cy: RC[1], r: 7 }, reloj);
 
     // --- Revelación: STOCKUS + tira de LED ---
@@ -205,7 +205,7 @@
       const hl = S('ellipse', { cx: PW / 2, cy: PH / 2, rx: PW * .85, ry: PH * .8, fill: `url(#h-${slide.id})` }, g);
       const fr = S('rect', { class: 'pfr', x: 0, y: 0, width: PW, height: PH }, g);
       const led = S('rect', { class: 'pled', x: PW - 54, y: 22, width: 30, height: 9 }, g);
-      const num = S('text', { class: 'pnum', x: 24, y: 44 }, g); num.textContent = '0' + (i + 1);
+      const num = S('text', { class: 'pnum', x: PW / 2, y: 44 }, g); num.textContent = '0' + (i + 1);
       const sk = S('g', { class: 'esq' }, g);
       if (i === 0) {
         S('rect', { x: 90, y: 70, width: 180, height: 190 }, sk);
@@ -232,11 +232,11 @@
         [[96, 70], [136, 110], [176, 50], [216, 90]].forEach(([bx, bh]) => S('rect', { class: 'lleno', x: bx, y: 240 - bh, width: 26, height: bh }, sk));
         S('polyline', { points: '200,104 226,118 252,96 276,108' }, sk);
       }
-      const lb = S('text', { class: 'plab', x: 0, y: PH + 52 }, g); lb.textContent = etiquetas[i].toUpperCase();
+      const lb = S('text', { class: 'plab', x: PW / 2, y: PH + 52 }, g); lb.textContent = etiquetas[i].toUpperCase();
       return { g, hl, fr, led, sk, lb };
     });
 
-    const WCX = 960, WCY = 440;            // centro de STOCKUS revelado (eje de la diapositiva)
+    const WCX = 960, WCY = 470;            // centro de STOCKUS revelado (eje de la diapositiva)
     let wordW = 0, wordH = 0, wordPad = 0;
     return {
       render(t) {
@@ -268,7 +268,7 @@
         op(walker, t < M.zigzag ? 0 : pr(t, M.zigzag, .3));
         if (t >= M.zigzag) {
           const q = enRuta(sW);
-          walker.setAttribute('transform', `translate(${q[0].toFixed(1)} ${q[1].toFixed(1)}) scale(2)`);
+          walker.setAttribute('transform', `translate(${q[0].toFixed(1)} ${q[1].toFixed(1)}) scale(1.55)`);
           const ph = RM || sW >= tot ? 0 : Math.sin((t - M.zigzag) * 9) * 7;
           walker._legs.setAttribute('d', `M0 -16 L${(-8 + ph).toFixed(1)} 0 M0 -16 L${(8 - ph).toFixed(1)} 0`);
         }
@@ -299,7 +299,7 @@
         word.style.clipPath = mk >= 1 ? 'none' : `inset(-25% ${((1 - mk) * 110 - 10).toFixed(1)}% -25% -10%)`;
         op(word, t >= M.revela + .3 ? 1 : 0);
         // STOCKUS sube y se achica arriba a la izquierda (6): su primera letra queda en x = 120
-        // posición explícita (origen arriba a la izquierda): centrada en x = 960 → chica con la primera letra en x = 120
+        // posición explícita (origen arriba a la izquierda): grande y centrada en x = 960 → chica y centrada arriba
         if (!wordW && word.offsetWidth) {         // se mide el texto real (sin el espaciado que queda después de la última letra)
           word.style.transform = 'none';
           const st = slide.closest('#stage'), k = st.getBoundingClientRect().width / 1920;
@@ -310,7 +310,7 @@
         if (wordW) {
           const up = mv(t, M.sube, M.subeDur), sc = 1 - .66 * up;
           const x0 = WCX - wordPad - wordW / 2, y0 = WCY - wordH / 2;
-          const x1 = 120 - wordPad * .34, y1 = 150 - wordH * .34 / 2;
+          const x1 = WCX - (wordPad + wordW / 2) * .34, y1 = 150 - wordH * .34 / 2;   // chico y centrado arriba
           word.style.transform = `translate(${(x0 + (x1 - x0) * up).toFixed(1)}px, ${(y0 + (y1 - y0) * up).toFixed(1)}px) scale(${sc.toFixed(3)})`;
         }
         op(tira, pr(t, M.tira, .3) * (1 - pr(t, M.sube, .6)));
@@ -397,31 +397,57 @@
       });
     }
 
-    // --- 9: red local, wifi tachado, señal débil ---
+    // --- 9: red local, wifi tachado, señal débil (grupo centrado en x = 960) ---
     if (id === 'pe-red') {
       const e2 = S('g', { class: 'pe-red' }, svg);
-      const RX = 560, RY = 520;
-      const anillo = S('circle', { class: 'anillo', cx: RX, cy: RY, r: 250 }, e2);
-      const rlab = S('text', { class: 'rlab', x: RX, y: RY - 170 }, e2); rlab.textContent = 'RED LOCAL';
+      const RX = 635, RY = 560, RR = 350, RCY = RY - 20;          // dispositivos centrados dentro del anillo
+      const anillo = S('circle', { class: 'anillo', cx: RX, cy: RCY, r: RR }, e2);
+      const rlab = S('text', { class: 'rlab', x: RX, y: RCY - RR + 50 }, e2); rlab.textContent = 'RED LOCAL';
+      // rótulo centrado bajo su dispositivo, a 16 px (y es el borde inferior del dispositivo)
+      const rotulo = (g, cx, y, txt) => { const t = S('text', { class: 'dlab', x: cx, y: y + 16 + 18 }, g); t.textContent = txt; return y + 16 + 24; };
+      // Raspberry Pi: en el centro del anillo
       const dRpi = S('g', { class: 'disp' }, e2);
-      S('rect', { x: RX - 170, y: RY - 120, width: 150, height: 96 }, dRpi);
-      S('rect', { x: RX - 128, y: RY - 92, width: 40, height: 40 }, dRpi);
-      S('path', { d: `M${RX - 160} ${RY - 112} H${RX - 30}`, class: 'pins' }, dRpi);
-      const t1 = S('text', { class: 'dlab', x: RX - 95, y: RY + 4 }, dRpi); t1.textContent = 'RASPBERRY PI';
+      S('rect', { x: RX - 80, y: RY - 50, width: 160, height: 100 }, dRpi);
+      S('rect', { x: RX - 50, y: RY - 24, width: 44, height: 44 }, dRpi);
+      S('rect', { x: RX + 12, y: RY - 24, width: 48, height: 24 }, dRpi);
+      S('path', { class: 'pins', d: `M${RX - 68} ${RY - 40} H${RX + 68}` }, dRpi);
+      rotulo(dRpi, RX, RY + 50, 'RASPBERRY PI');
+      // ESP8266: arriba
       const dEsp = S('g', { class: 'disp' }, e2);
-      S('rect', { x: RX + 50, y: RY - 106, width: 104, height: 66 }, dEsp);
-      S('path', { d: `M${RX + 66} ${RY - 92} h12 v12 h12 v-12 h12 v12 h12`, class: 'pins' }, dEsp);
-      const t2 = S('text', { class: 'dlab', x: RX + 102, y: RY + 4 }, dEsp); t2.textContent = 'ESP8266';
+      const EY = RY - 220;                                  // borde superior
+      S('rect', { x: RX - 55, y: EY, width: 110, height: 70 }, dEsp);
+      S('path', { class: 'pins', d: `M${RX - 35} ${EY + 16} h12 v12 h12 v-12 h12 v12 h12 v-12 h12` }, dEsp);
+      S('rect', { x: RX - 30, y: EY + 40, width: 30, height: 20 }, dEsp);
+      const espBajo = rotulo(dEsp, RX, EY + 70, 'ESP8266');
+      // Computadora: a la izquierda (pantalla + base)
       const dLap = S('g', { class: 'disp' }, e2);
-      S('rect', { x: RX - 160, y: RY + 50, width: 130, height: 82 }, dLap);
-      S('path', { d: `M${RX - 182} ${RY + 146} H${RX - 8} L${RX - 22} ${RY + 132} H${RX - 168} Z` }, dLap);
+      const LX = RX - 235;                                  // centro de la pantalla
+      S('rect', { x: LX - 65, y: RY - 49, width: 130, height: 82 }, dLap);
+      S('rect', { x: LX - 57, y: RY - 41, width: 114, height: 66 }, dLap);
+      S('path', { d: `M${LX - 87} ${RY + 49} H${LX + 87} L${LX + 73} ${RY + 33} H${LX - 73} Z` }, dLap);
+      rotulo(dLap, LX, RY + 49, 'COMPUTADORA');
+      // Celular: a la derecha, vertical 9:19, un poco más alto que la computadora
       const dTel = S('g', { class: 'disp' }, e2);
-      S('rect', { x: RX + 74, y: RY + 40, width: 58, height: 104 }, dTel);
-      S('line', { x1: RX + 94, y1: RY + 132, x2: RX + 112, y2: RY + 132 }, dTel);
+      const TW = 66, TH = 139, TX = RX + 170, TY = RY - 8 - TH / 2, TC = TX + TW / 2;   // centrado a la altura de la conexión
+      const marcoTel = S('rect', { x: TX, y: TY, width: TW, height: TH, rx: 2 }, dTel);
+      const pantTel = S('rect', { x: TX + 6, y: TY + 16, width: TW - 12, height: TH - 32 }, dTel);
+      S('line', { x1: TC - 11, x2: TC + 5, y1: TY + 8, y2: TY + 8 }, dTel);             // parlante
+      S('circle', { class: 'lleno', cx: TC + 13, cy: TY + 8, r: 2.2 }, dTel);            // cámara
+      S('line', { x1: TC - 11, x2: TC + 11, y1: TY + TH - 8, y2: TY + TH - 8 }, dTel);   // barra de gestos
+      const burbujas = S('g', { class: 'tel-chat' }, dTel);
+      S('rect', { x: TX + TW - 12 - 24, y: TY + 30, width: 24, height: 13 }, burbujas);   // consulta (chica, a la derecha)
+      S('rect', { x: TX + 12, y: TY + 52, width: 38, height: 22 }, burbujas);             // respuesta de Stockus (más larga)
+      S('line', { x1: TX + 17, x2: TX + 44, y1: TY + 59, y2: TY + 59 }, burbujas);
+      S('line', { x1: TX + 17, x2: TX + 36, y1: TY + 66, y2: TY + 66 }, burbujas);
+      rotulo(dTel, TC, TY + TH, 'CELULAR');
+      // conexiones: desde el centro del borde de cada dispositivo a la Raspberry Pi; rectas, simétricas, sin cruzar textos
       const enlaces = S('g', { class: 'enl' }, e2);
-      [[RX - 95, RY - 24 + 14, RX - 95, RY + 50], [RX - 20, RY - 72, RX + 50, RY - 72], [RX - 20, RY - 40, RX + 74, RY + 60]].forEach(([a, b, c, d]) => S('line', { x1: a, y1: b, x2: c, y2: d }, enlaces));
+      S('line', { x1: LX + 65, y1: RY - 8, x2: RX - 80, y2: RY - 8 }, enlaces);         // computadora (centro de su pantalla) → Pi
+      S('line', { x1: TX, y1: RY - 8, x2: RX + 80, y2: RY - 8 }, enlaces);              // celular → Pi
+      S('line', { x1: RX, y1: espBajo + 6, x2: RX, y2: RY - 50 }, enlaces);             // ESP8266 (eje de su borde, debajo del rótulo) → Pi
       const devs = [dRpi, dEsp, dLap, dTel];
-      const WX = 1250, WY = 560;
+      // wifi que se tacha + cartel NO INTERNET
+      const WX = RX + 605, WY = 560;
       const wifi = S('g', { class: 'wifi' }, e2);
       const arcos = [70, 125, 180].map((r) => S('path', { d: `M${(WX - r * .7071).toFixed(1)} ${(WY - r * .7071).toFixed(1)} A${r} ${r} 0 0 1 ${(WX + r * .7071).toFixed(1)} ${(WY - r * .7071).toFixed(1)}` }, wifi));
       const wdot = S('circle', { class: 'lleno', cx: WX, cy: WY - 8, r: 14 }, wifi);
@@ -429,15 +455,20 @@
       const cartel = S('g', { class: 'cartel' }, e2);
       S('rect', { x: WX - 175, y: WY + 70, width: 350, height: 76 }, cartel);
       const ct = S('text', { x: WX, y: WY + 121 }, cartel); ct.textContent = 'NO INTERNET';
-      const BX = 1580, BY = 620;
+      // señal débil con tilde
+      const BX = RX + 850, BY = 620;
       const senal = S('g', { class: 'senal' }, e2);
       [30, 58, 86, 114].forEach((hh, i) => S('rect', { class: i < 2 ? 'lleno' : 'vacio', x: BX + i * 40, y: BY - hh, width: 26, height: hh }, senal));
       const tilde = S('path', { class: 'tilde', d: `M${BX + 14} ${BY - 200} L${BX + 50} ${BY - 166} L${BX + 128} ${BY - 252}` }, e2);
       const slab = S('text', { class: 'rlab', x: BX + 73, y: BY + 50 }, e2); slab.textContent = 'SEÑAL DÉBIL';
+      const trazosTel = [marcoTel, pantTel];
       piezas.push((t) => {
         draw(anillo, mv(t, M.anillo, M.anilloDur * .5));
         op(rlab, pr(t, M.anillo + .8, .5));
-        devs.forEach((d, i) => op(d, pr(t, M.anillo + M.anilloDur * .4 + i * M.anilloDur * .12, .4)));
+        devs.forEach((d, i) => op(d, pr(t, M.anillo + M.anilloDur * .4 + i * M.anilloDur * .1, .4)));
+        // el celular: primero se traza el marco, después aparecen las burbujas
+        trazosTel.forEach((e, i) => draw(e, mv(t, M.anillo + M.anilloDur * .7 + i * .25, .5)));
+        op(burbujas, pr(t, M.anillo + M.anilloDur * .9, .4));
         op(enlaces, pr(t, M.anillo + M.anilloDur * .85, .5));
         const wv = 1 - .55 * pr(t, M.senal, .5);
         arcos.forEach((a, i) => { op(a, t >= M.wifi ? wv : 0); draw(a, mv(t, M.wifi + i * M.wifiDur * .12, M.wifiDur * .2)); });
@@ -450,37 +481,40 @@
       });
     }
 
-    // --- 10: Raspberry Pi → ESP8266 → tira de LED ---
+    // --- 10: Raspberry Pi → ESP8266 → tira de LED (tres cajas iguales, grupo centrado en x = 960) ---
     if (id === 'pe-hardware') {
       const e3 = S('g', { class: 'pe-cad' }, svg);
-      function nodo(x, w, titulo, sub) {
-        const g = S('g', { transform: `translate(${x} 300)` }, e3);
-        const hl = S('ellipse', { cx: w / 2, cy: 130, rx: w * .8, ry: 230, fill: `url(#h-${id})` }, g);
-        const fr = S('rect', { class: 'nfr', x: 0, y: 0, width: w, height: 270 }, g);
-        const a = S('text', { class: 'ntit', x: 32, y: 66 }, g); a.textContent = titulo;
+      const BW = 400, BH = 270, BY0 = 330, GAP = 120;
+      const X0 = 960 - (3 * BW + 2 * GAP) / 2;            // 240
+      function nodo(i, titulo, sub) {
+        const x = X0 + i * (BW + GAP);
+        const g = S('g', { transform: `translate(${x} ${BY0})` }, e3);
+        const hl = S('ellipse', { cx: BW / 2, cy: BH / 2, rx: BW * .8, ry: 230, fill: `url(#h-${id})` }, g);
+        const fr = S('rect', { class: 'nfr', x: 0, y: 0, width: BW, height: BH }, g);
+        const a = S('text', { class: 'ntit', x: BW / 2, y: 66 }, g); a.textContent = titulo;
         const dib = S('g', { class: 'ndib' }, g);
-        let b = null;
-        if (sub) { b = S('text', { class: 'nsub', x: 0, y: 330 }, g); b.textContent = sub; }
+        const b = S('text', { class: 'nsub', x: BW / 2, y: BH + 52 }, g); b.textContent = sub;
         return { g, hl, fr, dib, b };
       }
-      const n1 = nodo(120, 440, 'RASPBERRY PI', 'COMPUTADORA PRINCIPAL');
-      S('rect', { x: 40, y: 120, width: 220, height: 110 }, n1.dib);
-      S('rect', { x: 92, y: 150, width: 48, height: 48 }, n1.dib);
-      S('rect', { x: 170, y: 150, width: 66, height: 26 }, n1.dib);
-      S('path', { d: 'M52 132 H248', class: 'pins' }, n1.dib);
-      S('rect', { x: 290, y: 140, width: 110, height: 80 }, n1.dib);
-      const n2 = nodo(760, 380, 'ESP8266', 'CONTROLA LA TIRA');
-      S('rect', { x: 40, y: 126, width: 150, height: 100 }, n2.dib);
-      S('path', { d: 'M58 146 h14 v14 h14 v-14 h14 v14 h14 v-14 h14', class: 'pins' }, n2.dib);
-      S('rect', { x: 66, y: 184, width: 40, height: 28 }, n2.dib);
-      const n3 = nodo(1340, 460, 'TIRA DE LED', 'LEDS INTELIGENTES');
-      const csegs = [];
+      const n1 = nodo(0, 'RASPBERRY PI', 'COMPUTADORA PRINCIPAL');       // dibujo de 340 de ancho, centrado
+      S('rect', { x: 30, y: 116, width: 220, height: 110 }, n1.dib);
+      S('rect', { x: 82, y: 146, width: 48, height: 48 }, n1.dib);
+      S('rect', { x: 160, y: 146, width: 66, height: 26 }, n1.dib);
+      S('path', { d: 'M42 128 H238', class: 'pins' }, n1.dib);
+      S('rect', { x: 270, y: 136, width: 100, height: 80 }, n1.dib);
+      const n2 = nodo(1, 'ESP8266', 'CONTROLA LA TIRA');                 // placa de 160 de ancho, centrada
+      S('rect', { x: 120, y: 120, width: 160, height: 104 }, n2.dib);
+      S('path', { d: 'M150 142 h14 v14 h14 v-14 h14 v14 h14 v-14 h14 v14 h14', class: 'pins' }, n2.dib);
+      S('rect', { x: 180, y: 180, width: 40, height: 28 }, n2.dib);
+      const n3 = nodo(2, 'TIRA DE LED', 'LEDS INTELIGENTES');           // 12 segmentos, centrados
+      const csegs = [], SWD = 25, SGP = 8, SX = (BW - (12 * SWD + 11 * SGP)) / 2;
       for (let i = 0; i < 12; i++) {
-        S('rect', { class: 'base', x: 32 + i * 33, y: 166, width: 25, height: 16 }, n3.dib);
-        csegs.push(S('rect', { class: 'luz', x: 32 + i * 33, y: 166, width: 25, height: 16 }, n3.dib));
+        S('rect', { class: 'base', x: SX + i * (SWD + SGP), y: 162, width: SWD, height: 16 }, n3.dib);
+        csegs.push(S('rect', { class: 'luz', x: SX + i * (SWD + SGP), y: 162, width: SWD, height: 16 }, n3.dib));
       }
-      const fl1 = S('path', { class: 'flecha', d: 'M572 435 H748 M732 423 L748 435 L732 447' }, e3);
-      const fl2 = S('path', { class: 'flecha', d: 'M1152 435 H1328 M1312 423 L1328 435 L1312 447' }, e3);
+      const MY = BY0 + BH / 2, A1 = X0 + BW, A2 = X0 + 2 * BW + GAP;
+      const fl1 = S('path', { class: 'flecha', d: `M${A1 + 16} ${MY} H${A1 + GAP - 16} M${A1 + GAP - 30} ${MY - 12} L${A1 + GAP - 16} ${MY} L${A1 + GAP - 30} ${MY + 12}` }, e3);
+      const fl2 = S('path', { class: 'flecha', d: `M${A2 + 16} ${MY} H${A2 + GAP - 16} M${A2 + GAP - 30} ${MY - 12} L${A2 + GAP - 16} ${MY} L${A2 + GAP - 30} ${MY + 12}` }, e3);
       piezas.push((t) => {
         const D = M.piezaDur;
         [[n1, M.raspberry], [n2, M.esp], [n3, M.tira]].forEach(([n, a], i) => {
@@ -488,7 +522,7 @@
           const v = pr(t, a + .3, .6) * (i === 2 ? 1 : 1 - .55 * pr(t, a + D, .6));
           op(n.hl, v);
           n.fr.style.strokeOpacity = (.35 + .65 * Math.max(v, .45)).toFixed(3);
-          if (n.b) op(n.b, pr(t, a + .6, .5));
+          op(n.b, pr(t, a + .6, .5));
         });
         draw(fl1, mv(t, M.esp - .6, .8));
         draw(fl2, mv(t, M.tira - .6, .8));
@@ -499,7 +533,7 @@
     // --- 11: maqueta en vivo (bucle) y los tres beneficios ---
     if (id === 'pe-maqueta') {
       const e4 = S('g', { class: 'pe-maq' }, svg);
-      const MX = 560, MY = 156, MW = 800, TIER = 180, MC = 4;
+      const MX = 560, MY = 186, MW = 800, TIER = 168, MC = 4;
       S('rect', { class: 'mueble', x: MX, y: MY, width: MW, height: TIER * 3 + 10 }, e4);
       const mseg = [], mcaj = [];
       for (let r = 0; r < 3; r++) {
@@ -514,14 +548,14 @@
         mseg.push(...(r % 2 ? fila.reverse() : fila));
         for (let c = 0; c < MC; c++) {
           const x = MX + 20 + c * 192, y = y0 + 40;
-          S('rect', { class: 'mc', x, y, width: 176, height: 128 }, e4);
-          S('line', { class: 'manija', x1: x + 66, x2: x + 110, y1: y + 102, y2: y + 102 }, e4);
+          S('rect', { class: 'mc', x, y, width: 176, height: 116 }, e4);
+          S('line', { class: 'manija', x1: x + 66, x2: x + 110, y1: y + 92, y2: y + 92 }, e4);
           mcaj.push({ r, c, x, y });
         }
       }
       const mObj = mcaj.find((m) => m.r === 2 && m.c === 2);
       const mHalo = S('ellipse', { cx: mObj.x + 88, cy: mObj.y + 67, rx: 260, ry: 200, fill: `url(#h-${id})` }, e4);
-      const mLit = S('rect', { class: 'obj', x: mObj.x + 6, y: mObj.y + 6, width: 164, height: 116 }, e4);
+      const mLit = S('rect', { class: 'obj', x: mObj.x + 6, y: mObj.y + 6, width: 164, height: 104 }, e4);
       const mObjSeg = 50;
       const mlab = H('div', 'pe-maqlab', slide);
       const mled = H('i', null, mlab);
@@ -566,20 +600,47 @@
   }
 
   /* =====================================================================
-     DIAPOSITIVA 21 · CONVERSACIÓN CON STOCKUS (unos 10 s; después queda quieta)
-     Layout fijo: el lugar de cada mensaje está reservado desde el principio. Cuando el siguiente
-     no entra, los anteriores suben y se desvanecen ANTES de que aparezca (nada se mueve al aparecer).
+     DIAPOSITIVAS 21 A 24 · CONVERSACIÓN CON STOCKUS: un mensaje por diapositiva
+     Siempre el mismo contenedor, en la misma posición. Arriba, atenuado al 55 %, el mensaje anterior;
+     debajo, el actual. Nunca hay más de dos burbujas. Cada una tiene su lugar reservado (nada se mueve al escribir).
      ===================================================================== */
-  const CHAT = [
-    { t: .45, tipo: 'q', texto: 'Stockus, ¿qué dejó este proyecto?' },
-    { t: 1.6, tipo: 'a', lineas: ['Un problema real, resuelto con luz.', 'Funciona sin internet.', 'Ubica cada producto con LEDs inteligentes.'] },
-    { t: 6.3, tipo: 'q', texto: '¿Y ahora?' },
-    { t: 7.7, tipo: 'f', grande: 'Primeros clientes.', sub: 'Relevamiento a relevamiento. Cada instalación, acompañada.' }
-  ];
-  const TOPS = [0, 196, 564, 760];                     // posiciones fijas de cada fila (css)
-  const SCROLLS = [{ t: 5.75, a: 196, sale: 0 }, { t: 7.05, a: 564, sale: 1 }];
-  const MS = .03, PUNTOS = .8, SCROLL_D = .5;
-  function conversacion(slide) {
+  const MSG = {
+    q1: { tipo: 'q', texto: 'Stockus, ¿qué dejó este proyecto?' },
+    a1: { tipo: 'a', lineas: ['Un problema real, resuelto con luz.', 'Funciona sin internet.', 'Ubica cada producto con LEDs inteligentes.'] },
+    q2: { tipo: 'q', texto: '¿Y ahora?' },
+    f:  { tipo: 'f', grande: 'Primeros clientes.', sub: 'Relevamiento a relevamiento. Cada instalación, acompañada.' }
+  };
+  const PASOS_CHAT = { 'conv-pregunta': [null, 'q1'], 'conv-respuesta': ['q1', 'a1'], 'conv-ahora': ['a1', 'q2'], 'conv-final': ['q2', 'f'] };
+  const ALTO = { q: 156, a: 328, f: 274 }, SEP = 40;
+  function mensaje(col, key, top) {
+    const m = MSG[key];
+    const el = H('div', 'msg ' + (m.tipo === 'q' ? 'q' : 'a'), col);
+    el.style.top = top + 'px';
+    const row = H('div', 'row', el);
+    const av = m.tipo !== 'q' ? H('i', 'av', row) : null;
+    const unit = H('div', 'unit', row);                     // la etiqueta queda centrada sobre su burbuja
+    H('div', 'lab', unit, m.tipo === 'q' ? 'Pregunta' : 'Stockus');
+    const bub = H('div', 'bub' + (m.tipo === 'f' ? ' fin' : ''), unit);
+    const o = { m, el, av, parts: [] };
+    if (m.tipo !== 'q') { o.dots = H('div', 'dots', bub); for (let k = 0; k < 3; k++) H('i', null, o.dots); }
+    const hueco = (parent, s) => { const h = H('span', 'hold', parent); H('span', 'ghost2', h, s); return H('span', 'tx', h); };
+    if (m.tipo === 'q') o.parts.push({ e: hueco(bub, m.texto), s: m.texto });
+    else if (m.tipo === 'a') m.lineas.forEach((s) => { const p = H('p', 'ln', bub); const led = H('i', 'l', p); o.parts.push({ e: hueco(p, s), s, led }); });
+    else { o.parts.push({ e: hueco(H('p', 'big', bub), m.grande), s: m.grande }); o.parts.push({ e: hueco(H('p', 'sub', bub), m.sub), s: m.sub }); }
+    return o;
+  }
+  function escribir(o, t, tiempos) {                         // tiempos: [inicio, duración] de cada parte
+    o.parts.forEach((p, i) => {
+      const [a, d] = tiempos ? tiempos[i] : [YA, 1];
+      const n = Math.round(lin(t, a, d) * p.s.length);
+      const txt = t < a ? '' : p.s.slice(0, n);
+      if (p.e.textContent !== txt) p.e.textContent = txt;
+      if (p.led) op(p.led, pr(t, a - .05, .15));
+    });
+  }
+  function conversacion(slide, cfg) {
+    const [prevK, curK] = PASOS_CHAT[slide.id];
+    const M = cfg.m || {};
     const box = H('div', 'chat', slide);
     const head = H('div', 'chead', box);
     const hl = H('div', 'hl', head);
@@ -588,48 +649,22 @@
     const body = H('div', 'cbody', box);
     const col = H('div', 'col', body);
     const vento = H('div', 'cvento', box, 'Construido sobre Vento');
-    const msgs = CHAT.map((m, i) => {
-      const el = H('div', 'msg m' + (i + 1) + ' ' + (m.tipo === 'q' ? 'q' : 'a'), col);
-      H('div', 'lab', el, m.tipo === 'q' ? 'Pregunta' : 'Stockus');
-      const row = H('div', 'row', el);
-      const av = m.tipo !== 'q' ? H('i', 'av', row) : null;
-      const bub = H('div', 'bub' + (m.tipo === 'f' ? ' fin' : ''), row);
-      const o = { m, el, av, parts: [] };
-      if (m.tipo !== 'q') { o.dots = H('div', 'dots', bub); for (let k = 0; k < 3; k++) H('i', null, o.dots); }
-      const hueco = (parent, s) => { const h = H('span', 'hold', parent); H('span', 'ghost2', h, s); return H('span', 'tx', h); };
-      if (m.tipo === 'q') o.parts.push({ e: hueco(bub, m.texto), s: m.texto });
-      else if (m.tipo === 'a') m.lineas.forEach((s) => { const p = H('p', 'ln', bub); const led = H('i', 'l', p); o.parts.push({ e: hueco(p, s), s, led }); });
-      else { o.parts.push({ e: hueco(H('p', 'big', bub), m.grande), s: m.grande }); o.parts.push({ e: hueco(H('p', 'sub', bub), m.sub), s: m.sub, ms: .022 }); }
-      let tt = m.t + (m.tipo === 'q' ? .2 : PUNTOS);
-      o.parts.forEach((p) => { p.t0 = tt; p.d = p.s.length * (p.ms || MS); tt += p.d + .12; });
-      o.fin = tt;
-      return o;
-    });
+    const prev = prevK ? mensaje(col, prevK, 0) : null;
+    const cur = mensaje(col, curK, prevK ? ALTO[MSG[prevK].tipo] + SEP : 0);
+    if (prev) escribir(prev, 0, null);                       // el anterior ya está completo
     return {
       render(t) {
-        op(box, pr(t, 0, .4));
-        let y = 0;
-        SCROLLS.forEach((s, k) => { const prev = k ? SCROLLS[k - 1].a : 0; y += (s.a - prev) * mv(t, s.t, SCROLL_D); });
-        col.style.transform = y > 0 ? `translateY(${(-y).toFixed(1)}px)` : '';
-        msgs.forEach((o, i) => {
-          const nx = msgs[i + 1];
-          let v = pr(t, o.m.t, .25);
-          if (nx) v *= 1 - .45 * pr(t, nx.m.t, .3);                          // el anterior queda al 55 %
-          SCROLLS.forEach((s) => { if (s.sale === i) v *= 1 - pr(t, s.t, .25); });  // se va hacia arriba antes de cruzar el borde
-          op(o.el, v);
-          if (o.dots) {
-            op(o.dots, t >= o.m.t && t < o.m.t + PUNTOS ? 1 : 0);
-            if (!RM) [...o.dots.children].forEach((d, k) => op(d, .35 + .65 * Math.abs(Math.sin((t - o.m.t) * 6 - k * .7))));
-          }
-          if (o.av) o.av.style.opacity = t >= o.m.t ? '1' : '0';
-          o.parts.forEach((p) => {
-            const n = Math.round(cl((t - p.t0) / p.d) * p.s.length);
-            const txt = t < p.t0 ? '' : p.s.slice(0, n);
-            if (p.e.textContent !== txt) p.e.textContent = txt;
-            if (p.led) op(p.led, pr(t, p.t0 - .05, .15));
-          });
-        });
-        op(vento, pr(t, msgs[3].fin, .5));
+        op(box, slide.id === 'conv-pregunta' ? pr(t, 0, .4) : 1);
+        if (prev) { op(prev.el, 1 - .45 * pr(t, 0, .35)); if (prev.av) prev.av.style.opacity = '1'; if (prev.dots) op(prev.dots, 0); }
+        op(cur.el, pr(t, 0, .3));
+        if (cur.av) cur.av.style.opacity = '1';
+        if (cur.dots) {
+          const fin = M.escribiendo || 1;
+          op(cur.dots, t < fin ? 1 : 0);
+          if (!RM) [...cur.dots.children].forEach((d, k) => op(d, .35 + .65 * Math.abs(Math.sin(t * 6 - k * .7))));
+        }
+        escribir(cur, t, M.partes);
+        op(vento, curK === 'f' ? pr(t, M.vento, .6) : 0);
       }
     };
   }
@@ -637,6 +672,6 @@
   window.ESCENAS = {
     'th-deposito': thomas, 'th-palabra': thomas, 'th-tiempo': thomas, 'th-stockus': thomas, 'th-pasos': thomas,
     'pe-diferencia': pedro, 'pe-leds': pedro, 'pe-red': pedro, 'pe-hardware': pedro, 'pe-maqueta': pedro,
-    conversacion
+    'conv-pregunta': conversacion, 'conv-respuesta': conversacion, 'conv-ahora': conversacion, 'conv-final': conversacion
   };
 })();

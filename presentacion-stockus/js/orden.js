@@ -23,6 +23,9 @@ window.ORDEN = [
   'escala',         // 18
   'presupuesto',    // 19 presupuesto, con el punto de equilibrio de fondo
   'pago',           // 20 caso HDS y plan de pago
-  'conversacion',   // 21 conclusiones: la conversación con Stockus
-  'cierre'          // 22 frase clave, gracias y preguntas
+  'conv-pregunta',  // 21 conversación · la pregunta (Gonzalo)
+  'conv-respuesta', // 22 conversación · responde Stockus (Gonzalo)
+  'conv-ahora',     // 23 conversación · ¿Y ahora? (Francisco)
+  'conv-final',     // 24 conversación · primeros clientes (Francisco)
+  'cierre'          // 25 frase clave, gracias y preguntas
 ];

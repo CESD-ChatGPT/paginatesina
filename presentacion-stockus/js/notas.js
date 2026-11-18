@@ -83,41 +83,59 @@ window.NOTAS = {
       ind2: 'Ensayar el en vivo con ruido de fondo.' }
   ] },
   'metodologia': { titulo: 'Paso a paso, con Scrum (metodología)', bloques: [
-    { t0: 346, t1: 371, quien: 'Luana', bloque: 'Metodología',
-      texto: '“Gracias, Luciano. Ahora les contamos cómo lo construimos. Todo empezó en la pasantía en HDS, donde descubrimos el problema. Trabajamos con Scrum: dividimos el proyecto en sprints, ciclos cortos con un objetivo claro, el Sprint Goal, y anotamos las tareas en Trello. Yo me encargué de la documentación, en especial del manual de usuario. Francisco les cuenta la meta de cada sprint.”' },
-    { t0: 371, t1: 396, quien: 'Francisco', bloque: 'Metas de los sprints (Sprint Goal)',
-      texto: '“Gracias, Luana. Cada sprint tuvo su meta. El Sprint Goal del primero: investigar y definir los límites del proyecto. El del segundo: desarrollar el software. Y el del tercero: integrar el software con el hardware. Eso es lo que acaban de ver.”' }
+    { t0: 346, t1: 361, quien: 'Thomas', bloque: 'Metodología',
+      texto: '“Gracias, Luciano. Ahora les contamos cómo lo construimos. Todo empezó en la pasantía en HDS, donde descubrimos el problema. Trabajamos con Scrum: dividimos el proyecto en sprints, ciclos cortos con un objetivo claro, y anotamos las tareas en Trello.”' },
+    { t0: 361, t1: 386, quien: 'Luana', bloque: 'Metas de los sprints (Sprint Goal)',
+      texto: '“Gracias, Thomas. Yo me encargué de la documentación, en especial del manual de usuario. Y cada sprint tuvo su meta, su Sprint Goal: el del primero, investigar y definir los límites del proyecto; el del segundo, desarrollar el software; y el del tercero, integrar el software con el hardware. Eso es lo que acaban de ver.”' }
   ] },
   'deposito': { titulo: 'Video: así cambia un depósito', bloques: [
-    { t0: 396, t1: 420, quien: 'Francisco', bloque: 'Video: así cambia un depósito',
+    { t0: 386, t1: 410, quien: 'Francisco', bloque: 'Video: así cambia un depósito',
       ind: 'El video arranca solo, sin audio, y dura 22 s. Tiempos aproximados: 0–1,5 s el problema; 1,5–5,5 s las consecuencias; 5,5–7 s entra Stockus; 7–13 s ingresos y egresos; 13–17 s búsqueda con LED; 17–22 s el resultado.',
-      texto: '“Así cambia un depósito: hoy el stock se lleva de memoria, se pierde tiempo y se cometen errores. Entra Stockus: registramos ingresos y egresos desde la web o el chat, preguntamos dónde está un producto y el LED nos lo muestra. El resultado: stock claro.”',
+      texto: '“Gracias, Luana. Así cambia un depósito: hoy el stock se lleva de memoria, se pierde tiempo y se cometen errores. Entra Stockus: registramos ingresos y egresos desde la web o el chat, preguntamos dónde está un producto y el LED nos lo muestra. El resultado: stock claro.”',
       ind2: 'No decir «animación» ni «página web»: describir lo que se ve. El video usa la leche como producto de ejemplo: no nombrar a ninguna empresa.' }
   ] },
   'escala': { titulo: 'A medida (Stockus escala)', bloques: [
-    { t0: 420, t1: 440, quien: 'Luana', bloque: 'Lo económico: a medida, no hay un precio único',
+    { t0: 410, t1: 430, quien: 'Luana', bloque: 'Lo económico: a medida, no hay un precio único',
       texto: '“Gracias, Francisco. Ahora, lo económico. Stockus crece con cada empresa, desde una sola zona hasta todo el depósito: por eso no hay un precio único. Cada propuesta es a medida, y eso es justamente su ventaja. Siempre empezamos con un relevamiento.”' }
   ] },
   'presupuesto': { titulo: 'Qué entra en el presupuesto', bloques: [
-    { t0: 440, t1: 464, quien: 'Francisco', bloque: 'Costo fijo y parte variable',
+    { t0: 430, t1: 454, quien: 'Francisco', bloque: 'Costo fijo y parte variable',
       texto: '“Gracias, Luana. El presupuesto tiene un costo fijo, igual para todos: el software y el hardware base. Y una parte variable que depende de cada empresa: los metros de LEDs inteligentes, el tamaño del depósito y lo que quiere automatizar. Atrás pueden ver nuestro punto de equilibrio: entre 2 y 3 sistemas por mes con jornada completa.”' }
   ] },
   'pago': { titulo: 'Un caso real y cómo se paga', bloques: [
-    { t0: 464, t1: 486, quien: 'Luana', bloque: 'Caso de referencia: HDS',
+    { t0: 454, t1: 476, quien: 'Luana', bloque: 'Caso de referencia: HDS',
       texto: '“Gracias, Francisco. Como ejemplo, HDS, una empresa mediana que partía sin sistema de stock. Tener el trabajo terminado, con el sistema funcionando, llevaría como máximo entre 2 y 3 meses: contar el stock, armar el sistema, capacitar al personal y hacer los ajustes finales, siempre por fases.”' },
-    { t0: 486, t1: 510, quien: 'Francisco', bloque: 'Plan de pago 1: el 50 %',
+    { t0: 476, t1: 500, quien: 'Francisco', bloque: 'Plan de pago 1: el 50 %',
       texto: '“Gracias, Luana. Y lo más importante: cada empresa tiene su propia propuesta y su propia forma de pago. Se paga por etapas, según el avance. Un 50% al firmar, que cubre el hardware, así lo compramos todo desde el principio.”' },
-    { t0: 510, t1: 536, quien: 'Luana', bloque: 'Plan de pago 2: el 30 % y el 20 %',
+    { t0: 500, t1: 526, quien: 'Luana', bloque: 'Plan de pago 2: el 30 % y el 20 %',
       texto: '“Gracias, Francisco. Después, un 30% al terminar la instalación, y el 20% restante al finalizar la capacitación, con la conformidad del cliente. Así el último pago llega solo cuando todo funciona. El monto de cada empresa se define en la propuesta, después del relevamiento.”' }
   ] },
-  'conversacion': { titulo: 'Conclusiones: la conversación con Stockus', bloques: [
-    { t0: 536, t1: 586, quien: 'Gonzalo', bloque: 'Conclusiones: la conversación con Stockus',
-      ind: 'La diapositiva escribe sola la pregunta y la respuesta de Stockus (unos 10 s). Gonzalo la acompaña sin leerla.',
-      texto: '“Gracias, Luana. Para cerrar, le hacemos una última pregunta a Stockus: ¿qué dejó este proyecto?”\n\n(Se escribe la pregunta y Stockus responde. Pausa de unos 6 a 8 segundos.)\n\n“Un problema real, resuelto con luz. Partimos de un depósito sin sistema de stock; hoy Stockus permite cargar y controlar el stock, funciona sin internet y ubica cada producto con LEDs inteligentes, todo construido sobre Vento.”\n\n“¿Y ahora? Esto recién empieza. Nuestro próximo paso son los primeros clientes, siempre empezando con un relevamiento para entender cómo trabaja cada uno, y acompañarlos después con soporte y mantenimiento.”' }
+  'conv-pregunta': { titulo: 'Conversación · la pregunta', bloques: [
+    { t0: 526, t1: 536, quien: 'Gonzalo', bloque: 'Conclusiones 1: la pregunta',
+      ind: 'La pregunta se escribe sola (unos 4 s) y queda quieta.',
+      texto: '“Gracias, Luana. Para cerrar, le hacemos una última pregunta a Stockus: ¿qué dejó este proyecto?”',
+      ind2: 'AVANZAR → DIAPO 22 · responde Stockus. Esperar a que termine de escribir (unos 14 s).' }
+  ] },
+  'conv-respuesta': { titulo: 'Conversación · responde Stockus', bloques: [
+    { t0: 536, t1: 561, quien: 'Gonzalo', bloque: 'Conclusiones 1: la respuesta de Stockus',
+      ind: 'Las tres líneas aparecen a los 1, 6 y 11 s; queda quieta desde los 14 s.',
+      texto: '“Un problema real, resuelto con luz. Partimos de un depósito sin sistema de stock; hoy Stockus permite cargar y controlar el stock, funciona sin internet y ubica cada producto con LEDs inteligentes, todo construido sobre Vento.”',
+      ind2: 'AVANZAR → DIAPO 23 (Francisco).' }
+  ] },
+  'conv-ahora': { titulo: 'Conversación · ¿Y ahora?', bloques: [
+    { t0: 561, t1: 567, quien: 'Francisco', bloque: 'Conclusiones 2: ¿y ahora?',
+      texto: '“Gracias, Gonzalo. Y ahora, ¿qué sigue?”',
+      ind2: 'AVANZAR → DIAPO 24 · responde Stockus: «Primeros clientes.»' }
+  ] },
+  'conv-final': { titulo: 'Conversación · primeros clientes', bloques: [
+    { t0: 567, t1: 586, quien: 'Francisco', bloque: 'Conclusiones 2: primeros clientes',
+      ind: 'Aparece «Primeros clientes.» (1–3 s), la línea de abajo (5 s) y «Construido sobre Vento» (8 s).',
+      texto: '“Esto recién empieza. Nuestro próximo paso son los primeros clientes, siempre empezando con un relevamiento para entender cómo trabaja cada uno, y acompañarlos después con soporte y mantenimiento.”',
+      ind2: 'AVANZAR → DIAPO 25 (Gonzalo, cierre).' }
   ] },
   'cierre': { titulo: 'Cada producto, a un LED de distancia (cierre)', bloques: [
     { t0: 586, t1: 600, quien: 'Gonzalo', bloque: 'Cierre',
-      texto: '“Y si hay que quedarse con una sola idea, es esta: cada producto, a un LED de distancia. Gracias por su atención. Quedamos a disposición para sus preguntas.”' }
+      texto: '“Gracias, Francisco. Y si hay que quedarse con una sola idea, es esta: cada producto, a un LED de distancia. Gracias por su atención. Quedamos a disposición para sus preguntas.”' }
   ] }
 };
 /* El cronómetro arranca al pasar de la diapositiva 1 a la 2. En el guion eso ocurre a las 0:30. */

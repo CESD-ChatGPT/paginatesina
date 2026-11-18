@@ -23,6 +23,7 @@
   const NO_FOOT = [0, N - 1, ...VIDEO_SLIDES, ...idxs((s) => s.hasAttribute('data-nofoot'))];
   const COLD_CUTS = new Set(VIDEO_SLIDES);    // alrededor de los videos no hay transición de luz
   const LAST_SOFT = Math.max(0, ORDEN.indexOf('pe-maqueta'));   // de la 1 a la 11: fundidos cortos
+  const FIRST_CONV = ORDEN.indexOf('conv-pregunta') >= 0 ? ORDEN.indexOf('conv-pregunta') : N;   // de la 21 a la 25 también
   const SVGNS = 'http://www.w3.org/2000/svg';
   if (LITE) stage.classList.add('lite');
   if (LITE) document.documentElement.classList.add('lite');
@@ -330,30 +331,19 @@
       c.rise('.pay .foot2', { delay: 3.3, dur: .6, dist: 12 });
     },
     'cierre'(c, s) {
-      c.fade('.cajonera svg', { dur: 1 });
-      c.drawer('.cajonera', { delay: .3 });
-      // un punto de luz recorre la frase de izquierda a derecha y la deja encendida
-      const fr = s.querySelector('.frase'), luz = fr.querySelector('.luz');
-      const words = [...fr.querySelectorAll('span')];
-      const pts = words.map((w) => ({ x: w.offsetLeft + w.offsetWidth / 2, y: w.offsetTop + w.offsetHeight * .58 }));
-      const first = { x: pts[0].x - 140, y: pts[0].y };
-      const ruta = [first, ...pts];
-      const cum = [0];
-      for (let i = 1; i < ruta.length; i++) cum.push(cum[i - 1] + Math.hypot(ruta[i].x - ruta[i - 1].x, ruta[i].y - ruta[i - 1].y));
-      const total = cum[cum.length - 1];
-      if (!c.instant) words.forEach((w) => w.classList.remove('on'));
-      c.T((p) => {
-        const d = p * total;
-        let k = 1; while (k < ruta.length - 1 && cum[k] < d) k++;
-        const u = Math.min(1, Math.max(0, (d - cum[k - 1]) / ((cum[k] - cum[k - 1]) || 1)));
-        luz.style.transform = `translate(${ruta[k - 1].x + (ruta[k].x - ruta[k - 1].x) * u}px, ${ruta[k - 1].y + (ruta[k].y - ruta[k - 1].y) * u}px)`;
-        luz.style.opacity = p >= 1 ? 0 : Math.min(1, p * 12);
-        words.forEach((w, i) => w.classList.toggle('on', d >= cum[i + 1] - 2));
-      }, { delay: .5, dur: 2.8, linear: true });
-      c.A(s.querySelector('.stripHalo'), [{ opacity: 0 }, { opacity: .9 }], { delay: 3.1, dur: 1 });
-      c.segs('.strip', { delay: 3.1, gap: .03 });
-      c.rise('.gq', { delay: 3.6, dur: .6, dist: 12 });
-      c.rise('.iso', { delay: 3.8, dur: .6, dist: 12 });
+      // Quieto y limpio: dos fundidos para la frase, la tira entera de una vez, y nada que se desplace (unos 3 s)
+      c.fade('.cajonera svg', { dur: .8 });
+      const lit = s.querySelector('.cajonera .lit'), lh = s.querySelector('.cajonera .halo');
+      if (lit) c.A(lit, [{ opacity: 0 }, { opacity: 1 }], { dur: .8 });
+      if (lh) c.A(lh, [{ opacity: 0 }, { opacity: .8 }], { dur: .8 });
+      c.fade('.l1', { delay: 0, dur: .8, ease: EO });
+      c.fade('.l2', { delay: 1.4, dur: .8, ease: EO });
+      const led = s.querySelector('.led');
+      c.A(led, [{ textShadow: '0 0 0 rgba(79,179,206,0)' }, { textShadow: '0 0 34px rgba(79,179,206,.75)' }], { delay: 2.2, dur: .8, ease: EO });
+      c.fade('.strip', { delay: 2.0, dur: .8, ease: EO });
+      c.fade('.stripHalo', { delay: 2.0, dur: .8, to: .9, ease: EO });
+      c.fade('.gq', { delay: 2.4, dur: .7, ease: EO });
+      c.fade('.iso', { delay: 2.6, dur: .7, ease: EO });
     }
   };
 
@@ -499,7 +489,8 @@
     finishTransition();
     const prev = cur;
     const back = prev >= 0 && n < prev;
-    const soft = prev >= 0 && prev <= LAST_SOFT && n <= LAST_SOFT;   // 1 a 11: fundido de 250 ms, sin la luz que viaja
+    // fundido de 250 ms, sin la luz que viaja: de la 1 a la 11 y de la conversación al cierre (21 a 25)
+    const soft = prev >= 0 && ((prev <= LAST_SOFT && n <= LAST_SOFT) || (prev >= FIRST_CONV && n >= FIRST_CONV));
     const cut = prev < 0 || opts.cut || COLD_CUTS.has(n) || COLD_CUTS.has(prev) || REDUCE;
     const instant = prev < 0 || back || REDUCE || opts.instant;
     cur = n;

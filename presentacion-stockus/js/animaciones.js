@@ -1,4 +1,4 @@
-/* ANIMACIONES DE ENTRADA (diapositivas 2 a 11 y 21): un único objeto para retocarlas.
+/* ANIMACIONES DE ENTRADA (diapositivas 2 a 11 y 21 a 24): un único objeto para retocarlas.
    Cada animación arranca al llegar a su diapositiva y termina en un estado quieto que queda hasta avanzar.
    dur  = cuándo queda estable (segundos desde que se llega).
    m    = momentos de la animación, en segundos desde que se llega (los usa js/escenas.js).
@@ -44,6 +44,10 @@ window.ANIMACIONES = {
   'pe-maqueta': { dur: 14, bucle: true,      // el recorrido de luz de la maqueta es el único bucle de la presentación
     m: { maqueta: 0, maquetaDur: 4, leds: [8, 11, 14] },
     subs: [{ t: 0, en: 'Our live model', es: 'Nuestra maqueta en vivo' }] },
-  /* ---------- Conclusiones (21): el chat se escribe solo ---------- */
-  'conversacion': { dur: 11 }
+  /* ---------- Conclusiones (21 a 24): un mensaje por diapositiva ----------
+     partes = [inicio, duración] de cada texto que se escribe letra por letra; escribiendo = fin de los tres puntos */
+  'conv-pregunta':  { dur: 4.2, m: { partes: [[.2, 3.8]] } },
+  'conv-respuesta': { dur: 14,  m: { escribiendo: 1, partes: [[1, 1.4], [6, .9], [11, 1.8]] } },
+  'conv-ahora':     { dur: 2.2, m: { partes: [[.2, 1.8]] } },
+  'conv-final':     { dur: 9,   m: { escribiendo: 1, partes: [[1, 2], [5, 1.6]], vento: 8 } }
 };
