@@ -48,8 +48,9 @@ CONVERSACIÓN CON STOCKUS (diapositivas 21 a 24)
   Nada corre por tiempo después de la entrada. Al retroceder se ve terminada.
 
 CIERRE (diapositiva 25)
-  Quieto: la frase aparece en dos fundidos, la palabra LED queda con un halo fijo y la
-  tira se enciende entera de una vez. Unos 3 s y queda estático.
+  La frase aparece en dos fundidos, sin nada que la recorra, y la palabra LED queda con
+  un halo fijo. Después la tira se enciende de izquierda a derecha, un LED cada 60 ms,
+  con el halo creciendo. Unos 4 s y queda estático.
 
 MODO LIVIANO
   Abrir index.html?lite  (sin partículas, sin grano ni brillos de las tiras; los halos

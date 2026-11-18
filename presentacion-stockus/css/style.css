@@ -446,99 +446,26 @@ img.logo, img.iso { display: block; height: auto; object-fit: contain; max-width
 @media (prefers-reduced-motion: reduce) { .breathe { animation: none !important; } }
 
 /* =====================================================================
-   PASADA DE CENTRADO: todo el texto va centrado sobre el eje de la diapositiva (x = 960),
-   dentro de la grilla (120 px a los lados, 96 arriba, 160 abajo). Las filas se centran como bloque.
+   AJUSTES PUNTUALES (sin centrado general: cada diapositiva conserva su alineación)
    ===================================================================== */
-.title { left: var(--mx); width: var(--ancho); text-align: center; }
-
-/* 12 · equipo: "Somos" + isologotipo como un solo título centrado; tarjetas con todo centrado */
-#equipo .title { display: flex; align-items: center; justify-content: center; gap: 28px; }
-#equipo .title .logo { position: static; width: auto; height: 118px; margin: -8px 0 0; }   /* PNG con su margen de seguridad */
-#equipo .grid { top: 236px; grid-auto-rows: 316px; }
-#equipo .card { text-align: center; }
-#equipo .card .dw { right: auto; left: 50%; margin-left: -28px; top: 30px; }
-#equipo .card .num { margin-top: 62px; }
-#equipo .card .who { left: 24px; right: 24px; }
-
-/* 13 · identidad: logo, frase, paleta y tipografías en columna centrada */
-#identidad .lockup { left: 520px; top: 170px; }
-#identidad .isoline { left: 0; width: 1920px; top: 444px; text-align: center; }
-#identidad .bars { left: 50%; transform: translateX(-50%); top: 516px; }
-#identidad .bar { text-align: center; }
-#identidad .bar .sw { height: 168px; }
-#identidad .samples { left: 50%; transform: translateX(-50%); top: 786px; text-align: center; }
-#identidad .samples .aa, #identidad .samples .mm { font-size: 90px; }
-
-/* 14 · Vento */
-#vento .def { text-align: center; }
-#vento .frame { left: 50%; margin-left: -713.5px; }
-
-/* 16 · metodología: "3 SPRINTS" como bloque centrado; tres nodos iguales centrados en 360 / 960 / 1560 */
-#metodologia .big { left: 539px; top: 172px; }
-#metodologia .bigl { left: 814px; top: 292px; }
-#metodologia .bigl2 { left: 0; width: 1920px; top: 596px; text-align: center; }
-#metodologia .tl { left: 0; width: 1920px; top: 658px; }
-#metodologia .tl .line, #metodologia .tl .fill { left: 360px; width: 1200px; }
-#metodologia .tl .nd { width: 480px; text-align: center; }
-#metodologia .tl .n1 { left: 120px; } #metodologia .tl .n2 { left: 720px; } #metodologia .tl .n3 { left: 1320px; }
-#metodologia .tl .dotn { margin: 0 auto; }
-#metodologia .tl .halo { left: 1260px; }
-
-/* 18 · escala: rótulos centrados bajo su cajonera; la columna de palabras, centrada */
-#escala .caps { transform: translateX(-50%); text-align: center; }
-#escala .k, #escala .k.main { padding-left: 0; border-left: 0; text-align: center; }
-#escala .k.main { padding-bottom: 22px; border-bottom: 2px solid rgba(79,179,206,.6); }
-#escala .steps .st { transform: translateX(-50%); text-align: center; white-space: nowrap; }
-#escala .steps .strip { left: 7px; }
-
-/* 19 · presupuesto */
-#presupuesto .pc { text-align: center; }
-#presupuesto .pc li, #presupuesto .a li { border-left: 0; padding: 10px 0; }
-#presupuesto .eq1 { justify-content: center; }
-#presupuesto .eq2 { text-align: center; }
-
-/* 20 · HDS y pago: números centrados sobre su tramo (50 → 0–594, 30 → 612–966, 20 → 984–1218) */
-#pago .hds { text-align: center; }
-#pago .pay { left: 570px; width: 1218px; }
-#pago .pay .head, #pago .pay .foot2 { left: 0; width: 1218px; text-align: center; }
-#pago .pay .pc { transform: translateX(-50%); }
-#pago .pay .p1 { left: 297px; } #pago .pay .p2 { left: 789px; } #pago .pay .p3 { left: 1101px; right: auto; }
-#pago .pay .lb { transform: translateX(-50%); text-align: center; }
-#pago .pay .lb b { font-size: 26px; letter-spacing: 0; }
-#pago .pay .l1 { left: 297px; } #pago .pay .l2 { left: 789px; } #pago .pay .l3 { left: 1101px; right: auto; text-align: center; }
-
-/* 2 a 6 · Thomas */
-.th .th-rot { left: 0; width: 1920px; top: 108px; text-align: center; }
-.th .th-rot .n { margin-top: 16px; }
-.th .th-rot .d { margin-top: 16px; }
-.th .th-nost { left: 0; width: 1920px; top: 150px; text-align: center; font-size: 120px; }
-.th text.preg { font-size: 26px; }
-.th .th-rev .halo { left: 210px; top: 20px; }
-.th .th-rev .dot { top: 457px; }
-.th .th-strip { top: 640px; }
-.th .pasos .pnum, .th .pasos .plab { text-anchor: middle; }
-
-/* 7 a 11 · Pedro */
-.pe .pe-kick { width: var(--ancho); text-align: center; }
-.pe .pe-chat .lab { text-align: center; }
-.pe .pe-chat .campo { justify-content: center; }
+/* 9 y 10 · rótulos centrados con su rectángulo */
 .pe .ntit, .pe .nsub { text-anchor: middle; }
 .pe .tel-chat rect, .pe .tel-chat line { fill: none; stroke: var(--cel); stroke-width: 1.6; }
-.pe .pe-maqlab { left: 0; width: 1920px; top: 140px; justify-content: center; }
-.pe .pe-ben .b { flex-direction: column; gap: 10px; text-align: center; }
 
-/* 21 a 24 · conversación: contenedor centrado, encabezado centrado, texto centrado dentro de cada burbuja */
+/* 21 a 24 · conversación: contenedor centrado; texto de las burbujas a la izquierda, interlineado 1,35 */
 .conv .chead { justify-content: center; gap: 44px; }
 .conv .unit { display: flex; flex-direction: column; align-items: center; }
 .conv .lab, .conv .q .lab, .conv .a .lab { text-align: center; padding-left: 0; }
-.conv .bub { text-align: center; }
-.conv .tx { right: 0; text-align: center; }
-.conv .ln { justify-content: center; }
-.conv .fin .big, .conv .fin .sub { text-align: center; }
-.conv .dots { left: 50%; transform: translateX(-50%); }
+.conv .bub, .conv .q .bub, .conv .a .bub { text-align: left; padding: 28px 36px; }
+.conv .q .bub { height: 132px; line-height: 1.35; }
+.conv .ln { justify-content: flex-start; line-height: 1.35; }
+.conv .fin { height: 250px; }
+.conv .fin .big { line-height: 1.35; text-align: left; }
+.conv .fin .sub { line-height: 1.35; text-align: left; }
+.conv .tx { left: 0; right: auto; text-align: left; }
 .conv .cvento { left: 0; right: 0; text-align: center; }
 
-/* 25 · cierre: quieto y centrado */
+/* 25 · cierre: frase quieta; la tira se enciende LED por LED */
 #cierre .frase { top: 196px; }
 #cierre .frase .l { font-size: 144px; line-height: 1.12; }
 #cierre .strip { top: 584px; }
@@ -546,5 +473,3 @@ img.logo, img.iso { display: block; height: auto; object-fit: contain; max-width
 #cierre .gq { top: 646px; display: flex; justify-content: center; gap: 28px; font-size: 38px; }
 #cierre .gq b { font-weight: 400; color: rgba(79,179,206,.6); }
 #cierre .iso { left: 50%; margin-left: -190px; top: 736px; }
-#vento .def { font-size: 30px; }
-#metodologia .ghost.word { left: 0; width: 1920px; text-align: center; top: 150px; }

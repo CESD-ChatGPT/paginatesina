@@ -331,7 +331,7 @@
       c.rise('.pay .foot2', { delay: 3.3, dur: .6, dist: 12 });
     },
     'cierre'(c, s) {
-      // Quieto y limpio: dos fundidos para la frase, la tira entera de una vez, y nada que se desplace (unos 3 s)
+      // Frase quieta en dos fundidos; después la tira se enciende de izquierda a derecha, un LED cada 60 ms (unos 4 s)
       c.fade('.cajonera svg', { dur: .8 });
       const lit = s.querySelector('.cajonera .lit'), lh = s.querySelector('.cajonera .halo');
       if (lit) c.A(lit, [{ opacity: 0 }, { opacity: 1 }], { dur: .8 });
@@ -340,8 +340,9 @@
       c.fade('.l2', { delay: 1.4, dur: .8, ease: EO });
       const led = s.querySelector('.led');
       c.A(led, [{ textShadow: '0 0 0 rgba(79,179,206,0)' }, { textShadow: '0 0 34px rgba(79,179,206,.75)' }], { delay: 2.2, dur: .8, ease: EO });
-      c.fade('.strip', { delay: 2.0, dur: .8, ease: EO });
-      c.fade('.stripHalo', { delay: 2.0, dur: .8, to: .9, ease: EO });
+      const leds = s.querySelectorAll('.strip .seg');
+      c.segs('.strip', { delay: 2.2, gap: .06 });
+      c.A(s.querySelector('.stripHalo'), [{ opacity: 0 }, { opacity: .9 }], { delay: 2.2, dur: leds.length * .06 + .3, ease: 'linear' });
       c.fade('.gq', { delay: 2.4, dur: .7, ease: EO });
       c.fade('.iso', { delay: 2.6, dur: .7, ease: EO });
     }

@@ -102,7 +102,7 @@
     const subs = subtitulos(slide, cfg);
 
     // --- Depósito isométrico ---
-    const K = .596, X0 = 805, Y0 = 519, C = .866;      // depósito centrado en x = 960, entre y = 340 y y = 900
+    const K = .777, X0 = 1098, Y0 = 342, C = .866;
     const P = (x, y, z) => [X0 + (x - y) * C * K, Y0 + ((x + y) * .5 - z) * K];
     const pts = (a) => a.map((q) => P(q[0], q[1], q[2]).map((n) => n.toFixed(1)).join(',')).join(' ');
     const wh = S('g', { class: 'wh' }, svg);
@@ -131,14 +131,14 @@
     }
     cajones.forEach((c, n) => { c.jx = ((n * 37) % 11) - 5; c.jy = ((n * 23) % 9) - 4; c.jr = ((n * 17) % 7) - 3; });
     const marcas = S('g', null, wh);
-    const preg = cajones.map((c) => { const e = S('text', { class: 'preg', x: c.cx, y: c.cy + 9 }, marcas); e.textContent = '?'; return e; });
-    const errores = [4, 15, 19, 28, 33].map((n) => cruz(marcas, cajones[n].cx, cajones[n].cy, 12));
+    const preg = cajones.map((c) => { const e = S('text', { class: 'preg', x: c.cx, y: c.cy + 11 }, marcas); e.textContent = '?'; return e; });
+    const errores = [4, 15, 19, 28, 33].map((n) => cruz(marcas, cajones[n].cx, cajones[n].cy, 15));
 
     // --- Personas y globos ---
     const gente = S('g', null, wh);
     const pa = P(110, 225, 0), pb = P(560, 270, 0);
-    const perA = persona(gente, pa[0], pa[1], 1.55);
-    const perB = persona(gente, pb[0], pb[1], 1.55);
+    const perA = persona(gente, pa[0], pa[1], 2);
+    const perB = persona(gente, pb[0], pb[1], 2);
     function globo(x, y, w, haciaIzq) {
       const g = S('g', { class: 'globo' }, gente);
       S('rect', { x: x - w / 2, y: y - 40, width: w, height: 80, rx: 2 }, g);
@@ -147,8 +147,8 @@
       g._t = S('text', { x, y: y + 15 }, g);
       return g;
     }
-    const gA = globo(pa[0] - 40, pa[1] - 176, 230, true);
-    const gB = globo(pb[0] + 70, pb[1] - 176, 300, false);
+    const gA = globo(pa[0] - 40, pa[1] - 230, 230, true);
+    const gB = globo(pb[0] + 70, pb[1] - 230, 300, false);
     const decA = ['4?', '6?', '5?'], decB = ['7?', '4?', 'creo que 3…'];     // el último queda fijo
 
     // --- Zigzag con rastro punteado ---
@@ -166,7 +166,7 @@
     const rastro = S('g', { class: 'rastro' }, wh);
     const puntos = [];
     for (let s = 0; s <= tot; s += 16) { const q = enRuta(s); puntos.push({ s, e: S('circle', { cx: q[0].toFixed(1), cy: q[1].toFixed(1), r: 3 }, rastro) }); }
-    const walker = persona(wh, 0, 0, 1.55);
+    const walker = persona(wh, 0, 0, 2);
 
     // --- Columna izquierda: rótulos y reloj ---
     const rot = H('div', 'th-rot', slide);
@@ -174,16 +174,16 @@
     H('div', 'n', rot, 'HDS TECHNOLOGY');
     H('div', 'd', rot, 'Logística y depósitos');
     const nost = H('div', 'th-nost', slide);
-    nost.textContent = 'NO STOCK SYSTEM';
+    nost.innerHTML = 'NO STOCK<br>SYSTEM';
     const reloj = S('g', { class: 'reloj' }, svg);
-    const RC = [960, 218], RR = 110;                    // reloj centrado arriba del depósito
+    const RC = [430, 500], RR = 160;
     S('circle', { cx: RC[0], cy: RC[1], r: RR }, reloj);
     for (let i = 0; i < 12; i++) {
-      const a = i * Math.PI / 6, r1 = i % 3 ? RR * .88 : RR * .8;
-      S('line', { x1: RC[0] + Math.sin(a) * r1, y1: RC[1] - Math.cos(a) * r1, x2: RC[0] + Math.sin(a) * RR * .95, y2: RC[1] - Math.cos(a) * RR * .95 }, reloj);
+      const a = i * Math.PI / 6, r1 = i % 3 ? 140 : 128;
+      S('line', { x1: RC[0] + Math.sin(a) * r1, y1: RC[1] - Math.cos(a) * r1, x2: RC[0] + Math.sin(a) * 152, y2: RC[1] - Math.cos(a) * 152 }, reloj);
     }
-    const hHora = S('line', { class: 'aguja h', x1: RC[0], y1: RC[1], x2: RC[0], y2: RC[1] - RR * .5 }, reloj);
-    const hMin = S('line', { class: 'aguja m', x1: RC[0], y1: RC[1], x2: RC[0], y2: RC[1] - RR * .78 }, reloj);
+    const hHora = S('line', { class: 'aguja h', x1: RC[0], y1: RC[1], x2: RC[0], y2: RC[1] - 78 }, reloj);
+    const hMin = S('line', { class: 'aguja m', x1: RC[0], y1: RC[1], x2: RC[0], y2: RC[1] - 122 }, reloj);
     S('circle', { class: 'eje', cx: RC[0], cy: RC[1], r: 7 }, reloj);
 
     // --- Revelación: STOCKUS + tira de LED ---
@@ -205,7 +205,7 @@
       const hl = S('ellipse', { cx: PW / 2, cy: PH / 2, rx: PW * .85, ry: PH * .8, fill: `url(#h-${slide.id})` }, g);
       const fr = S('rect', { class: 'pfr', x: 0, y: 0, width: PW, height: PH }, g);
       const led = S('rect', { class: 'pled', x: PW - 54, y: 22, width: 30, height: 9 }, g);
-      const num = S('text', { class: 'pnum', x: PW / 2, y: 44 }, g); num.textContent = '0' + (i + 1);
+      const num = S('text', { class: 'pnum', x: 24, y: 44 }, g); num.textContent = '0' + (i + 1);
       const sk = S('g', { class: 'esq' }, g);
       if (i === 0) {
         S('rect', { x: 90, y: 70, width: 180, height: 190 }, sk);
@@ -232,11 +232,11 @@
         [[96, 70], [136, 110], [176, 50], [216, 90]].forEach(([bx, bh]) => S('rect', { class: 'lleno', x: bx, y: 240 - bh, width: 26, height: bh }, sk));
         S('polyline', { points: '200,104 226,118 252,96 276,108' }, sk);
       }
-      const lb = S('text', { class: 'plab', x: PW / 2, y: PH + 52 }, g); lb.textContent = etiquetas[i].toUpperCase();
+      const lb = S('text', { class: 'plab', x: 0, y: PH + 52 }, g); lb.textContent = etiquetas[i].toUpperCase();
       return { g, hl, fr, led, sk, lb };
     });
 
-    const WCX = 960, WCY = 470;            // centro de STOCKUS revelado (eje de la diapositiva)
+    const WCX = 960, WCY = 440;            // centro de STOCKUS revelado (eje de la diapositiva)
     let wordW = 0, wordH = 0, wordPad = 0;
     return {
       render(t) {
@@ -299,7 +299,7 @@
         word.style.clipPath = mk >= 1 ? 'none' : `inset(-25% ${((1 - mk) * 110 - 10).toFixed(1)}% -25% -10%)`;
         op(word, t >= M.revela + .3 ? 1 : 0);
         // STOCKUS sube y se achica arriba a la izquierda (6): su primera letra queda en x = 120
-        // posición explícita (origen arriba a la izquierda): grande y centrada en x = 960 → chica y centrada arriba
+        // posición explícita (origen arriba a la izquierda): centrada en x = 960 → chica con la primera letra en x = 120
         if (!wordW && word.offsetWidth) {         // se mide el texto real (sin el espaciado que queda después de la última letra)
           word.style.transform = 'none';
           const st = slide.closest('#stage'), k = st.getBoundingClientRect().width / 1920;
@@ -310,7 +310,7 @@
         if (wordW) {
           const up = mv(t, M.sube, M.subeDur), sc = 1 - .66 * up;
           const x0 = WCX - wordPad - wordW / 2, y0 = WCY - wordH / 2;
-          const x1 = WCX - (wordPad + wordW / 2) * .34, y1 = 150 - wordH * .34 / 2;   // chico y centrado arriba
+          const x1 = 120 - wordPad * .34, y1 = 150 - wordH * .34 / 2;
           word.style.transform = `translate(${(x0 + (x1 - x0) * up).toFixed(1)}px, ${(y0 + (y1 - y0) * up).toFixed(1)}px) scale(${sc.toFixed(3)})`;
         }
         op(tira, pr(t, M.tira, .3) * (1 - pr(t, M.sube, .6)));
@@ -533,7 +533,7 @@
     // --- 11: maqueta en vivo (bucle) y los tres beneficios ---
     if (id === 'pe-maqueta') {
       const e4 = S('g', { class: 'pe-maq' }, svg);
-      const MX = 560, MY = 186, MW = 800, TIER = 168, MC = 4;
+      const MX = 560, MY = 156, MW = 800, TIER = 180, MC = 4;
       S('rect', { class: 'mueble', x: MX, y: MY, width: MW, height: TIER * 3 + 10 }, e4);
       const mseg = [], mcaj = [];
       for (let r = 0; r < 3; r++) {
@@ -548,14 +548,14 @@
         mseg.push(...(r % 2 ? fila.reverse() : fila));
         for (let c = 0; c < MC; c++) {
           const x = MX + 20 + c * 192, y = y0 + 40;
-          S('rect', { class: 'mc', x, y, width: 176, height: 116 }, e4);
-          S('line', { class: 'manija', x1: x + 66, x2: x + 110, y1: y + 92, y2: y + 92 }, e4);
+          S('rect', { class: 'mc', x, y, width: 176, height: 128 }, e4);
+          S('line', { class: 'manija', x1: x + 66, x2: x + 110, y1: y + 102, y2: y + 102 }, e4);
           mcaj.push({ r, c, x, y });
         }
       }
       const mObj = mcaj.find((m) => m.r === 2 && m.c === 2);
       const mHalo = S('ellipse', { cx: mObj.x + 88, cy: mObj.y + 67, rx: 260, ry: 200, fill: `url(#h-${id})` }, e4);
-      const mLit = S('rect', { class: 'obj', x: mObj.x + 6, y: mObj.y + 6, width: 164, height: 104 }, e4);
+      const mLit = S('rect', { class: 'obj', x: mObj.x + 6, y: mObj.y + 6, width: 164, height: 116 }, e4);
       const mObjSeg = 50;
       const mlab = H('div', 'pe-maqlab', slide);
       const mled = H('i', null, mlab);
@@ -611,7 +611,7 @@
     f:  { tipo: 'f', grande: 'Primeros clientes.', sub: 'Relevamiento a relevamiento. Cada instalación, acompañada.' }
   };
   const PASOS_CHAT = { 'conv-pregunta': [null, 'q1'], 'conv-respuesta': ['q1', 'a1'], 'conv-ahora': ['a1', 'q2'], 'conv-final': ['q2', 'f'] };
-  const ALTO = { q: 156, a: 328, f: 274 }, SEP = 40;
+  const ALTO = { q: 174, a: 328, f: 292 }, SEP = 40;     // etiqueta (42) + burbuja; interlineado 1,35
   function mensaje(col, key, top) {
     const m = MSG[key];
     const el = H('div', 'msg ' + (m.tipo === 'q' ? 'q' : 'a'), col);
