@@ -352,20 +352,26 @@
       const CX = 1160, CY = 330, CW = 160, CH = 136, COLS = 4, ROWS = 4;
       const caj = S('g', { class: 'pe-caj' }, e1);
       for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
-        S('rect', { x: CX + c * CW + 3, y: CY + r * CH + 3, width: CW - 6, height: CH - 6 }, caj);
+        S('rect', { x: CX + c * CW + 3, y: CY + r * CH + 22, width: CW - 6, height: CH - 25 }, caj);   // debajo de la tira de su fila
         S('line', { class: 'manija', x1: CX + c * CW + CW * .36, x2: CX + c * CW + CW * .64, y1: CY + r * CH + CH * .76, y2: CY + r * CH + CH * .76 }, caj);
       }
-      const NSG = 24, SW = 22.6, SG = 4;
-      const tira = S('g', null, e1);
-      const segs = [];
-      for (let i = 0; i < NSG; i++) {
-        const x = CX + i * (SW + SG);
-        S('rect', { class: 'base', x, y: CY - 36, width: SW, height: 9 }, tira);
-        segs.push(S('rect', { class: 'luz', x, y: CY - 36, width: SW, height: 9 }, tira));
+      // una tira de LED por fila, pegada al borde superior de la fila, del ancho de la fila; 5 segmentos por columna
+      const SPC = 5, SG = 4, SW = (CW - 6 - (SPC - 1) * SG) / SPC, TIRA_Y = 6;
+      const tira = S('g', { class: 'tiras' }, e1);
+      const filas = [];
+      for (let r = 0; r < ROWS; r++) {
+        const fila = S('g', { class: 'tira-fila' }, tira), segsF = [];
+        for (let c = 0; c < COLS; c++) for (let k = 0; k < SPC; k++) {
+          const x = CX + c * CW + 3 + k * (SW + SG), y = CY + r * CH + TIRA_Y;
+          S('rect', { class: 'base', x, y, width: SW, height: 9 }, fila);
+          segsF.push(S('rect', { class: 'luz', x, y, width: SW, height: 9 }, fila));
+        }
+        filas.push(segsF);
       }
-      const objSeg = 14, ox = CX + 2 * CW + 3, oy = CY + 2 * CH + 3;
-      const objHalo = S('ellipse', { cx: ox + (CW - 6) / 2, cy: oy + (CH - 6) / 2, rx: CW * 1.3, ry: CH * 1.3, fill: `url(#h-${id})` }, e1);
-      const obj = S('rect', { class: 'obj', x: ox + 5, y: oy + 5, width: CW - 16, height: CH - 16 }, e1);
+      const OBJ_R = 2, OBJ_C = 2, OBJ_K = OBJ_C * SPC + 2;     // LED del cajón buscado: fila 3, columna 3 (segmento central)
+      const ox = CX + 2 * CW + 3, oy = CY + 2 * CH + 22;
+      const objHalo = S('ellipse', { cx: ox + (CW - 6) / 2, cy: oy + (CH - 25) / 2, rx: CW * 1.3, ry: CH * 1.3, fill: `url(#h-${id})` }, e1);
+      const obj = S('rect', { class: 'obj', x: ox + 5, y: oy + 5, width: CW - 16, height: CH - 35 }, e1);
       const snake = [];
       for (let r = 0; r < ROWS; r++) for (let k = 0; k < COLS; k++) { const c = r % 2 ? COLS - 1 - k : k; snake.push([CX + c * CW + CW / 2, CY + r * CH + CH / 2]); }
       const sdots = []; let stot = 0;
@@ -388,8 +394,9 @@
         const nc = Math.round(lin(t, M.escribe, M.escribeDur) * PREG.length);
         ctx.textContent = PREG.slice(0, nc);
         caret.style.opacity = id === 'pe-diferencia' && t >= M.escribe - .5 && nc < PREG.length ? '1' : '0';
-        const run = mv(t, M.led, M.ledDur * .8), h = run * objSeg;
-        segs.forEach((s, i) => op(s, run >= 1 ? (i === objSeg ? 1 : 0) : (t < M.led ? 0 : nivel(h, i))));
+        // el LED recorre las filas de arriba hacia abajo (0,5 s por fila) y queda fijo en la del producto
+        const paso = t < M.led + .3 ? -1 : Math.min(OBJ_R, Math.floor((t - M.led - .3) / .5));
+        filas.forEach((f, r) => f.forEach((sg, i) => op(sg, r === paso && i === OBJ_K ? 1 : 0)));
         const on = pr(t, M.led + M.ledDur * .8, M.ledDur * .2 + .2);
         op(obj, on); op(objHalo, on);
         const sd = mvl(t, M.recorrido, M.recorridoDur) * stot;
@@ -406,7 +413,7 @@
       // Panel RED LOCAL: un único SVG de 640x480 con viewBox -320 -240 640 480 (origen en el centro), x de 120 a 760.
       // Paneles: 120 | red local 640 | 140 | wifi 400 | 140 | señal 360 | 120. Centro vertical común y = 523.
       const CY = 523;
-      const red = S('svg', { class: 'red-local', x: 120, y: CY - 240, width: 640, height: 480, viewBox: '-320 -240 640 480', overflow: 'visible' }, e2);
+      const red = S('svg', { class: 'red-local', x: 360, y: CY - 240, width: 640, height: 480, viewBox: '-320 -240 640 480', overflow: 'visible' }, e2);
       const anillo = S('rect', { class: 'red-marco', x: -319.25, y: -239.25, width: 638.5, height: 478.5, rx: 2 }, red);
       const rlab = S('text', { class: 'rlab rlab-red', x: 0, y: -190 + 8 }, red); rlab.style.textAnchor = 'middle'; rlab.textContent = 'RED LOCAL';   // centro en (0, −190)
       const grupo = S('g', { transform: 'translate(20 0)' }, red);   // dispositivos y líneas 20 px a la derecha: 56 px de margen a cada lado
@@ -458,7 +465,7 @@
       S('line', { x1: 100, y1: 70, x2: 154, y2: 70 }, enlaces);
       const devs = [dRpi, dEsp, dLap, dTel];
       // panel 2 (880 a 1260): wifi tachado + cartel. Base de los gráficos en YB, rótulos en una misma línea debajo
-      const YB = CY + 58, WX = 1100, WY = YB - 6;
+      const YB = CY + 58, WX = 1360, WY = YB - 6;
       const wifi = S('g', { class: 'wifi' }, e2);
       const arcos = [88, 162, 236].map((r) => S('path', { d: `M${(WX - r * .7071).toFixed(1)} ${(WY - r * .7071).toFixed(1)} A${r} ${r} 0 0 1 ${(WX + r * .7071).toFixed(1)} ${(WY - r * .7071).toFixed(1)}` }, wifi));
       const wdot = S('circle', { class: 'lleno', cx: WX, cy: WY - 12, r: 18 }, wifi);
@@ -467,12 +474,6 @@
       const cartel = S('g', { class: 'cartel' }, e2);
       S('rect', { x: WX - 175, y: LBL, width: 350, height: 76 }, cartel);
       const ct = S('text', { x: WX, y: LBL + 53 }, cartel); ct.textContent = 'NO INTERNET';
-      // panel 3 (1420 a 1800): cuatro barras del mismo alto que el wifi, sin tilde
-      const BXc = 1620, BW4 = 58, BG = 30, BX = BXc - (4 * BW4 + 3 * BG) / 2, BY = YB;
-      const senal = S('g', { class: 'senal' }, e2);
-      [62, 120, 178, 236].forEach((hh, i) => S('rect', { class: i < 2 ? 'lleno' : 'vacio', x: BX + i * (BW4 + BG), y: BY - hh, width: BW4, height: hh }, senal));
-      const tilde = S('g', null, e2);
-      const slab = S('text', { class: 'rlab', x: BXc, y: LBL + 53 }, e2); slab.textContent = 'SEÑAL DÉBIL';
       const trazosTel = [marcoTel, pantTel];
       piezas.push((t) => {
         draw(anillo, mv(t, M.anillo, M.anilloDur * .5));
@@ -482,13 +483,11 @@
         trazosTel.forEach((e, i) => draw(e, mv(t, M.anillo + M.anilloDur * .7 + i * .25, .5)));
         op(burbujas, pr(t, M.anillo + M.anilloDur * .9, .4));
         op(enlaces, pr(t, M.anillo + M.anilloDur * .85, .5));
-        const wv = 1 - .55 * pr(t, M.senal, .5);
+        const wv = 1;
         arcos.forEach((a, i) => { op(a, t >= M.wifi ? wv : 0); draw(a, mv(t, M.wifi + i * M.wifiDur * .12, M.wifiDur * .2)); });
         op(wdot, pr(t, M.wifi, .3) * wv);
         op(strike, t >= M.wifi + M.wifiDur * .55 ? wv : 0); draw(strike, mv(t, M.wifi + M.wifiDur * .55, M.wifiDur * .15));
         op(cartel, pr(t, M.wifi + M.wifiDur * .75, .4) * wv);
-        op(senal, pr(t, M.senal, .5));
-        op(slab, pr(t, M.senal + .3, .5));
       });
     }
 

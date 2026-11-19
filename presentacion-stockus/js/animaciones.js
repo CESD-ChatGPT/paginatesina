@@ -34,10 +34,9 @@ window.ANIMACIONES = {
     m: { led: 0, ledDur: 4, recorrido: 6, recorridoDur: 3, tacha: 9, tachaDur: 1 },
     subs: [{ t: 0, en: 'LEDs show the exact location', es: 'Los LEDs muestran el lugar exacto' },
            { t: 6, en: 'No shelf-by-shelf searching', es: 'Sin buscar estante por estante' }] },
-  'pe-red': { dur: 13,
-    m: { anillo: 0, anilloDur: 4, wifi: 5, wifiDur: 4, senal: 10, senalDur: 3 },
-    subs: [{ t: 0, en: 'Local network: no internet needed', es: 'Red local: no necesita internet' },
-           { t: 10, en: 'Great for weak connections', es: 'Ideal para señal débil' }] },
+  'pe-red': { dur: 9,      // red local 0–4 s, wifi tachado 5–9 s (sin el tramo de la señal débil)
+    m: { anillo: 0, anilloDur: 4, wifi: 5, wifiDur: 4 },
+    subs: [{ t: 0, en: 'Local network: no internet needed', es: 'Red local: no necesita internet' }] },
   'pe-hardware': { dur: 9,
     m: { raspberry: 0, esp: 3, tira: 6, piezaDur: 3 },
     subs: [{ t: 0, en: 'Raspberry Pi + ESP8266 + LED strip', es: 'Raspberry Pi, ESP8266 y tira de LED' }] },
