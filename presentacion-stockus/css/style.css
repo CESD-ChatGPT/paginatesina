@@ -528,3 +528,4 @@ img.logo, img.iso { display: block; height: auto; object-fit: contain; max-width
 .pe .enl9 line { stroke: #4FB3CE; stroke-width: 2.5; stroke-dasharray: 6 5; }
 .pe .red-marco { fill: rgba(79,179,206,.04); stroke: #4FB3CE; stroke-width: 1.5; }
 .pe .rlab-red { font-size: 22px; text-anchor: start; letter-spacing: .16em; }
+.pe .disp .teclado { fill: none; stroke: #fff; stroke-width: 1.2; }

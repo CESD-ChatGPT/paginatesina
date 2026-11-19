@@ -408,17 +408,18 @@
       const CY = 523;
       const red = S('svg', { class: 'red-local', x: 120, y: CY - 240, width: 640, height: 480, viewBox: '-320 -240 640 480', overflow: 'visible' }, e2);
       const anillo = S('rect', { class: 'red-marco', x: -319.25, y: -239.25, width: 638.5, height: 478.5, rx: 2 }, red);
-      const rlab = S('text', { class: 'rlab rlab-red', x: -284, y: -204 + 24 }, red); rlab.textContent = 'RED LOCAL';
+      const rlab = S('text', { class: 'rlab rlab-red', x: 0, y: -190 + 8 }, red); rlab.style.textAnchor = 'middle'; rlab.textContent = 'RED LOCAL';   // centro en (0, −190)
+      const grupo = S('g', { transform: 'translate(20 0)' }, red);   // dispositivos y líneas 20 px a la derecha: 56 px de margen a cada lado
       const lab = (g, x, yTop, txt) => { const t = S('text', { class: 'dlab', x, y: yTop + 11 }, g); t.textContent = txt; return t; };
       // ESP8266 150x98, centro (0,−90); rótulo a la derecha, a 14 px
-      const dEsp = S('g', { class: 'disp' }, red);
+      const dEsp = S('g', { class: 'disp' }, grupo);
       S('rect', { x: -75, y: -139, width: 150, height: 98 }, dEsp);
       S('path', { class: 'pins', d: 'M-52 -118 h15 v15 h15 v-15 h15 v15 h15 v-15 h15 v15 h15' }, dEsp);
       S('rect', { x: -46, y: -88, width: 46, height: 30 }, dEsp);
       S('rect', { x: 16, y: -84, width: 34, height: 20 }, dEsp);
       { const t = S('text', { class: 'dlab', x: 89, y: -85 }, dEsp); t.style.textAnchor = 'start'; t.textContent = 'ESP8266'; }
       // Raspberry Pi 200x130, centro (0,70)
-      const dRpi = S('g', { class: 'disp' }, red);
+      const dRpi = S('g', { class: 'disp' }, grupo);
       S('rect', { x: -100, y: 5, width: 200, height: 130 }, dRpi);
       S('path', { class: 'pins', d: 'M-84 20 H84' }, dRpi);
       S('rect', { x: -72, y: 42, width: 58, height: 58 }, dRpi);
@@ -426,13 +427,15 @@
       S('rect', { x: 8, y: 86, width: 36, height: 20 }, dRpi);
       lab(dRpi, 0, 149, 'RASPBERRY PI');
       // Computadora 130x88, centro (−219,70)
-      const dLap = S('g', { class: 'disp' }, red);
+      const dLap = S('g', { class: 'disp' }, grupo);
       S('rect', { x: -275, y: 26, width: 112, height: 70 }, dLap);
       S('rect', { x: -267, y: 34, width: 96, height: 54 }, dLap);
       S('path', { d: 'M-284 114 H-154 L-164 96 H-274 Z' }, dLap);
+      S('line', { class: 'teclado', x1: -270, x2: -168, y1: 104, y2: 104 }, dLap);          // base del teclado
+      S('path', { class: 'teclado', d: 'M-231 114 V109 H-207 V114' }, dLap);               // hueco del trackpad
       lab(dLap, -219, 128, 'COMPUTADORA');
       // Celular 90x170, centro (199,70)
-      const dTel = S('g', { class: 'disp' }, red);
+      const dTel = S('g', { class: 'disp' }, grupo);
       const TX = 154, TY = -15, TW = 90, TH = 170, TC = 199;
       const marcoTel = S('rect', { x: TX, y: TY, width: TW, height: TH, rx: 10 }, dTel);
       const pantTel = S('rect', { x: TX + 7, y: TY + 20, width: TW - 14, height: TH - 40, rx: 2 }, dTel);
@@ -449,7 +452,7 @@
       S('rect', { x: TX + TW - 14 - 28, y: TY + 100, width: 28, height: 14 }, burbujas);
       lab(dTel, 199, 169, 'CELULAR');
       // líneas punteadas: vertical (0,−41)→(0,5); horizontales de 54 px
-      const enlaces = S('g', { class: 'enl enl9' }, red);
+      const enlaces = S('g', { class: 'enl enl9' }, grupo);
       S('line', { x1: 0, y1: -41, x2: 0, y2: 5 }, enlaces);
       S('line', { x1: -100, y1: 70, x2: -154, y2: 70 }, enlaces);
       S('line', { x1: 100, y1: 70, x2: 154, y2: 70 }, enlaces);
