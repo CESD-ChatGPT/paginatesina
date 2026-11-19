@@ -524,3 +524,5 @@ img.logo, img.iso { display: block; height: auto; object-fit: contain; max-width
 .pe .dlab { font-size: 15px; }
 .pe .rlab-red { font-size: 20px; }
 .pe .tel-chat rect, .pe .tel-chat line { stroke-width: 1.6; }
+.pe .rlab-red { font-size: 24px; letter-spacing: .16em; }
+.pe .enl9 line { stroke: #4FB3CE; stroke-width: 2.5; stroke-dasharray: 6 5; }
