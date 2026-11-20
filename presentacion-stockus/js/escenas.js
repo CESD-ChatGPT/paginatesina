@@ -588,7 +588,7 @@
       });
       piezas.push((t) => {
         op(e4, pr(t, M.maqueta, M.maquetaDur * .5));
-        op(mlab, pr(t, M.maqueta + 1, .5));
+        op(mlab, pr(t, M.maqueta + .7, .35));
         const t0 = M.maqueta + M.maquetaDur * .6;
         if (RM) {
           mseg.forEach((s, i) => op(s, i === mObjSeg ? 1 : .3));
@@ -602,7 +602,7 @@
           op(mLit, (.35 + .65 * v) * pr(t, M.maqueta, 1)); op(mHalo, (.2 + .8 * v) * pr(t, M.maqueta, 1));
           mled.style.opacity = t < t0 ? '1' : (.4 + .6 * Math.abs(Math.cos(tt * 2.2))).toFixed(3);
         }
-        op(ben, pr(t, M.maqueta + 1, .6));
+        op(ben, pr(t, M.maqueta + .7, .42));
         benEls.forEach((b, i) => { const on = pr(t, M.leds[i], .4); op(b.led, on); op(b.d, .4 + .6 * on); });
       });
     }

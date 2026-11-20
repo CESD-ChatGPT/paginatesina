@@ -39,8 +39,9 @@ window.ANIMACIONES = {
   'pe-hardware': { dur: 9,
     m: { raspberry: 0, esp: 3, tira: 6, piezaDur: 3 },
     subs: [{ t: 0, en: 'Raspberry Pi + ESP8266 + LED strip', es: 'Raspberry Pi, ESP8266 y tira de LED' }] },
-  'pe-maqueta': { dur: 14, bucle: true,      // el recorrido de luz de la maqueta es el único bucle de la presentación
-    m: { maqueta: 0, maquetaDur: 4, leds: [8, 11, 14] }, },
+  'pe-maqueta': { dur: 10.2, bucle: true,    // el recorrido de luz de la maqueta es el único bucle de la presentación
+    // entrada un 30 % más corta (antes 14 s + 0,4 s del último fundido = 14,4 s; ahora 10,2 s); el ritmo del bucle no cambia
+    m: { maqueta: 0, maquetaDur: 2.8, leds: [5.6, 7.7, 9.8] }, },
   /* ---------- Conclusiones (21 a 24): un mensaje por diapositiva ----------
      partes = [inicio, duración] de cada texto que se escribe letra por letra; escribiendo = fin de los tres puntos */
   'conv-pregunta':  { dur: 4.2, m: { partes: [[.2, 3.8]] } },
