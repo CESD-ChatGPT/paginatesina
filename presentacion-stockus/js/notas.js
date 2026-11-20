@@ -16,7 +16,7 @@ window.NOTAS = {
   ] },
   'th-palabra': { titulo: 'Thomas · Stock controlado de palabra', bloques: [
     { t0: 53, t1: 58, quien: 'Thomas', bloque: 'Inglés 1 · de palabra', en: true,
-      texto: '“The stock was controlled verbally, and it was disorganized.”',
+      texto: '“The stock was controlled verbally, with no system to track it.”',
       ind2: 'AVANZAR → DIAPO 4 al decir: «Because of this, the employees lost time…»' }
   ] },
   'th-tiempo': { titulo: 'Thomas · Tiempo perdido y errores', bloques: [

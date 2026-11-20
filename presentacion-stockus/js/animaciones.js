@@ -12,8 +12,7 @@ window.ANIMACIONES = {
            { t: 14, en: 'A big problem: no stock system', es: 'El problema: no había sistema de stock' }] },
   'th-palabra': { dur: 4, bucle: true,      // el diálogo de los globos se repite mientras la diapositiva está en pantalla
     m: { voces: 0, vocesDur: 3, desalineado: 2, desalineadoDur: 2 },
-    subs: [{ t: 0, en: 'Stock controlled verbally', es: 'El stock se controlaba de palabra' },
-           { t: 3, en: 'Poorly organized', es: 'Poco organizado' }] },
+    subs: [{ t: 0, en: 'The stock was controlled verbally, with no system to track it.', es: 'El stock se controlaba de forma verbal, sin ningún sistema para registrarlo.' }] },
   'th-tiempo': { dur: 7,
     m: { zigzag: 0, zigzagDur: 5, reloj: 0, relojDur: 5, cruces: 5, crucesDur: 2 },   // el reloj gira mientras la persona camina
     subs: [{ t: 0, en: 'Lost time. Common mistakes.', es: 'Pérdida de tiempo y errores frecuentes' }] },

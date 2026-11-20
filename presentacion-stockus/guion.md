@@ -58,7 +58,7 @@ Thomas y Pedro dicen sus partes en inglés. Todo lo demás es en español.
 
 *[AVANZAR → DIAPO 3 · stock controlado de palabra]*
 
-**(EN)** "The stock was controlled verbally, and it was disorganized."
+**(EN)** "The stock was controlled verbally, with no system to track it."
 
 *[AVANZAR → DIAPO 4 · tiempo perdido y errores]*
 
