@@ -153,7 +153,7 @@ Thomas y Pedro dicen sus partes en inglés. Todo lo demás es en español.
 ## 6:01 – 6:26 | Metas de los sprints (Sprint Goal) (Luana)
 *DIAPO 16 (sigue)*
 
-"Gracias, Thomas. Yo me encargué de la documentación, en especial del manual de usuario. Y cada sprint tuvo su meta, su Sprint Goal: el del primero, investigar y definir los límites del proyecto; el del segundo, desarrollar el software; y el del tercero, integrar el software con el hardware. Eso es lo que acaban de ver."
+"Gracias, Thomas. Trabajar así nos permitió avanzar paso a paso y siempre con rumbo claro. Y cada sprint tuvo su meta, su Sprint Goal: el del primero, investigar y definir los límites del proyecto; el del segundo, desarrollar el software; y el del tercero, integrar el software con el hardware. Eso es lo que acaban de ver."
 
 ## 6:26 – 6:50 | Video: así cambia un depósito (Francisco)
 *DIAPO 17 (video, sin audio, 22 s)*

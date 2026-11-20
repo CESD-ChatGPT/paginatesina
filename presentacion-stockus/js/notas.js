@@ -86,7 +86,7 @@ window.NOTAS = {
     { t0: 346, t1: 361, quien: 'Thomas', bloque: 'Metodología',
       texto: '“Gracias, Luciano. Ahora les contamos cómo lo construimos. Todo empezó en la pasantía en HDS, donde descubrimos el problema. Trabajamos con Scrum: dividimos el proyecto en sprints, ciclos cortos con un objetivo claro, y anotamos las tareas en Trello.”' },
     { t0: 361, t1: 386, quien: 'Luana', bloque: 'Metas de los sprints (Sprint Goal)',
-      texto: '“Gracias, Thomas. Yo me encargué de la documentación, en especial del manual de usuario. Y cada sprint tuvo su meta, su Sprint Goal: el del primero, investigar y definir los límites del proyecto; el del segundo, desarrollar el software; y el del tercero, integrar el software con el hardware. Eso es lo que acaban de ver.”' }
+      texto: '“Gracias, Thomas. Trabajar así nos permitió avanzar paso a paso y siempre con rumbo claro. Y cada sprint tuvo su meta, su Sprint Goal: el del primero, investigar y definir los límites del proyecto; el del segundo, desarrollar el software; y el del tercero, integrar el software con el hardware. Eso es lo que acaban de ver.”' }
   ] },
   'deposito': { titulo: 'Video: así cambia un depósito', bloques: [
     { t0: 386, t1: 410, quien: 'Francisco', bloque: 'Video: así cambia un depósito',
