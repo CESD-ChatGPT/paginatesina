@@ -27,7 +27,7 @@ window.ANIMACIONES = {
            { t: 17, en: 'Track your inventory live', es: 'Seguís tu inventario en tiempo real' }] },
   /* ---------- Pedro ---------- */
   'pe-diferencia': { dur: 9,
-    m: { titulo: 0, tituloDur: 2, escribe: 3, escribeDur: 5 },
+    m: { titulo: 0, tituloDur: 2, escribe: 3, escribeDur: 3 },     // escritura un 40 % más rápida: termina a los 6 s (la entrada dura 9)
     subs: [{ t: 0, en: 'You ask where a product is', es: 'Preguntás dónde está un producto' }] },
   'pe-leds': { dur: 10,
     m: { led: 0, ledDur: 4, recorrido: 6, recorridoDur: 3, tacha: 9, tachaDur: 1 },

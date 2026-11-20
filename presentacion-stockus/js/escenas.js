@@ -68,14 +68,22 @@
   function subtitulos(slide, cfg) {
     const band = H('div', 'subband', slide);
     const box = H('div', 'subs', band);
-    const en = H('p', 'en', box), es = H('p', 'es', box);
+    const es = H('p', 'es', box), en = H('p', 'en', box);     // español arriba y en grande; inglés debajo, más chico
     const cues = cfg.subs || [];
     let cur = -1;
     return (t) => {
       let i = -1;
       for (let k = 0; k < cues.length; k++) if (cues[k].t <= t + 1e-6) i = k;
       if (i < 0) { op(box, 0); return; }
-      if (i !== cur) { cur = i; en.textContent = cues[i].en; es.textContent = cues[i].es; }
+      if (i !== cur) {
+        cur = i; en.textContent = cues[i].en; es.textContent = cues[i].es;
+        // si el español no entra en el ancho útil (1680 px), se achica lo justo para que quede en un renglón
+        es.style.fontSize = '';
+        const rg = document.createRange(); rg.selectNodeContents(es);
+        const k = (slide.closest('#stage') || document.body).getBoundingClientRect().width / 1920 || 1;
+        const w = rg.getBoundingClientRect().width / k;
+        if (w > 1680) es.style.fontSize = (56 * 1680 / w).toFixed(1) + 'px';
+      }
       const nx = cues[i + 1];
       op(box, Math.min(i === 0 && cues[i].t === 0 ? 1 : pr(t, cues[i].t, .35), nx ? 1 - lin(t, nx.t - .25, .25) : 1));
     };
