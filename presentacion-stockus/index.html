@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Stockus · Solvus</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="stage">
+
+  <!-- Sala a oscuras -->
+  <section class="slide bg-black" id="negro" data-title="Sala a oscuras"></section>
+
+  <!-- Thomas (2 a 6) y Pedro (7 a 11): una idea por diapositiva; animación de entrada en js/escenas.js, tiempos en js/animaciones.js -->
+  <section class="slide bg-pet guiada th" id="th-deposito" data-title="Thomas · El depósito de HDS y el problema"></section>
+  <section class="slide bg-pet guiada th" id="th-palabra" data-title="Thomas · Stock controlado de palabra"></section>
+  <section class="slide bg-pet guiada th" id="th-tiempo" data-title="Thomas · Tiempo perdido y errores"></section>
+  <section class="slide bg-pet guiada th" id="th-stockus" data-title="Thomas · Aparece STOCKUS"></section>
+  <section class="slide bg-pet guiada th" id="th-pasos" data-title="Thomas · Los cuatro pasos"></section>
+  <section class="slide bg-pet guiada pe" id="pe-diferencia" data-title="Pedro · Lo que diferencia a Stockus"></section>
+  <section class="slide bg-pet guiada pe" id="pe-leds" data-title="Pedro · Los LEDs marcan el lugar"></section>
+  <section class="slide bg-pet guiada pe" id="pe-red" data-title="Pedro · Red local, sin internet"></section>
+  <section class="slide bg-pet guiada pe" id="pe-hardware" data-title="Pedro · Raspberry Pi y ESP8266"></section>
+  <section class="slide bg-pet guiada pe" id="pe-maqueta" data-title="Pedro · La maqueta en vivo"></section>
+
+  <!-- Equipo -->
+  <section class="slide bg-pet" id="equipo" data-title="Somos Solvus">
+    <h2 class="title">Somos Solvus</h2>
+    <img class="logo" src="assets/img/solvus-isologotipo-horizontal-blanco.png" alt="Solvus">
+    <div class="grid">
+      <div class="card box"><i class="dw" data-key-in></i><div class="who"><div class="name">Gonzalo Ferrero</div><div class="role">Scrum Master</div><div class="sub">Coordinador / Facilitador</div></div></div>
+      <div class="card box"><i class="dw"></i><div class="who"><div class="name">Francisco Farias</div><div class="role">Product Owner</div><div class="sub">Comunicación</div></div></div>
+      <div class="card box"><i class="dw"></i><div class="who"><div class="name">Luana Beltramone</div><div class="role">Documentación</div><div class="sub">&nbsp;</div></div></div>
+      <div class="card box"><i class="dw"></i><div class="who"><div class="name">Pedro Cabezas</div><div class="role">Desarrollador / Investigador</div><div class="sub">&nbsp;</div></div></div>
+      <div class="card box"><i class="dw"></i><div class="who"><div class="name">Luciano Albarracin</div><div class="role">Desarrollador / Investigador</div><div class="sub">&nbsp;</div></div></div>
+      <div class="card box"><i class="dw" data-key-out></i><div class="who"><div class="name">Thomas Spalletti</div><div class="role">Desarrollador / Investigador</div><div class="sub">&nbsp;</div></div></div>
+    </div>
+  </section>
+
+  <!-- Identidad -->
+  <section class="slide bg-pet" id="identidad" data-title="Una marca clara y sobria">
+    <h2 class="title">Una marca clara y sobria</h2>
+    <div class="lockup">
+      <img class="word" src="assets/img/solvus-isologotipo-horizontal-blanco.png" alt="Isologotipo horizontal de Solvus">
+      <svg class="iso" data-key viewBox="157.58 271.91 83.39 86.90" aria-hidden="true">
+        <defs><radialGradient id="isoGlow"><stop offset="0" stop-color="#fff"/><stop offset=".35" stop-color="#4FB3CE" stop-opacity=".9"/><stop offset="1" stop-color="#4FB3CE" stop-opacity="0"/></radialGradient></defs>
+        <!-- Isotipo del manual de marca (pág. 5, pdftocairo -svg). Un solo trazo en S partido al medio en dos flechas;
+             los extremos exteriores se alargan medio grosor para reproducir el remate cuadrado del original. -->
+        <g class="fa"><path class="st" d="M 55.75 13.999853 L 26.500137 13.999853 C 26.155244 13.999853 25.812576 14.017654 25.469907 14.051031 C 25.129464 14.084408 24.789021 14.135586 24.450803 14.202339 C 24.11481 14.269093 23.781042 14.351422 23.451724 14.451552 C 23.122407 14.551683 22.799765 14.667389 22.481573 14.798671 C 22.163381 14.929953 21.854089 15.076811 21.549248 15.239244 C 21.246632 15.401678 20.952916 15.577463 20.665876 15.768823 C 20.38106 15.960183 20.105146 16.164894 19.838131 16.382956 C 19.573342 16.601017 19.317453 16.83243 19.074915 17.074968 C 18.832378 17.317506 18.600965 17.573394 18.382904 17.838183 C 18.164842 18.105198 17.960131 18.381112 17.768771 18.665928 C 17.57741 18.952968 17.401626 19.246684 17.239192 19.5493 C 17.076759 19.854141 16.929901 20.163433 16.798619 20.481625 C 16.667337 20.799817 16.551631 21.122459 16.4515 21.451776 C 16.35137 21.781094 16.269041 22.114862 16.202287 22.450855 C 16.135533 22.789073 16.084356 23.129516 16.050979 23.469959 C 16.017602 23.812628 15.999801 24.155296 15.999801 24.500189 C 15.999801 24.842858 16.017602 25.187751 16.050979 25.528194 C 16.084356 25.870863 16.135533 26.211306 16.202287 26.549524 C 16.269041 26.885517 16.35137 27.219285 16.4515 27.548602 C 16.551631 27.87792 16.667337 28.200562 16.798619 28.518754 C 16.929901 28.836946 17.076759 29.146238 17.239192 29.448854 C 17.401626 29.753695 17.57741 30.047411 17.768771 30.334451 C 17.960131 30.619266 18.164842 30.895181 18.382904 31.162195 C 18.600965 31.426985 18.832378 31.680648 19.074915 31.925411 C 19.317453 32.167949 19.573342 32.399361 19.838131 32.617423 C 20.105146 32.835485 20.38106 33.040196 20.665876 33.229331 C 20.952916 33.420691 21.246632 33.598701 21.549248 33.761134 C 21.854089 33.921343 22.163381 34.068201 22.481573 34.201708 C 22.799765 34.33299 23.122407 34.448696 23.451724 34.548826 C 23.781042 34.646732 24.11481 34.731286 24.450803 34.79804 C 24.789021 34.864793 25.129464 34.915971 25.469907 34.949348 C 25.812576 34.982725 26.155244 35.000525 26.500137 35.000525 L 32.4 35.000525" transform="matrix(1.755524, 0, 0, 1.755524, 143.095556, 253.919013)"/><path class="tri" d="M 234.382812 278.496094 L 213.316406 296.929688 L 234.382812 296.929688 Z"/></g>
+        <g class="fb"><path class="st" d="M 31.6 35.000525 L 37.4989 35.000525 C 37.843793 35.000525 38.186462 35.016101 38.52913 35.049478 C 38.871798 35.08508 39.212242 35.134033 39.548235 35.200786 C 39.886453 35.269765 40.217995 35.352094 40.547313 35.452225 C 40.876631 35.552355 41.201498 35.668061 41.517465 35.799343 C 41.835657 35.930625 42.147173 36.077483 42.44979 36.239917 C 42.752406 36.40235 43.048347 36.578135 43.333162 36.769495 C 43.620202 36.960855 43.896117 37.165566 44.160906 37.383628 C 44.42792 37.601689 44.681584 37.833102 44.924122 38.07564 C 45.168885 38.318178 45.398072 38.574066 45.616134 38.838856 C 45.834195 39.103645 46.038906 39.379559 46.230267 39.6666 C 46.421627 39.951415 46.597411 40.247356 46.759845 40.549972 C 46.922279 40.852588 47.069136 41.164105 47.200418 41.482297 C 47.3317 41.800489 47.447407 42.123131 47.547537 42.452449 C 47.647667 42.781766 47.732222 43.113309 47.798975 43.451527 C 47.865729 43.789745 47.914682 44.127963 47.950284 44.470632 C 47.98366 44.8133 47.999236 45.155968 47.999236 45.500862 C 47.999236 45.84353 47.98366 46.186198 47.950284 46.528867 C 47.914682 46.871535 47.865729 47.211978 47.798975 47.547971 C 47.732222 47.886189 47.647667 48.219957 47.547537 48.547049 C 47.447407 48.876367 47.3317 49.201234 47.200418 49.517201 C 47.069136 49.835393 46.922279 50.14691 46.759845 50.449526 C 46.597411 50.752142 46.421627 51.048083 46.230267 51.332898 C 46.038906 51.619939 45.834195 51.895853 45.616134 52.160642 C 45.398072 52.427657 45.168885 52.68132 44.924122 52.923858 C 44.681584 53.168621 44.42792 53.397809 44.160906 53.61587 C 43.896117 53.833932 43.620202 54.038643 43.333162 54.230003 C 43.048347 54.421363 42.752406 54.597148 42.44979 54.759581 C 42.147173 54.922015 41.835657 55.068873 41.517465 55.200155 C 41.201498 55.331437 40.876631 55.447143 40.547313 55.547273 C 40.217995 55.647404 39.886453 55.731958 39.548235 55.798712 C 39.212242 55.865465 38.871798 55.916643 38.52913 55.95002 C 38.186462 55.983397 37.843793 55.998973 37.4989 55.998973 L 11.999037 55.998973 L 8.249037 55.998973" transform="matrix(1.755524, 0, 0, 1.755524, 143.095556, 253.919013)"/><path class="tri" d="M 164.160156 352.226562 L 185.226562 333.796875 L 164.160156 333.796875 Z"/></g>
+        <g class="glow" transform="matrix(1.755524, 0, 0, 1.755524, 143.095556, 253.919013)"><circle r="5"/><circle r="4"/><circle r="3.3"/><circle r="2.6"/><circle r="2"/></g>
+      </svg>
+    </div>
+    <div class="isobox"><div class="ib-t">Una S, dos flechas</div><p class="ib-p">La S es Solvus. Las flechas son la entrada y la salida de mercadería.</p></div>
+    <div class="bars">
+      <div class="bar"><div class="sw" style="background:#1F6C82"></div><div class="nm">Teal</div><div class="hx">#1F6C82</div></div>
+      <div class="bar"><div class="sw" style="background:#0B2C40;border-color:rgba(79,179,206,.6)"></div><div class="nm">Petróleo</div><div class="hx">#0B2C40</div></div>
+      <div class="bar"><div class="sw" style="background:#4FB3CE"></div><div class="nm">Celeste</div><div class="hx">#4FB3CE</div></div>
+      <div class="bar"><div class="sw" style="background:#0A0A0A"></div><div class="nm">Negro</div><div class="hx">#0A0A0A</div></div>
+    </div>
+    <div class="samples">
+      <div><div class="aa">Aa</div><div class="sn">IBM PLEX SANS</div></div>
+      <div><div class="mm">0123</div><div class="sn">IBM PLEX MONO</div></div>
+    </div>
+  </section>
+
+  <!-- Vento -->
+  <section class="slide bg-neg" id="vento" data-title="Todo Stockus, en un solo lugar">
+    <h2 class="title">Todo Stockus, en un solo lugar</h2>
+    <p class="def"><b>Vento:</b> plataforma de IA para crear proyectos de hardware, robótica, IoT y automatizaciones con lenguaje natural</p>
+    <div class="frame">
+      <div class="inner">
+        <div class="halo hub"></div>
+        <img class="shot" src="assets/img/vento-flujo-hd.png" alt="Espacio de trabajo cesd en Vento: tres bases de datos, una Raspberry Pi, cuatro páginas y dos agentes de IA conectados al centro">
+        <svg class="over" viewBox="0 0 1902 880">
+          <rect class="hl h0" data-key x="797" y="368" width="324" height="181"/>
+          <rect class="hl h1" x="302" y="20" width="496" height="276"/>
+          <rect class="hl h2" x="889" y="4" width="156" height="290"/>
+          <rect class="hl h3" x="24" y="622" width="818" height="254"/>
+          <rect class="hl h4" x="926" y="622" width="177" height="184"/>
+          <rect class="hl h5" x="1716" y="622" width="177" height="184"/>
+          <path class="ln l1" d="M400 296 V312"/>
+          <path class="ln l2" d="M1045 64 H1082"/>
+          <path class="ln l3" d="M433 586 V622 M842 586 H1809 V622 M1014 586 V622"/>
+        </svg>
+        <div class="data d1" style="left:306px;top:312px">3 BASES DE DATOS</div>
+        <div class="data d2" style="left:1090px;top:42px">1 RASPBERRY PI EN LÍNEA</div>
+        <div class="data d3" style="left:28px;top:564px">4 PÁGINAS · 2 AGENTES DE IA</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Demo: video del chatbot -->
+  <section class="slide bg-black" id="demo" data-title="Demo: el chatbot funcionando">
+    <video class="vid" src="assets/video/video-chatbot.mp4" poster="assets/video/video-chatbot.jpg" muted playsinline preload="auto"></video>
+  </section>
+
+  <!-- Metodología: solo las metas de cada sprint -->
+  <section class="slide bg-pet" id="metodologia" data-title="Paso a paso, con Scrum">
+    <div class="ghost word">SCRUM</div>
+    <h2 class="title">Paso a paso, con Scrum</h2>
+    <div class="big"><span class="cnt">3</span></div>
+    <div class="bigl">SPRINTS</div>
+    <div class="bigl2">CADA UNO CON SU SPRINT GOAL</div>
+    <div class="tl">
+      <div class="halo"></div>
+      <div class="line"></div><div class="fill"></div>
+      <div class="nd" style="left:0"><div class="dotn"><b></b></div><div class="tag">Sprint Goal 1</div><p>Investigar y definir los límites</p></div>
+      <div class="nd" style="left:620px"><div class="dotn"><b></b></div><div class="tag">Sprint Goal 2</div><p>Desarrollar el software</p></div>
+      <div class="nd last" style="left:1240px"><div class="dotn" data-key><b></b></div><div class="tag">Sprint Goal 3</div><p>Integrar software y hardware</p></div>
+    </div>
+  </section>
+
+  <!-- Video: así cambia un depósito -->
+  <section class="slide bg-vid" id="deposito" data-title="Así cambia un depósito">
+    <video class="vid" src="assets/video/animacion-landing.mp4" poster="assets/video/animacion-landing.jpg" muted playsinline preload="auto"></video>
+  </section>
+
+  <!-- Escala -->
+  <section class="slide bg-pet" id="escala" data-title="Crece con cada empresa">
+    <h2 class="title">Crece con cada empresa</h2>
+    <div class="cajonera cj1" data-x="120" data-y="520" data-cell="100,100" data-grid="2,2" data-lit="1:0"></div>
+    <div class="cajonera cj2" data-x="380" data-y="420" data-cell="100,100" data-grid="3,3" data-lit="1:1,1:2,2:0,2:2"></div>
+    <div class="cajonera cj3" data-key data-x="740" data-y="320" data-cell="100,100" data-grid="5,4" data-lit="1:1,1:2,1:3,2:0,2:1,2:2,2:4,3:0,3:2,3:3,3:4,0:3"></div>
+    <div class="caps" style="left:120px;top:742px">UNA ZONA</div>
+    <div class="caps" style="left:380px;top:742px">VARIAS ZONAS</div>
+    <div class="caps" style="left:740px;top:742px">TODO EL DEPÓSITO</div>
+    <div class="keys">
+      <div class="k main"><div class="w">A MEDIDA</div><div class="s">Lo que cada cliente necesita</div></div>
+      <div class="k"><div class="w">ESCALABLE</div><div class="s">De una zona a todo el depósito</div></div>
+      <div class="k"><div class="w">SIN PRECIO ÚNICO</div><div class="s">Y esa es su ventaja</div></div>
+    </div>
+    <div class="steps">
+      <div class="strip" data-n="54" data-w="22"></div>
+      <div class="st" style="left:0"><small>01</small>RELEVAMIENTO</div>
+      <div class="st" style="left:600px"><small>02</small>DIAGNÓSTICO</div>
+      <div class="st" style="left:1200px"><small>03</small>PROPUESTA A MEDIDA</div>
+    </div>
+  </section>
+
+  <!-- Presupuesto, con el punto de equilibrio como recurso de fondo -->
+  <section class="slide bg-pet" id="presupuesto" data-title="Qué entra en el presupuesto">
+    <div class="cajonera" data-x="1240" data-y="-60" data-cell="220,150" data-grid="4,3" data-lit="0:2"></div>
+    <h2 class="title">Qué entra en el presupuesto</h2>
+    <div class="row">
+      <div class="pc a" data-key><div class="tag">Costo fijo · igual para todos</div><h3>Software y hardware base</h3><ul><li>Software de Stockus</li><li>Raspberry Pi, ESP8266 y fuente</li></ul></div>
+      <div class="plus"><svg viewBox="0 0 56 56"><path d="M28 8 V48"/><path d="M8 28 H48"/></svg></div>
+      <div class="pc b"><div class="tag">Variable · según cada empresa</div><h3>Se mide en cada depósito</h3><ul><li>Metros de LEDs inteligentes</li><li>Tamaño del depósito</li><li>Qué automatizar</li></ul></div>
+    </div>
+    <div class="equil">
+      <div class="eq1"><span class="k">Punto de equilibrio</span><span class="v">2–3 sistemas por mes</span><span class="j">(jornada completa)</span></div>
+      <div class="eq2">Gastos fijos ÷ lo que deja cada venta</div>
+    </div>
+  </section>
+
+  <!-- Caso HDS y plan de pago (el plan de pago es el protagonista) -->
+  <section class="slide bg-pet" id="pago" data-title="Un caso real y cómo se paga">
+    <h2 class="title">Un caso real y cómo se paga</h2>
+    <div class="hds box">
+      <div class="tag">HDS</div><div class="tag tg2">Empresa mediana</div>
+      <div class="big"><span class="a">2</span>–<span class="b">3</span></div>
+      <div class="mes">meses</div>
+      <div class="lb">Hasta tener el sistema funcionando</div>
+      <div class="fichas"><span>Contar</span><span>Armar</span><span>Capacitar</span><span>Ajustar</span></div>
+      <div class="fases">Siempre por fases</div>
+    </div>
+    <div class="pay">
+      <div class="head">Cada empresa, su propia propuesta de pago</div>
+      <div class="pcs">
+        <div class="pc p1"><span class="v">50</span><i>%</i></div>
+        <div class="pc p2"><span class="v">30</span><i>%</i></div>
+        <div class="pc p3"><span class="v">20</span><i>%</i></div>
+      </div>
+      <div class="strip" data-n="20" data-w="54" data-groups="10,6,4"></div>
+      <div class="labs">
+        <div class="lb l1" data-key><b>Al firmar</b><span>cubre el hardware</span></div>
+        <div class="lb l2"><b>Al terminar<br>la instalación</b></div>
+        <div class="lb l3"><b>Al finalizar<br>la capacitación</b><span>con la conformidad<br>del cliente</span></div>
+      </div>
+      <div class="foot2">Se paga a medida que se ve el resultado</div>
+    </div>
+  </section>
+
+  <!-- Conclusiones: la conversación con Stockus, un mensaje por diapositiva (js/escenas.js) -->
+  <section class="slide bg-pet conv" id="conv-pregunta" data-title="Conversación · la pregunta">
+    <div class="cajonera tenue" data-x="-30" data-y="-30" data-cell="180,160" data-grid="12,7"></div>
+  </section>
+  <section class="slide bg-pet conv" id="conv-respuesta" data-title="Conversación · responde Stockus">
+    <div class="cajonera tenue" data-x="-30" data-y="-30" data-cell="180,160" data-grid="12,7"></div>
+  </section>
+  <section class="slide bg-pet conv" id="conv-ahora" data-title="Conversación · ¿Y ahora?">
+    <div class="cajonera tenue" data-x="-30" data-y="-30" data-cell="180,160" data-grid="12,7"></div>
+  </section>
+  <section class="slide bg-pet conv" id="conv-final" data-title="Conversación · primeros clientes">
+    <div class="cajonera tenue" data-x="-30" data-y="-30" data-cell="180,160" data-grid="12,7"></div>
+  </section>
+
+  <!-- Cierre: la frase clave quieta; la tira se enciende LED por LED -->
+  <section class="slide bg-pet" id="cierre" data-title="Cada producto, a un LED de distancia">
+    <div class="cajonera tenue" data-x="-30" data-y="-30" data-cell="180,160" data-grid="12,7" data-lit="1:9"></div>
+    <div class="frase" data-key><div class="l l1">Cada producto,</div><div class="l l2">a un <span class="led">LED</span> de distancia.</div></div>
+    <div class="halo stripHalo"></div>
+    <div class="strip" data-n="30" data-w="34"></div>
+    <div class="gq"><span>Gracias</span><b>·</b><span>¿Preguntas?</span></div>
+    <img class="iso" src="assets/img/solvus-isologotipo-horizontal-blanco.png" alt="Solvus">
+  </section>
+
+  <div id="foot"><span class="bar"></span></div>
+  <div id="guia" aria-hidden="true"><i class="v l"></i><i class="v c"></i><i class="v r"></i><i class="h t"></i><i class="h b"></i></div>
+  <div id="travel"><div class="d"></div></div>
+  <div class="grain"></div>
+  <div id="blackout"></div>
+</div>
+<button id="fsbtn" type="button" aria-label="Pantalla completa (F)"><svg viewBox="0 0 20 20"><path d="M3 7V3h4M13 3h4v4M17 13v4h-4M7 17H3v-4"/></svg></button>
+<script src="js/orden.js"></script>
+<script src="js/notas.js"></script>
+<script src="js/animaciones.js"></script>
+<script src="js/escenas.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
