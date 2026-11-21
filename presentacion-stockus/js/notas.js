@@ -10,7 +10,7 @@ window.NOTAS = {
   ] },
   'th-deposito': { titulo: 'Thomas · El depósito de HDS y el problema', bloques: [
     { t0: 30, t1: 53, quien: 'Thomas', bloque: 'Inglés 1 · el depósito y el problema', en: true,
-      ind: 'La animación arranca sola (unos 20 s): primero el depósito y HDS, después los «?» y NO STOCK SYSTEM.',
+      ind: 'La animación arranca sola (unos 20 s): primero el depósito y HDS, después los «?» y SIN SISTEMA DE STOCK.',
       texto: '“Hello, everyone. I\'m going to talk about our project, Stockus. All this started when we were doing an internship at HDS technology, a company related to logistics and warehouses.”\n\n“During the internship, we found a BIG PROBLEM: they didn\'t have a stock system.”',
       ind2: 'AVANZAR → DIAPO 3 al decir: «The stock was controlled verbally…»' }
   ] },
