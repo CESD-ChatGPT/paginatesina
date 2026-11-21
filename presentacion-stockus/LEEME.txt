@@ -1,0 +1,88 @@
+STOCKUS · Presentación web (Solvus)
+====================================
+
+ABRIR
+  Doble clic en index.html (Chrome). No necesita servidor ni internet: las fuentes
+  IBM Plex Sans e IBM Plex Mono (licencia OFL) están dentro de assets/fonts/.
+  Al abrir se ve negro puro (diapositiva 1).
+
+PANTALLA COMPLETA
+  Tecla F, o el botón pequeño de la esquina inferior derecha (aparece al mover el
+  mouse, antes de empezar). Funciona en proyector 16:9 y 16:10 (franjas negras).
+
+CONTROL DE DIAPOSITIVAS (clicker)
+  Avanzar ........ Flecha derecha / abajo, Re Pág, Espacio, Enter, clic izquierdo
+  Retroceder ..... Flecha izquierda / arriba, Av Pág, clic derecho
+  Home / End ..... primera / última diapositiva
+  . o B .......... pantalla en negro total (alterna); pausa los videos
+  Escape ......... no hace nada
+  F5 ............. recarga y vuelve a la misma diapositiva (queda en la URL: #8)
+  P .............. abre la vista del presentador (ver abajo)
+  R .............. repite la animación de entrada de la diapositiva actual (para ensayar)
+  G .............. guía de la grilla (márgenes de 120 / 96 / 160 px y eje central),
+                   solo para ensayar; apagada por defecto
+  T .............. reinicia el cronómetro de la vista del presentador
+
+VISTA DEL PRESENTADOR
+  Tecla P: abre una segunda ventana para la pantalla de la notebook (arrastrala al
+  monitor de la notebook). Muestra el número y título de la diapositiva, quién habla,
+  el texto de su bloque (con la marca «AVANZAR → DIAPO n» de en qué frase pasar),
+  el cronómetro de 10:00 (arranca al pasar de la 1 a la 2, que en el guion es 0:30;
+  T lo reinicia), si vas adelantado o atrasado y si la animación de entrada de la
+  diapositiva ya terminó. Si el foco queda en esa ventana, las teclas también funcionan.
+
+ANIMACIONES DE ENTRADA (diapositivas 2 a 11 y 21 a 25)
+  Las partes en inglés son una idea por diapositiva: Thomas (2 a 6) y Pedro (7 a 11)
+  avanzan con el control en las frases marcadas en el guion. Cada diapositiva tiene
+  una animación de entrada que arranca al llegar, dura más o menos lo que se dice
+  ahí y queda quieta hasta avanzar (solo la maqueta de la 11 sigue en bucle).
+  Si el orador va más rápido, avanza y la animación se corta limpio; al retroceder
+  se muestra terminada. Duraciones, momentos y subtítulos: js/animaciones.js
+  (un solo objeto, en segundos).
+
+CONVERSACIÓN CON STOCKUS (diapositivas 21 a 24)
+  Un mensaje por diapositiva, cada uno se avanza con el control. El chat no cambia de
+  tamaño ni de lugar; se ven como máximo dos burbujas (la anterior atenuada).
+  21 pregunta (0–4 s) · 22 respuesta en tres líneas (1, 6 y 11 s; quieta desde 14 s) ·
+  23 «¿Y ahora?» (0–2 s) · 24 «Primeros clientes.» (quieta desde 9 s).
+  Nada corre por tiempo después de la entrada. Al retroceder se ve terminada.
+
+CIERRE (diapositiva 25)
+  La frase aparece en dos fundidos, sin nada que la recorra, y la palabra LED queda con
+  un halo fijo. Después la tira se enciende de izquierda a derecha, un LED cada 60 ms,
+  con el halo creciendo. Unos 4 s y queda estático.
+
+MODO LIVIANO
+  Abrir index.html?lite  (sin partículas, sin grano ni brillos de las tiras; los halos
+  quedan como gradientes estáticos). Usarlo si la notebook del escenario va lenta.
+
+VIDEOS
+  Diapositiva 15 (chatbot, 1:10, sin audio; termina antes de la placa «Pedí tu demo»)
+  y 17 (así cambia un depósito, 21,7 s, sin audio, recortado sin la barra de arriba
+  ni el botón «Pedí tu demo»): arrancan solos al entrar, se pausan y vuelven al
+  inicio al salir. Entre la 14 y la 18 los cambios son cortes directos.
+  assets/video/video-chatbot-completo.mp4 es la edición completa (1:14, con la placa
+  final), para usar fuera de la presentación.
+  Los originales están en assets/originales/ (sin tocar).
+
+ORDEN (25 diapositivas)
+  1 negro · 2 a 6 Thomas: el depósito y el problema · de palabra · tiempo y errores ·
+  STOCKUS · los cuatro pasos · 7 a 11 Pedro: lo que lo diferencia · los LEDs · red
+  local · Raspberry Pi y ESP8266 · la maqueta · 12 equipo · 13 identidad · 14 Vento ·
+  15 video del chatbot · 16 metodología · 17 video del depósito · 18 a medida ·
+  19 presupuesto, con el punto de equilibrio de fondo · 20 caso HDS y plan de pago ·
+  21 a 24 conversación con Stockus · 25 cierre: «Cada producto, a un LED de distancia.»
+  Transiciones: de la 1 a la 11 y de la 21 a la 25, fundidos de 250 ms; alrededor de los videos (14 a 18),
+  cortes directos; de la 12 a la 14 y de la 18 a la 21, la luz que viaja.
+
+CAMBIAR EL ORDEN O SACAR UNA DIAPOSITIVA
+  Todo sale de js/orden.js: una línea por diapositiva.
+  La numeración, la barra de LEDs, el hash (#N), las notas y el cronómetro se
+  ajustan solos. No hace falta tocar index.html.
+
+ARCHIVOS
+  index.html · presenter.html · css/ · js/ (orden.js, animaciones.js, escenas.js, app.js,
+  notas.js, presenter.js) · guion.md (fuente de las notas y los tiempos)
+  assets/ (fonts, img, video, originales)
+  respaldo-diapositivas.pdf  (una captura por diapositiva, por si falla la notebook)
+  js/orden.js (orden de las diapositivas)
