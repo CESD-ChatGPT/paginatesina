@@ -114,10 +114,7 @@
     const P = (x, y, z) => [X0 + (x - y) * C * K, Y0 + ((x + y) * .5 - z) * K];
     const pts = (a) => a.map((q) => P(q[0], q[1], q[2]).map((n) => n.toFixed(1)).join(',')).join(' ');
     const wh = S('g', { class: 'wh' }, svg);
-    // la cuadrícula del piso se corta a la derecha del rótulo grande (termina en x = 978) para no tocarlo
-    const clipPiso = S('clipPath', { id: 'piso-' + slide.id }, S('defs', null, svg));
-    S('rect', { x: 1010, y: 0, width: 910, height: 1080 }, clipPiso);
-    const piso = S('g', { class: 'piso', 'clip-path': `url(#piso-${slide.id})` }, wh);
+    const piso = S('g', { class: 'piso' }, wh);
     for (let x = -80; x <= 960; x += 80) S('polyline', { points: pts([[x, -60, 0], [x, 330, 0]]) }, piso);
     for (let y = -60; y <= 330; y += 65) S('polyline', { points: pts([[-80, y, 0], [960, y, 0]]) }, piso);
     const W = 210, D = 70, Hh = 300, GAP = 120;
