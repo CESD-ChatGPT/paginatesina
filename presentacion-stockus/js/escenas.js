@@ -183,7 +183,7 @@
     H('div', 'n', rot, 'HDS TECHNOLOGY');
     H('div', 'd', rot, 'Logística y depósitos');
     const nost = H('div', 'th-nost', slide);
-    nost.innerHTML = 'NO STOCK<br>SYSTEM';
+    nost.innerHTML = slide.id === 'th-palabra' || slide.id === 'th-tiempo' ? 'SIN SISTEMA<br>DE STOCK' : 'NO STOCK<br>SYSTEM';   // en la 3 y la 4, en español
     const reloj = S('g', { class: 'reloj', transform: 'translate(430 500) scale(1.5) translate(-430 -500)' }, svg);   // 1,5 veces
     const RC = [430, 500], RR = 160;
     S('circle', { cx: RC[0], cy: RC[1], r: RR }, reloj);
